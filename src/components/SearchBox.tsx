@@ -39,12 +39,19 @@ interface Props {
   pool: Item[];
   onPick: (item: Item) => void;
   onIngest: (item: Item) => void;
+  /** Lets the flow stand its arrow keys down while the overlay is up. */
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function SearchBox({ pool, onPick, onIngest }: Props) {
+export function SearchBox({ pool, onPick, onIngest, onOpenChange }: Props) {
   const toast = useToast();
   const [query, setQuery] = useState('');
-  const [open, setOpen] = useState(false);
+  const [rawOpen, setRawOpen] = useState(false);
+  const open = rawOpen;
+  const setOpen = (v: boolean) => {
+    setRawOpen(v);
+    onOpenChange?.(v);
+  };
   const [cursor, setCursor] = useState(0);
   const boxRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);

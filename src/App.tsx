@@ -189,6 +189,7 @@ export default function App() {
   const back = useCallback(() => setFocusIndex((i) => Math.max(0, i - 1)), []);
 
   const [showAbout, setShowAbout] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [rolling, setRolling] = useState(false);
   const rollShuffle = useCallback(() => {
     if (!wildcard) return;
@@ -209,7 +210,8 @@ export default function App() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
-      if (showAbout) return;
+      // While a panel is up it owns the arrow keys; the flow stands down.
+      if (showAbout || searchOpen) return;
       // The dial is arrow-driven too; let it keep its own keys when focused.
       if ((e.target as HTMLElement | null)?.closest?.('.dial')) return;
 
@@ -231,7 +233,7 @@ export default function App() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [deeper, wider, choose, wildcard, back, rollShuffle, showAbout]);
+  }, [deeper, wider, choose, wildcard, back, rollShuffle, showAbout, searchOpen]);
 
   const takenId = trail[focusIndex + 1];
 
@@ -389,7 +391,12 @@ export default function App() {
       )}
 
       <footer className="foot">
-        <SearchBox pool={pool} onPick={choose} onIngest={addIngested} />
+        <SearchBox
+          pool={pool}
+          onPick={choose}
+          onIngest={addIngested}
+          onOpenChange={setSearchOpen}
+        />
       </footer>
     </div>
   );

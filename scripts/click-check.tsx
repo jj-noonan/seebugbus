@@ -113,5 +113,44 @@ if (afterKey.title === beforeKey) problems.push('ArrowRight did not take the fir
 await key('ArrowLeft');
 console.log('after ArrowLeft:', read());
 
+// Search: open the overlay, type, and click a result. This path silently
+// broke once when the footer's stacking context let the header cover the
+// result rows and swallow the clicks.
+const trigger = container.querySelector('.searchtrigger') as any;
+if (!trigger) problems.push('search trigger missing');
+else {
+  await act(async () => {
+    trigger.dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true, cancelable: true }));
+  });
+  const input = container.querySelector('.search__field input') as any;
+  if (!input) problems.push('search overlay did not open');
+  else {
+    const setter = Object.getOwnPropertyDescriptor(
+      dom.window.HTMLInputElement.prototype, 'value',
+    )!.set!;
+    await act(async () => {
+      setter.call(input, 'the');
+      input.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
+    });
+    const rows = container.querySelectorAll('.search__row');
+    console.log('search rows for "the":', rows.length);
+    if (!rows.length) problems.push('search returned no local results for "the"');
+    else {
+      const label = rows[0].querySelector('.search__title')?.textContent;
+      const before = read().title;
+      await act(async () => {
+        (rows[0] as any).dispatchEvent(
+          new dom.window.MouseEvent('click', { bubbles: true, cancelable: true }),
+        );
+      });
+      const after = read();
+      console.log('picked:', label, '-> focus is now:', after.title);
+      if (after.title === before) problems.push('picking a search result did not navigate');
+      if (after.title !== label) problems.push(`expected focus "${label}", got "${after.title}"`);
+      if (container.querySelector('.searchpanel')) problems.push('overlay stayed open after picking');
+    }
+  }
+}
+
 console.log(problems.length ? `\nPROBLEMS: ${problems.join('; ')}` : '\nREACT LOGIC OK');
 process.exit(problems.length ? 1 : 0);

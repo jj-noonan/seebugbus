@@ -106,11 +106,19 @@ button { font: inherit; color: inherit; }
 .bar > * { min-width: 0; }
 
 /* Search sits at the bottom, out of the way of the deck. */
+/*
+ * No z-index here, deliberately.
+ *
+ * A z-index on the footer creates a stacking context, which trapped the search
+ * overlay inside it — its z-index:260 could then only compete with the footer's
+ * own children, so the header (z-index:80) painted over the top of the results
+ * and swallowed clicks on them. DOM order already puts the footer above the
+ * deck; the overlay needs to reach the root stacking context.
+ */
 .foot {
   display: flex;
   justify-content: center;
   padding: 0 clamp(12px, 2vw, 30px) clamp(12px, 2.2vh, 26px);
-  z-index: 70;
 }
 
 
