@@ -39,14 +39,82 @@ def art_path(url: str | None) -> str | None:
     return rest
 
 
+def scores(rows) -> dict[str, tuple[float, float]]:
+    """
+    Two 0-10 scores per album: popularity, then quality.
+
+    Popularity is distinct listeners, not plays — plays are dominated by
+    whoever put a record on two hundred times, while the number of separate
+    people who reached for it is what the word actually means.
+
+    Quality blends two things:
+
+      devotion — listens per listener. It cleanly separates records people
+        return to from records people tried once: Burial's Untrue scores 48
+        plays per listener against Skrillex's 9.9, despite similar totals. It
+        is shrunk toward the catalog mean by listener count, so an album with
+        one obsessive listener doesn't outrank a classic.
+
+      rating — the MusicBrainz community score, where it exists. Authoritative
+        but sparse and expensive to collect, so it is a bonus on top of
+        devotion rather than the basis.
+
+    Both are percentile-ranked, which self-calibrates as the catalog grows and
+    always spans the full range.
+    """
+    import statistics
+
+    devotions = []
+    for r in rows:
+        listeners = r["listener_count"] or 0
+        if listeners >= 5:
+            devotions.append((r["listen_count"] or 0) / listeners)
+    prior = statistics.median(devotions) if devotions else 8.0
+
+    raw_pop: dict[str, float] = {}
+    raw_q: dict[str, float] = {}
+    for r in rows:
+        listeners = r["listener_count"]
+        listens = r["listen_count"] or 0
+        raw_pop[r["id"]] = float(listeners) if listeners is not None else -1.0
+
+        if listeners:
+            # Bayesian shrink: with few listeners, trust the catalog median.
+            k = 12
+            devotion = (listens + prior * k) / (listeners + k)
+        else:
+            devotion = prior * 0.6  # unknown reads slightly below average
+
+        rating, votes = r["rating"], r["rating_votes"] or 0
+        if rating is not None and votes >= 2:
+            # Same shrink for a 5-star score with few votes.
+            adj = (rating * votes + 3.4 * 6) / (votes + 6)
+            devotion *= 0.65 + (adj / 5.0) * 0.7
+        raw_q[r["id"]] = devotion
+
+    def percentiles(raw: dict[str, float]) -> dict[str, float]:
+        known = sorted((v, k) for k, v in raw.items() if v >= 0)
+        n = max(1, len(known) - 1)
+        out = {k: 0.0 for k in raw}
+        for i, (_, k) in enumerate(known):
+            out[k] = round((i / n) * 10, 1)
+        return out
+
+    pop = percentiles(raw_pop)
+    qual = percentiles(raw_q)
+    return {k: (pop[k], qual[k]) for k in raw_pop}
+
+
 def export(conn: sqlite3.Connection, out: Path, limit: int | None = None) -> dict:
     where = "WHERE i.art_url IS NOT NULL"
-    order = "ORDER BY i.listen_count IS NULL, i.listen_count DESC"
+    # Rank the export by reach, so a capped snapshot keeps what people know.
+    order = "ORDER BY i.listener_count IS NULL, i.listener_count DESC, i.listen_count DESC"
     cap = f" LIMIT {int(limit)}" if limit else ""
 
     rows = conn.execute(f"""
         SELECT i.id, i.title, i.artist_id, i.year_start, i.art_url, i.art_thumb_url,
-               i.listen_count, a.name AS artist_name
+               i.listen_count, i.listener_count, i.rating, i.rating_votes,
+               a.name AS artist_name
         FROM items i LEFT JOIN artists a ON a.id = i.artist_id
         {where} {order}{cap}
     """).fetchall()
@@ -63,6 +131,7 @@ def export(conn: sqlite3.Connection, out: Path, limit: int | None = None) -> dic
         if r["item_id"] in keep:
             corridors[r["item_id"]].append(r["corridor_id"])
 
+    score = scores(rows)
     albums = [{
         "id": r["id"], "title": r["title"], "artistId": r["artist_id"],
         "artistName": r["artist_name"] or "", "year": r["year_start"],
@@ -73,6 +142,9 @@ def export(conn: sqlite3.Connection, out: Path, limit: int | None = None) -> dic
         "art": art_path(r["art_url"]),
         "tags": tags.get(r["id"], []), "corridorIds": corridors.get(r["id"], []),
         "listenCount": r["listen_count"],
+        "listenerCount": r["listener_count"],
+        "popularity": score[r["id"]][0],
+        "quality": score[r["id"]][1],
     } for r in rows]
 
     artist_ids = {a["artistId"] for a in albums if a["artistId"]}

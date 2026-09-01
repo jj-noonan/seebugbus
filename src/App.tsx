@@ -318,15 +318,6 @@ export default function App() {
             </span>
           </button>
         </div>
-        <SearchBox pool={pool} onPick={choose} onIngest={addIngested} />
-        <div className="bar__right">
-          <DistanceDial value={dial} onChange={setDial} />
-        </div>
-      </header>
-
-      <div className="flow">
-        <Flow cards={cards} />
-
 
         {wildcard && (
           <button
@@ -338,6 +329,16 @@ export default function App() {
             <span className="shuffle__label">Shuffle</span>
           </button>
         )}
+
+        <div className="bar__right">
+          <DistanceDial value={dial} onChange={setDial} />
+        </div>
+      </header>
+
+      <div className="flow">
+        <Flow cards={cards} />
+
+
 
         <div className="plate">
           <div className="plate__text" key={current.id}>
@@ -369,12 +370,16 @@ export default function App() {
           </div>
         </div>
 
-        <button className="infobtn" onClick={() => setShowAbout(true)}>
+        <button
+          className="infobtn"
+          onClick={() => setShowAbout(true)}
+          aria-label="How this works"
+          title="How this works"
+        >
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="12" cy="12" r="9.2" />
             <path d="M11.05 10.4h1.9v6.6h-1.9zM12 6.6a1.15 1.15 0 1 1 0 2.3 1.15 1.15 0 0 1 0-2.3z" />
           </svg>
-          How this works
         </button>
 
         {showAbout && <About onClose={() => setShowAbout(false)} />}
@@ -388,6 +393,9 @@ export default function App() {
         </ul>
       </div>
 
+      <footer className="foot">
+        <SearchBox pool={pool} onPick={choose} onIngest={addIngested} />
+      </footer>
     </div>
   );
 }

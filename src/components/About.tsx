@@ -83,11 +83,34 @@ export function About({ onClose }: { onClose: () => void }) {
         </section>
 
         <section>
+          <h3>Two scores behind every choice</h3>
+          <p>
+            <b>Popularity</b> is how many separate people reached for a record,
+            not how many plays it has — raw plays are dominated by whoever put
+            something on two hundred times.
+          </p>
+          <p>
+            <b>Quality</b> is devotion: listens per listener, boosted by the
+            MusicBrainz community rating where one exists. It separates records
+            people return to from records people tried once — Burial's
+            <em> Untrue</em> draws 48 plays per listener where a chart hit with
+            more total plays draws 10.
+          </p>
+          <p>
+            The dial moves both. Turned down it aims at records people know;
+            turned up it aims at the tail — and leans <em>harder</em> on quality
+            as it goes, because out there devotion is the only thing separating
+            a lost classic from a nobody's demo.
+          </p>
+        </section>
+
+        <section>
           <h3>Search</h3>
           <p>
             Searching something the catalog lacks isn't a dead end: it's looked up
             live in MusicBrainz, and if it exists it's fetched and added on the
-            spot. Press <kbd>/</kbd> from anywhere.
+            spot. Press <kbd>/</kbd> from anywhere, and <kbd>tab</kbd> to accept
+            the completion.
           </p>
         </section>
 

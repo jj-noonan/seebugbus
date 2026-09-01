@@ -253,9 +253,18 @@ def attach_art(candidates: list[dict], workers: int = 6) -> list[dict]:
 # --------------------------------------------------------------------------
 
 
-def fetch_listen_counts(rgids: list[str]) -> dict[str, int]:
-    """ListenBrainz listen counts. Best-effort: absent counts just mean unknown."""
-    counts: dict[str, int] = {}
+def fetch_popularity(rgids: list[str]) -> dict[str, tuple[int, int]]:
+    """
+    ListenBrainz listens *and* distinct listeners, in batches of 50.
+
+    Listeners matter more than listens: raw play counts are dominated by
+    whoever put a record on two hundred times, whereas the number of separate
+    people who reached for it is what "popular" actually means. Keeping both
+    also gives us listens-per-listener, which is the closest thing to a free
+    quality signal — it separates records people return to from records people
+    tried once.
+    """
+    out: dict[str, tuple[int, int]] = {}
     for i in range(0, len(rgids), 50):
         batch = rgids[i : i + 50]
         try:
@@ -269,13 +278,32 @@ def fetch_listen_counts(rgids: list[str]) -> dict[str, int]:
                 continue
             for row in r.json() or []:
                 mbid = row.get("release_group_mbid")
-                total = row.get("total_listen_count")
-                if mbid and total is not None:
-                    counts[mbid] = int(total)
+                if not mbid:
+                    continue
+                out[mbid] = (
+                    int(row.get("total_listen_count") or 0),
+                    int(row.get("total_user_count") or 0),
+                )
         except (requests.RequestException, ValueError):
             continue
         time.sleep(0.3)
-    return counts
+    return out
+
+
+def fetch_rating(mbid: str) -> tuple[float | None, int]:
+    """
+    MusicBrainz community rating for one release group.
+
+    There is no bulk endpoint, so this costs one rate-limited request each and
+    can only ever cover a slice of the catalog. Callers should spend those
+    requests on the albums most likely to be offered.
+    """
+    data = mb_get(f"/release-group/{mbid}", {"inc": "ratings"})
+    if not data:
+        return (None, 0)
+    r = data.get("rating") or {}
+    value = r.get("value")
+    return (float(value) if value is not None else None, int(r.get("votes-count") or 0))
 
 
 # --------------------------------------------------------------------------
@@ -299,9 +327,11 @@ def stratify(candidates: list[dict], keep: int) -> list[dict]:
     """
     # Always fetch counts, even when no trimming is needed: the obscurity score
     # depends on them regardless of whether we had to sample.
-    counts = fetch_listen_counts([c["id"] for c in candidates])
+    pop = fetch_popularity([c["id"] for c in candidates])
     for c in candidates:
-        c["listenCount"] = counts.get(c["id"])
+        listens, listeners = pop.get(c["id"], (None, None))
+        c["listenCount"] = listens
+        c["listenerCount"] = listeners
 
     if len(candidates) <= keep:
         return candidates
@@ -313,7 +343,7 @@ def _by_popularity(candidates: list[dict], keep: int) -> list[dict]:
     """Quartile sample: anchors, familiar, lesser-known, deep cuts."""
     if len(candidates) <= keep:
         return candidates
-    ranked = sorted(candidates, key=lambda c: c["listenCount"] or -1, reverse=True)
+    ranked = sorted(candidates, key=lambda c: c.get("listenerCount") or c.get("listenCount") or -1, reverse=True)
     quartile = max(1, len(ranked) // 4)
     buckets = [ranked[i * quartile : (i + 1) * quartile] for i in range(4)]
     buckets[3].extend(ranked[4 * quartile :])
@@ -405,6 +435,8 @@ def main() -> int:
     ap.add_argument("--export", default=str(ROOT / "src" / "data" / "catalog.json"),
                     help="JSON the dev app reads; '' to skip")
     ap.add_argument("--export-limit", type=int, default=12000)
+    ap.add_argument("--ratings", type=int, default=400,
+                    help="MusicBrainz rating lookups per sweep; 0 to skip")
     ap.add_argument("--reset", action="store_true")
     args = ap.parse_args()
 
@@ -484,13 +516,28 @@ def main() -> int:
                 export_catalog(conn, export_path, args.export_limit)
                 log(f"    ...{db.stats(conn)['albums']} albums in db")
 
-        missing = db.missing_listen_counts(conn, 20000)
+        missing = db.missing_listen_counts(conn, 40000)
         if missing:
-            log(f"fetching listen counts for {len(missing)} albums")
-            counts = fetch_listen_counts(missing)
-            db.set_listen_counts(conn, counts)
+            log(f"fetching popularity for {len(missing)} albums")
+            pop = fetch_popularity(missing)
+            db.set_popularity(conn, pop)
             conn.commit()
-            log(f"  got counts for {len(counts)}")
+            log(f"  got popularity for {len(pop)}")
+
+        # Ratings, most-listened first: one request each, so coverage will
+        # always be partial and the order is what makes it worth having.
+        if args.ratings:
+            todo = db.missing_ratings(conn, args.ratings)
+            if todo:
+                log(f"fetching ratings for {len(todo)} albums (most-listened first)")
+                rated = 0
+                for mbid in todo:
+                    value, votes = fetch_rating(mbid)
+                    db.set_rating(conn, mbid, value, votes)
+                    if value is not None:
+                        rated += 1
+                conn.commit()
+                log(f"  {rated} of {len(todo)} had a community rating")
 
         if export_path:
             export_catalog(conn, export_path, args.export_limit)

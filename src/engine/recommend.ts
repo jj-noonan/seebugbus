@@ -17,6 +17,48 @@ const AXIS_WEIGHT: Record<Axis, number> = {
   voice: 0.95,
 };
 
+/*
+ * ── Tuning ───────────────────────────────────────────────────────────────
+ * Every knob the recommender has, in one place, because this is the part that
+ * gets revisited. `npm run walk -- --dial N` prints the effect of any change
+ * in a couple of seconds.
+ */
+export const TUNING = {
+  /** Target distance at dial 0 and dial 1. */
+  radiusNear: 0.14,
+  radiusFar: 0.60,
+  /** Width of the distance band; wider at high dial, where precision is moot. */
+  sigmaNear: 0.10,
+  sigmaFar: 0.16,
+
+  /**
+   * Where on the fame scale the dial aims. Low dial wants records people know;
+   * high dial wants the tail. This is what actually makes "Sidewalk" feel like
+   * a sidewalk — proximity alone still served strangers.
+   */
+  popularityNear: 8.4,
+  popularityFar: 1.8,
+  popularitySigma: 2.7,
+
+  /**
+   * How hard quality is weighted, near and far.
+   *
+   * Deliberately *higher* far out. The long tail is mostly records almost
+   * nobody kept listening to, so reaching for obscurity without leaning on
+   * quality finds noise rather than discovery. Out there, devotion is the only
+   * thing separating a lost classic from a nobody's demo.
+   */
+  qualityWeightNear: 0.40,
+  qualityWeightFar: 0.85,
+
+  /** Two offers that lead to the same place are only one offer. */
+  divergenceBonus: 1.6,
+  /** Same artist twice running reads as a dead end, not a discovery. */
+  sameArtistPenalty: 0.25,
+} as const;
+
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
 const WEIGHT_NORM = Math.sqrt(
   AXES.reduce((sum, a) => sum + AXIS_WEIGHT[a] * AXIS_WEIGHT[a], 0),
 );
@@ -108,8 +150,10 @@ export function pickBranches(
   dial: number,
   excludeIds: ReadonlySet<string>,
 ): Branch[] {
-  const targetR = 0.14 + dial * 0.46;
-  const sigma = 0.10 + dial * 0.06;
+  const targetR = lerp(TUNING.radiusNear, TUNING.radiusFar, dial);
+  const sigma = lerp(TUNING.sigmaNear, TUNING.sigmaFar, dial);
+  const targetPop = lerp(TUNING.popularityNear, TUNING.popularityFar, dial);
+  const qWeight = lerp(TUNING.qualityWeightNear, TUNING.qualityWeightFar, dial);
 
   const currentCorridors = new Set(current.corridorIds);
   const bridgeCorridors = new Set(
@@ -125,16 +169,30 @@ export function pickBranches(
     // wrong as being further, otherwise every dial setting collapses to "close".
     const band = Math.exp(-((d - targetR) ** 2) / (2 * sigma * sigma));
 
-    // Turning the dial up should also reach past the well-trodden canon.
-    const novelty = 1 + dial * (item.obscurity / 10) * 0.45;
+    /*
+     * Fame. The dial slides a *target* along the popularity scale rather than
+     * applying a one-way bonus, so turning it down genuinely asks for records
+     * people know instead of merely tolerating them.
+     */
+    const popGap = item.popularity - targetPop;
+    const fame = Math.exp(
+      -(popGap * popGap) / (2 * TUNING.popularitySigma * TUNING.popularitySigma),
+    );
+
+    /*
+     * Quality, weighted harder the further out we reach — see TUNING. A record
+     * at quality 10 is worth roughly (1 + qWeight) times one at quality 0.
+     */
+    const merit = 1 - qWeight + (item.quality / 10) * qWeight * 2;
 
     // Same artist twice in a row reads as a dead end, not a discovery.
-    const sameArtist = item.artistId === current.artistId ? 0.25 : 1;
+    const sameArtist =
+      item.artistId === current.artistId ? TUNING.sameArtistPenalty : 1;
 
     // Stable tie-break so revisiting a card re-offers the same two records.
     const jitter = 0.9 + 0.2 * hash01(current.id + item.id);
 
-    scored.push({ item, d, score: band * novelty * sameArtist * jitter });
+    scored.push({ item, d, score: band * fame * merit * sameArtist * jitter });
   }
 
   if (scored.length < 2) return [];
@@ -161,7 +219,7 @@ export function pickBranches(
     for (const cb of b.slice(0, 8)) {
       if (ca.item.id === cb.item.id) continue;
       const divergence = distance(ca.item.vector, cb.item.vector);
-      const total = ca.score + cb.score + divergence * 1.6;
+      const total = ca.score + cb.score + divergence * TUNING.divergenceBonus;
       if (!best || total > best.total) best = { a: ca, b: cb, total };
     }
   }
@@ -213,7 +271,11 @@ export function pickWildcard(
  * something unplaceable gives you nothing to steer away from.
  */
 export function pickStart(pool: Item[], seed: string): Item | null {
-  const eligible = pool.filter((i) => i.obscurity >= 3 && i.obscurity <= 8);
+  // Open on something well-liked and mid-known: a canonical record makes the
+  // first branches feel obvious, an unloved one gives nothing to steer from.
+  const eligible = pool.filter(
+    (i) => i.obscurity >= 2 && i.obscurity <= 7.5 && i.quality >= 5,
+  );
   const from = eligible.length ? eligible : pool;
   if (!from.length) return null;
   return from[Math.floor(hash01(seed) * from.length)];

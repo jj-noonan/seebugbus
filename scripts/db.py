@@ -38,6 +38,9 @@ CREATE TABLE IF NOT EXISTS items (
   art_url       TEXT,
   art_thumb_url TEXT,
   listen_count  INTEGER,
+  listener_count INTEGER,
+  rating        REAL,
+  rating_votes  INTEGER,
   obscurity     REAL,
   vector        TEXT,
   first_seen    TEXT DEFAULT (datetime('now')),
@@ -144,6 +147,18 @@ def connect(path: Path | str = DEFAULT_DB) -> sqlite3.Connection:
 
 def init(conn: sqlite3.Connection) -> None:
     conn.executescript(SCHEMA)
+    # Columns added after the first databases were built.
+    have = {r["name"] for r in conn.execute("PRAGMA table_info(items)")}
+    for col, decl in (
+        ("listener_count", "INTEGER"),
+        ("rating", "REAL"),
+        ("rating_votes", "INTEGER"),
+    ):
+        if col not in have:
+            conn.execute(f"ALTER TABLE items ADD COLUMN {col} {decl}")
+    # Only now that the columns certainly exist.
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_items_listeners ON items(listener_count)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_items_rating ON items(rating_votes)")
     conn.commit()
 
 
@@ -164,17 +179,20 @@ def upsert_album(conn: sqlite3.Connection, alb: dict) -> None:
     """Insert or refresh one album plus its tags and corridor memberships."""
     conn.execute(
         """INSERT INTO items
-             (id, kind, title, artist_id, year_start, art_url, art_thumb_url, listen_count)
-           VALUES (?, 'album', ?,?,?,?,?,?)
+             (id, kind, title, artist_id, year_start, art_url, art_thumb_url,
+              listen_count, listener_count)
+           VALUES (?, 'album', ?,?,?,?,?,?,?)
            ON CONFLICT(id) DO UPDATE SET
              title=excluded.title,
              art_url=COALESCE(excluded.art_url, items.art_url),
              art_thumb_url=COALESCE(excluded.art_thumb_url, items.art_thumb_url),
              -- Never overwrite a known listen count with an unknown one.
              listen_count=COALESCE(excluded.listen_count, items.listen_count),
+             listener_count=COALESCE(excluded.listener_count, items.listener_count),
              updated_at=datetime('now')""",
         (alb["id"], alb["title"], alb["artistId"], alb.get("year"),
-         alb.get("artUrl"), alb.get("artThumbUrl"), alb.get("listenCount")),
+         alb.get("artUrl"), alb.get("artThumbUrl"),
+         alb.get("listenCount"), alb.get("listenerCount")),
     )
 
     if alb.get("tags"):
@@ -237,22 +255,50 @@ def stats(conn: sqlite3.Connection) -> dict:
         "albums": one("SELECT COUNT(*) FROM items"),
         "artists": one("SELECT COUNT(*) FROM artists"),
         "withArt": one("SELECT COUNT(*) FROM items WHERE art_url IS NOT NULL"),
-        "withListens": one("SELECT COUNT(*) FROM items WHERE listen_count IS NOT NULL"),
+        "withListens": one("SELECT COUNT(*) FROM items WHERE listener_count IS NOT NULL"),
+        "withRating": one("SELECT COUNT(*) FROM items WHERE rating IS NOT NULL"),
         "tagsDone": one("SELECT COUNT(*) FROM crawl_tags WHERE done_at IS NOT NULL"),
     }
 
 
-def set_listen_counts(conn: sqlite3.Connection, counts: dict[str, int]) -> None:
+def set_popularity(conn: sqlite3.Connection, rows: dict[str, tuple[int, int]]) -> None:
+    """rows: mbid -> (total listens, distinct listeners)."""
     conn.executemany(
-        "UPDATE items SET listen_count=?, updated_at=datetime('now') WHERE id=?",
-        [(v, k) for k, v in counts.items()],
+        """UPDATE items SET listen_count=?, listener_count=?, updated_at=datetime('now')
+           WHERE id=?""",
+        [(v[0], v[1], k) for k, v in rows.items()],
     )
+
+
+def set_rating(conn: sqlite3.Connection, mbid: str, value: float | None, votes: int) -> None:
+    conn.execute(
+        """UPDATE items SET rating=?, rating_votes=?, updated_at=datetime('now') WHERE id=?""",
+        (value, votes, mbid),
+    )
+
+
+def missing_ratings(conn: sqlite3.Connection, limit: int) -> list[str]:
+    """
+    Albums still lacking a rating lookup, most-listened first.
+
+    MusicBrainz has no bulk ratings endpoint — it is one request per album at
+    1 req/sec — so the order matters far more than the coverage. Rating the
+    records someone might actually be offered is worth vastly more than
+    grinding alphabetically through the tail.
+    """
+    return [
+        r["id"] for r in conn.execute(
+            """SELECT id FROM items
+               WHERE rating_votes IS NULL
+               ORDER BY listener_count DESC NULLS LAST, listen_count DESC NULLS LAST
+               LIMIT ?""", (limit,))
+    ]
 
 
 def missing_listen_counts(conn: sqlite3.Connection, limit: int = 100000) -> list[str]:
     return [
         r["id"] for r in conn.execute(
-            "SELECT id FROM items WHERE listen_count IS NULL LIMIT ?", (limit,)
+            "SELECT id FROM items WHERE listener_count IS NULL LIMIT ?", (limit,)
         )
     ]
 

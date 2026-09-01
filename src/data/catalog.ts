@@ -71,6 +71,7 @@ function deriveObscurity(albums: RawAlbum[]): Map<string, number> {
  * a crawled one — same axes, same links, same card.
  */
 export function itemFromRaw(a: RawAlbum, obscurity: number): Item {
+  const popularity = a.popularity ?? 10 - obscurity;
   return {
     id: a.id,
     kind: 'album' as const,
@@ -82,6 +83,10 @@ export function itemFromRaw(a: RawAlbum, obscurity: number): Item {
     artUrl: coverUrl(a.art, 500),
     artThumbUrl: coverUrl(a.art, 250),
     obscurity,
+    popularity,
+    // Unknown quality sits just below the middle: it should not be rewarded
+    // like a loved record, nor buried like a bad one.
+    quality: a.quality ?? 4.5,
     corridorIds: a.corridorIds,
     tags: a.tags,
     vector: deriveVector(a.tags, a.year),
@@ -99,7 +104,9 @@ function build(): { items: Item[]; artists: Map<string, Artist> } {
 
   const items: Item[] = raw.albums
     .filter((a) => a.art) // no art, no card — this is a cover flow
-    .map((a) => itemFromRaw(a, obscurity.get(a.id) ?? 5))
+    .map((a) =>
+      itemFromRaw(a, a.popularity != null ? 10 - a.popularity : obscurity.get(a.id) ?? 5),
+    )
     // Records whose tags we barely recognise get placed at the middle of every
     // axis, which makes them look deceptively similar to everything. Drop them
     // rather than let them pollute the branch offers.

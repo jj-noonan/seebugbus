@@ -72,10 +72,14 @@ def main() -> int:
         added += 1
         print(f"  + {rec['artistName']} — {rec['title']} ({rec['year']}) {corridors or '(no corridor)'}")
 
-    counts = crawl.fetch_listen_counts([m for m in todo])
-    if counts:
-        db.set_listen_counts(conn, counts)
+    pop = crawl.fetch_popularity(list(todo))
+    if pop:
+        db.set_popularity(conn, pop)
         conn.commit()
+    for mbid in todo:
+        value, votes = crawl.fetch_rating(mbid)
+        db.set_rating(conn, mbid, value, votes)
+    conn.commit()
     print(f"added {added}; db now {db.stats(conn)['albums']} albums")
     return 0
 

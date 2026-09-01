@@ -127,3 +127,35 @@
   /* Its own row now, so it stands on its own height rather than the logo's. */
   .search__field { padding: 10px 16px; }
 }
+
+/* ── inline completion ───────────────────────────────────────────────── */
+
+.search__wrap { position: relative; flex: 1; min-width: 0; display: flex; }
+.search__wrap input { position: relative; z-index: 1; background: none; }
+
+.search__ghost {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  white-space: pre;
+  overflow: hidden;
+  pointer-events: none;
+  font-size: clamp(13px, 1.2vw, 15px);
+  color: var(--ink-faint);
+}
+
+/* Occupies exactly the width of what's typed, so the ghost starts at the caret. */
+.search__typed { visibility: hidden; }
+
+.search__tab {
+  margin-left: 9px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  border: 1px solid var(--hairline);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}

@@ -23,11 +23,16 @@ console.log(
     `${CATALOG_STATS.corridorsComplete.length}/11 corridors\n`,
 );
 
-const obs = ITEMS.map((i) => i.obscurity).sort((a, b) => a - b);
-console.log(
-  `obscurity spread: min ${obs[0]?.toFixed(1)} / median ` +
-    `${obs[Math.floor(obs.length / 2)]?.toFixed(1)} / max ${obs.at(-1)?.toFixed(1)}\n`,
-);
+const spread = (get: (i: (typeof ITEMS)[number]) => number, label: string) => {
+  const v = ITEMS.map(get).sort((a, b) => a - b);
+  console.log(
+    `${label.padEnd(11)} min ${v[0]?.toFixed(1)} / median ` +
+      `${v[Math.floor(v.length / 2)]?.toFixed(1)} / max ${v.at(-1)?.toFixed(1)}`,
+  );
+};
+spread((i) => i.popularity, 'popularity');
+spread((i) => i.quality, 'quality');
+console.log();
 
 for (let w = 0; w < walks; w++) {
   const start = pickStart(ITEMS, `walk-${w}-${dial}`);
@@ -37,7 +42,7 @@ for (let w = 0; w < walks; w++) {
   const visited = new Set<string>([start.id]);
   console.log(
     `  ${current.subtitle} — ${current.title} (${current.yearStart}) ` +
-      `[obs ${current.obscurity}] {${current.corridorIds.join(',')}}`,
+      `[pop ${current.popularity} q ${current.quality}] {${current.corridorIds.join(',')}}`,
   );
 
   for (let s = 0; s < steps; s++) {
@@ -51,7 +56,7 @@ for (let w = 0; w < walks; w++) {
       console.log(
         `     ${b.role === 'deeper' ? 'D' : 'W'} d=${b.distance.toFixed(2)} ` +
           `${b.item.subtitle} — ${b.item.title} (${b.item.yearStart}) ` +
-          `[obs ${b.item.obscurity}] "${b.reason}"${cross}`,
+          `[pop ${b.item.popularity} q ${b.item.quality}] "${b.reason}"${cross}`,
       );
     }
     const spread = branches.length === 2

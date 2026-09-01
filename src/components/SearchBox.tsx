@@ -64,6 +64,33 @@ export function SearchBox({ pool, onPick, onIngest }: Props) {
 
   useEffect(() => setCursor(0), [query]);
 
+  /*
+   * Inline completion.
+   *
+   * The dropdown already lists matches, but a ghost completion answers a
+   * different question: it tells you the catalog has this before you finish
+   * typing, and lets you take it without leaving the keyboard. Only offered on
+   * a true prefix — completing the middle of a string reads as the field
+   * fighting you.
+   */
+  const ghost = useMemo(() => {
+    const raw = query.trim();
+    if (raw.length < 2 || !results.length) return '';
+    const q = normalise(raw);
+    for (const field of [results[0].title, results[0].subtitle]) {
+      if (normalise(field).startsWith(q) && field.length > raw.length) {
+        return field.slice(raw.length);
+      }
+    }
+    return '';
+  }, [query, results]);
+
+  const acceptGhost = () => {
+    if (!ghost) return false;
+    setQuery(query.trim() + ghost);
+    return true;
+  };
+
   useEffect(() => {
     const onDown = (e: MouseEvent) => {
       if (!boxRef.current?.contains(e.target as Node)) setOpen(false);
@@ -157,6 +184,14 @@ export function SearchBox({ pool, onPick, onIngest }: Props) {
     // Arrow keys drive the flow globally; inside the field they belong to the
     // result list, so stop them here rather than letting both fire.
     if (['ArrowDown', 'ArrowUp', 'Enter', 'Escape'].includes(e.key)) e.stopPropagation();
+    const atEnd =
+      inputRef.current &&
+      inputRef.current.selectionStart === inputRef.current.value.length;
+    if ((e.key === 'Tab' || (e.key === 'ArrowRight' && atEnd)) && ghost) {
+      e.preventDefault();
+      acceptGhost();
+      return;
+    }
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       setCursor((c) => Math.min(results.length - 1, c + 1));
@@ -181,15 +216,26 @@ export function SearchBox({ pool, onPick, onIngest }: Props) {
           <circle cx="11" cy="11" r="7" />
           <path d="m20 20-3.6-3.6" strokeLinecap="round" />
         </svg>
-        <input
-          ref={inputRef}
-          value={query}
-          placeholder="Search an album or artist to jump there…"
-          aria-label="Search the catalog"
-          onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
-          onFocus={() => setOpen(true)}
-          onKeyDown={onKeyDown}
-        />
+        <span className="search__wrap">
+          <input
+            ref={inputRef}
+            value={query}
+            placeholder="Search an album or artist to jump there…"
+            aria-label="Search the catalog"
+            autoComplete="off"
+            spellCheck={false}
+            onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
+            onFocus={() => setOpen(true)}
+            onKeyDown={onKeyDown}
+          />
+          {ghost && (
+            <span className="search__ghost" aria-hidden="true">
+              <span className="search__typed">{query}</span>
+              {ghost}
+              <span className="search__tab">tab</span>
+            </span>
+          )}
+        </span>
         {query && (
           <button className="search__clear" onClick={() => { setQuery(''); inputRef.current?.focus(); }} aria-label="Clear search">
             ×

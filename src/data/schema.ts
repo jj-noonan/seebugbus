@@ -82,10 +82,20 @@ export interface Item {
   artThumbUrl: string | null;
 
   /**
-   * 0..10, where 10 is a genuine deep cut. Derived from listen counts where
-   * we have them and tag-attention as a fallback — see deriveObscurity().
+   * 0..10, where 10 is a genuine deep cut. The inverse of `popularity`.
    */
   obscurity: number;
+
+  /** 0..10 by distinct listeners. How many people reached for this record. */
+  popularity: number;
+
+  /**
+   * 0..10 from listens-per-listener, boosted by the MusicBrainz community
+   * rating where one exists. Devotion, not acclaim — how hard people who found
+   * it held on. Subjective by nature, but it separates a record people return
+   * to from one they sampled once.
+   */
+  quality: number;
 
   corridorIds: string[];
   tags: ItemTag[];
@@ -160,6 +170,10 @@ export interface RawAlbum {
   art: string | null;
   tags: ItemTag[];
   corridorIds: string[];
-  /** ListenBrainz listen count where available; null when unknown. */
+  /** ListenBrainz counts where available; null when unknown. */
   listenCount: number | null;
+  listenerCount?: number | null;
+  /** Precomputed 0..10 scores from the exporter. */
+  popularity?: number;
+  quality?: number;
 }
