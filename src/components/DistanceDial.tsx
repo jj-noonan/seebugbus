@@ -1,34 +1,29 @@
 import { useCallback, useRef } from 'react';
 import './DistanceDial.css';
 
-const MIN_ANGLE = -138;
-const MAX_ANGLE = 138;
-const BALLS = 13;
+const MIN_ANGLE = -122;
+const MAX_ANGLE = 122;
 
 /**
- * Named stops, so the number has a meaning attached to it.
+ * Five stops, not a continuum.
  *
- * Trail terms rather than numbers: how far the next record sits from this one
- * is much easier to feel as terrain than as a distance. A sidewalk keeps you on
- * pavement you already know; bushwhacking means no path at all.
+ * A speedometer that can rest anywhere invites fiddling for a "right" number
+ * that doesn't exist — the underlying scale is fuzzy, and five named terrains
+ * are all the resolution the recommender can honestly act on. Detents also make
+ * the control legible at a glance: you are on stop 3 of 5, not at 49.
  */
-const STOPS: [number, string][] = [
-  [0.00, 'Sidewalk'],
-  [0.25, 'Footpath'],
-  [0.50, 'Ridgeline'],
-  [0.75, 'Backcountry'],
-  [1.00, 'Bushwhack'],
+export const STOPS: { name: string; blurb: string }[] = [
+  { name: 'Sidewalk',    blurb: 'barely a step — close variations' },
+  { name: 'Footpath',    blurb: 'a gentle turn off the main road' },
+  { name: 'Ridgeline',   blurb: 'real ground covered, still a path' },
+  { name: 'Backcountry', blurb: 'far out, and it shows' },
+  { name: 'Bushwhack',   blurb: 'no path at all' },
 ];
 
-function wordFor(v: number): string {
-  let best = STOPS[0];
-  for (const stop of STOPS) {
-    if (Math.abs(stop[0] - v) < Math.abs(best[0] - v)) best = stop;
-  }
-  return best[1];
-}
+const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
+const toIndex = (v: number) => Math.round(clamp01(v) * (STOPS.length - 1));
+const toValue = (i: number) => i / (STOPS.length - 1);
 
-const clamp = (v: number) => Math.min(1, Math.max(0, v));
 const polar = (cx: number, cy: number, r: number, deg: number) => {
   const a = ((deg - 90) * Math.PI) / 180;
   return [cx + Math.cos(a) * r, cy + Math.sin(a) * r] as const;
@@ -41,11 +36,12 @@ interface Props {
 
 export function DistanceDial({ value, onChange }: Props) {
   const drag = useRef<{ y: number; v: number } | null>(null);
-  const angle = MIN_ANGLE + value * (MAX_ANGLE - MIN_ANGLE);
+  const index = toIndex(value);
+  const angle = MIN_ANGLE + toValue(index) * (MAX_ANGLE - MIN_ANGLE);
 
-  const nudge = useCallback(
-    (delta: number) => onChange(clamp(value + delta)),
-    [value, onChange],
+  const step = useCallback(
+    (delta: number) => onChange(toValue(Math.min(STOPS.length - 1, Math.max(0, index + delta)))),
+    [index, onChange],
   );
 
   const onPointerDown = useCallback(
@@ -59,60 +55,64 @@ export function DistanceDial({ value, onChange }: Props) {
   const onPointerMove = useCallback(
     (e: React.PointerEvent<HTMLButtonElement>) => {
       if (!drag.current) return;
-      // Vertical drag rather than true rotation: angular tracking on a knob
-      // this size is fiddly and inverts awkwardly as the pointer crosses the top.
-      onChange(clamp(drag.current.v + (drag.current.y - e.clientY) / 150));
+      // Snap while dragging rather than on release, so the detents are felt.
+      const raw = clamp01(drag.current.v + (drag.current.y - e.clientY) / 190);
+      const snapped = toValue(toIndex(raw));
+      if (snapped !== value) onChange(snapped);
     },
-    [onChange],
+    [onChange, value],
   );
 
-  const endDrag = useCallback(() => {
-    drag.current = null;
-  }, []);
+  const endDrag = useCallback(() => { drag.current = null; }, []);
 
   const onKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      const step = e.shiftKey ? 0.01 : 0.05;
-      if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
-        e.preventDefault();
-        nudge(step);
-      } else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
-        e.preventDefault();
-        nudge(-step);
-      } else if (e.key === 'Home') {
-        e.preventDefault();
-        onChange(0);
-      } else if (e.key === 'End') {
-        e.preventDefault();
-        onChange(1);
-      }
+      if (e.key === 'ArrowUp' || e.key === 'ArrowRight') { e.preventDefault(); step(1); }
+      else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
+      else if (e.key === 'Home') { e.preventDefault(); onChange(0); }
+      else if (e.key === 'End') { e.preventDefault(); onChange(1); }
     },
-    [nudge, onChange],
+    [step, onChange],
   );
 
-  // Nelson-ball-clock markers along the arc of travel; lit up to the value.
-  const markers = Array.from({ length: BALLS }, (_, i) => {
-    const t = i / (BALLS - 1);
-    const deg = MIN_ANGLE + t * (MAX_ANGLE - MIN_ANGLE);
-    const [sx, sy] = polar(38, 38, 25, deg);
-    const [bx, by] = polar(38, 38, 32.5, deg);
-    const lit = t <= value + 0.001;
+  // Gauge ticks: five majors with numerals, minors between, on a 244° sweep.
+  const majors = STOPS.map((_, i) => {
+    const deg = MIN_ANGLE + toValue(i) * (MAX_ANGLE - MIN_ANGLE);
+    const [x1, y1] = polar(50, 50, 33, deg);
+    const [x2, y2] = polar(50, 50, 41, deg);
+    const [nx, ny] = polar(50, 50, 25.5, deg);
+    const on = i <= index;
     return (
-      <g key={i} opacity={lit ? 1 : 0.3}>
+      <g key={i}>
         <line
-          x1={sx} y1={sy} x2={bx} y2={by}
-          stroke={lit ? 'var(--accent)' : 'rgba(242,227,198,.35)'}
-          strokeWidth="1"
+          x1={x1} y1={y1} x2={x2} y2={y2}
+          stroke="var(--sbb-ink)"
+          strokeWidth={3}
+          strokeLinecap="round"
+          opacity={on ? 1 : 0.35}
         />
-        <circle
-          cx={bx} cy={by} r={i % 3 === 0 ? 2.9 : 2}
-          fill={lit ? 'var(--accent)' : 'rgba(242,227,198,.32)'}
-        />
+        <text
+          x={nx} y={ny + 3.4}
+          textAnchor="middle"
+          className="gauge__num"
+          opacity={on ? 1 : 0.4}
+        >
+          {i + 1}
+        </text>
       </g>
     );
   });
 
-  const [hx, hy] = polar(38, 38, 20, angle);
+  const minors = Array.from({ length: 4 }, (_, i) => {
+    const deg = MIN_ANGLE + ((i + 0.5) / 4) * (MAX_ANGLE - MIN_ANGLE);
+    const [x1, y1] = polar(50, 50, 36, deg);
+    const [x2, y2] = polar(50, 50, 41, deg);
+    return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="var(--sbb-ink)" strokeWidth={1.4} opacity={0.3} />;
+  });
+
+  const [tipX, tipY] = polar(50, 50, 30, angle);
+  const [bx1, by1] = polar(50, 50, 5.5, angle - 90);
+  const [bx2, by2] = polar(50, 50, 5.5, angle + 90);
 
   return (
     <div className="dial">
@@ -120,73 +120,37 @@ export function DistanceDial({ value, onChange }: Props) {
         className="dial__knob"
         role="slider"
         aria-label="How far the offered paths travel"
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={Math.round(value * 100)}
-        aria-valuetext={`${Math.round(value * 100)}, ${wordFor(value)}`}
-        title="Drag up or down: sidewalk keeps you close, bushwhack goes off-trail"
+        aria-valuemin={1}
+        aria-valuemax={STOPS.length}
+        aria-valuenow={index + 1}
+        aria-valuetext={STOPS[index].name}
+        title={`${STOPS[index].name} — ${STOPS[index].blurb}. Drag up or down.`}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
         onKeyDown={onKeyDown}
-        onWheel={(e) => nudge(e.deltaY < 0 ? 0.04 : -0.04)}
+        onWheel={(e) => step(e.deltaY < 0 ? 1 : -1)}
       >
-        <svg width="76" height="76" viewBox="0 0 76 76">
-          <defs>
-            <radialGradient id="dialFace" cx="36%" cy="28%">
-              <stop offset="0%" stopColor="#4a3a2c" />
-              <stop offset="64%" stopColor="#2b2118" />
-              <stop offset="100%" stopColor="#161009" />
-            </radialGradient>
-          </defs>
-
-          {markers}
-
-          <circle cx="38" cy="38" r="22.5" fill="url(#dialFace)" />
-          <circle
-            cx="38" cy="38" r="22.5"
-            fill="none"
-            stroke="rgba(217,164,65,.3)"
-            strokeWidth="1"
+        <svg viewBox="0 0 100 100">
+          {/* Cream face inside an ink bezel — the badge from the logo, round. */}
+          <circle className="gauge__bezel" cx="50" cy="50" r="47" />
+          <circle className="gauge__face" cx="50" cy="50" r="43" />
+          {minors}
+          {majors}
+          {/* Needle */}
+          <polygon
+            className="gauge__needle"
+            points={`${tipX},${tipY} ${bx1},${by1} ${bx2},${by2}`}
           />
-
-          {/* pointer */}
-          <line
-            x1="38" y1="38" x2={hx} y2={hy}
-            stroke="var(--accent)"
-            strokeWidth="2.4"
-            strokeLinecap="round"
-          />
-          <circle cx="38" cy="38" r="3.4" fill="var(--accent)" />
-          <circle cx="38" cy="38" r="1.3" fill="#1c1611" />
+          <circle className="gauge__hub" cx="50" cy="50" r="6" />
+          <circle className="gauge__hubdot" cx="50" cy="50" r="2.1" />
         </svg>
       </button>
 
-      <div className="dial__chevrons">
-        <span
-          className="dial__chev"
-          role="button"
-          tabIndex={-1}
-          aria-label="Increase distance"
-          onClick={() => nudge(0.05)}
-        >
-          ▲
-        </span>
-        <span
-          className="dial__chev"
-          role="button"
-          tabIndex={-1}
-          aria-label="Decrease distance"
-          onClick={() => nudge(-0.05)}
-        >
-          ▼
-        </span>
-      </div>
-
       <div className="dial__readout">
-        <span className="dial__number">{Math.round(value * 100)}</span>
-        <span className="dial__word">{wordFor(value)}</span>
+        <span className="dial__number">{index + 1}<i>/5</i></span>
+        <span className="dial__word">{STOPS[index].name}</span>
         <span className="dial__caption">Terrain · drag ↕</span>
       </div>
     </div>

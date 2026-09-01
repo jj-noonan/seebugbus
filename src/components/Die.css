@@ -1,8 +1,8 @@
 .die {
   display: block;
-  width: 68px;
-  height: 68px;
-  filter: drop-shadow(0 7px 16px rgba(0, 0, 0, 0.55));
+  width: var(--die-size, 46px);
+  height: var(--die-size, 46px);
+  filter: drop-shadow(0 5px 13px rgba(0, 0, 0, 0.55));
   transition: transform 0.2s var(--ease);
 }
 
@@ -10,10 +10,11 @@
 
 /* Bone-coloured face, ink pips: a real die reads instantly, and it is the one
    object on the stage that is not a rectangle of album art. */
+/* Same three inks as the logo badge and the gauge: cream ground, ink line. */
 .die__body {
   fill: var(--sbb-cream);
-  stroke: rgba(43, 33, 24, 0.5);
-  stroke-width: 2;
+  stroke: var(--sbb-ink);
+  stroke-width: 4;
 }
 
 .die__pip { fill: var(--sbb-ink); }
@@ -44,3 +45,5 @@
 @media (prefers-reduced-motion: reduce) {
   .die, .die--rolling { animation: none !important; transition: none; }
 }
+
+@media (max-width: 720px) { .die { --die-size: 40px; } }

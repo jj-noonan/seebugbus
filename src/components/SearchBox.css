@@ -121,3 +121,9 @@
   background: rgba(224, 112, 63, 0.12);
   border: 1px dashed rgba(224, 112, 63, 0.5);
 }
+
+
+@media (max-width: 720px) {
+  /* Its own row now, so it stands on its own height rather than the logo's. */
+  .search__field { padding: 10px 16px; }
+}

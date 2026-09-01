@@ -43,7 +43,7 @@
    * small card marooned in a very tall frame — the layout simply ignored the
    * vertical half of the screen.
    */
-  --case-w: clamp(200px, min(32vw, 44vh), 460px);
+  --case-w: clamp(215px, min(38vw, 52vh), 540px);
   --case-h: calc(var(--case-w) * 1.136);
 
   /*
@@ -54,8 +54,8 @@
    * the thing that makes Cover Flow read as a single continuous deck. Spread
    * apart with gaps, the same four cards read as four unrelated objects.
    */
-  --past-x:  calc(var(--case-w) * 0.66);
-  --offer-x: calc(var(--case-w) * 0.70);
+  --past-x:  calc(var(--case-w) * 0.62);
+  --offer-x: calc(var(--case-w) * 0.66);
   --offer-y: calc(var(--case-h) * 0.44);
   --exit-x:  80vw;
 
@@ -124,8 +124,8 @@ button { font: inherit; color: inherit; }
 
 .brand:hover { opacity: 0.82; }
 .brand:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; border-radius: 10px; }
-/* Floor well above the 76px dial knob — the logo outranks the control. */
-.brand__mark { width: clamp(91px, 7.7vw, 115px); height: auto; flex: none; border-radius: 20px; }
+/* Never smaller than the 84px gauge beside it — the logo outranks the control. */
+.brand__mark { width: clamp(88px, 7.7vw, 118px); height: auto; flex: none; border-radius: 20px; }
 
 .brand__word {
   display: flex;
@@ -156,28 +156,38 @@ button { font: inherit; color: inherit; }
  */
 @media (max-width: 720px) {
   :root {
-    --case-w: clamp(140px, 43vw, 240px);
-    --past-x:  calc(var(--case-w) * 0.60);
-    --offer-x: calc(var(--case-w) * 0.62);
+    --case-w: clamp(150px, 47vw, 260px);
+    --past-x:  calc(var(--case-w) * 0.58);
+    --offer-x: calc(var(--case-w) * 0.60);
     --offer-y: calc(var(--case-h) * 0.42);
     --deck-y: 45%;
   }
 
-  .brand__mark { width: clamp(52px, 15vw, 74px); border-radius: 14px; }
-  .dial { padding: 5px 8px; gap: 8px; }
-  .dial__readout, .dial__chevrons { display: none; }
-  .dial__knob { width: 56px; height: 56px; }
-  .dial__knob svg { width: 56px; height: 56px; }
+  /*
+   * Two rows. Squeezed onto one, the search field collapsed to just its
+   * magnifier between the logo and the dial — a search box you cannot type a
+   * word into is worse than one that costs a row.
+   */
+  .bar {
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    row-gap: 10px;
+    align-items: center;
+  }
 
-  .slot[data-slot="up"], .slot[data-slot="down"] { --s: 0.5; }
-  .slot[data-slot="past"] { --s: 0.56; }
+  .bar__left  { grid-column: 1; grid-row: 1; }
+  .bar__right { grid-column: 2; grid-row: 1; }
+  .search     { grid-column: 1 / -1; grid-row: 2; }
 
-  /* Nothing to press an arrow key with on a phone. */
+  .brand__mark { width: clamp(56px, 16vw, 78px); border-radius: 14px; }
+
+  .slot[data-slot="up"], .slot[data-slot="down"] { --s: 0.48; }
+  .slot[data-slot="past"] { --s: 0.52; }
+
   .keys { display: none; }
-
+  .infobtn { font-size: 12px; padding: 6px 12px 6px 7px; }
   .plate { gap: 10px; width: min(94vw, 420px); }
-  .shuffle { top: calc(var(--deck-y) - var(--case-h) * 0.5 - 66px); }
-  .die { width: 56px; height: 56px; }
+  .shuffle { top: calc(var(--deck-y) - var(--case-h) * 0.5 - 58px); }
 }
 
 @media (hover: none) and (pointer: coarse) {
@@ -265,9 +275,9 @@ button { font: inherit; color: inherit; }
 .slot--interactive .slot__card:focus-visible { outline: 2px solid var(--accent); outline-offset: 7px; }
 
 .slot[data-slot="focus"] { --s: 1;    --ry: 0deg;   transform: translate(-50%, -50%); z-index: 40; }
-.slot[data-slot="past"]  { --s: 0.68; --ry: 40deg;  transform: translate(calc(-50% - var(--past-x)), -50%); z-index: 20; opacity: 0.74; }
-.slot[data-slot="up"]    { --s: 0.62; --ry: -30deg; transform: translate(calc(-50% + var(--offer-x)), calc(-50% - var(--offer-y))); z-index: 30; }
-.slot[data-slot="down"]  { --s: 0.62; --ry: -30deg; transform: translate(calc(-50% + var(--offer-x)), calc(-50% + var(--offer-y))); z-index: 30; }
+.slot[data-slot="past"]  { --s: 0.58; --ry: 40deg;  transform: translate(calc(-50% - var(--past-x)), -50%); z-index: 20; opacity: 0.74; }
+.slot[data-slot="up"]    { --s: 0.54; --ry: -30deg; transform: translate(calc(-50% + var(--offer-x)), calc(-50% - var(--offer-y))); z-index: 30; }
+.slot[data-slot="down"]  { --s: 0.54; --ry: -30deg; transform: translate(calc(-50% + var(--offer-x)), calc(-50% + var(--offer-y))); z-index: 30; }
 
 /* Cards on their way out keep animating instead of vanishing mid-move. */
 .slot[data-slot="exit-left"]  { --s: 0.4; --ry: 52deg;  transform: translate(calc(-50% - var(--exit-x)), -50%); opacity: 0; z-index: 10; pointer-events: none; }

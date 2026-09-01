@@ -12,6 +12,7 @@ import {
 import { Flow, type FlowCard } from './components/Flow';
 import { SearchBox } from './components/SearchBox';
 import { Die, ROLL_MS } from './components/Die';
+import { About } from './components/About';
 import { useAmbient } from './hooks/useAmbient';
 import { DistanceDial } from './components/DistanceDial';
 
@@ -187,6 +188,7 @@ export default function App() {
 
   const back = useCallback(() => setFocusIndex((i) => Math.max(0, i - 1)), []);
 
+  const [showAbout, setShowAbout] = useState(false);
   const [rolling, setRolling] = useState(false);
   const rollShuffle = useCallback(() => {
     if (!wildcard) return;
@@ -207,6 +209,7 @@ export default function App() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (showAbout) return;
       // The dial is arrow-driven too; let it keep its own keys when focused.
       if ((e.target as HTMLElement | null)?.closest?.('.dial')) return;
 
@@ -228,7 +231,7 @@ export default function App() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [deeper, wider, choose, wildcard, back, rollShuffle]);
+  }, [deeper, wider, choose, wildcard, back, rollShuffle, showAbout]);
 
   const takenId = trail[focusIndex + 1];
 
@@ -365,6 +368,16 @@ export default function App() {
             </a>
           </div>
         </div>
+
+        <button className="infobtn" onClick={() => setShowAbout(true)}>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9.2" />
+            <path d="M11.05 10.4h1.9v6.6h-1.9zM12 6.6a1.15 1.15 0 1 1 0 2.3 1.15 1.15 0 0 1 0-2.3z" />
+          </svg>
+          How this works
+        </button>
+
+        {showAbout && <About onClose={() => setShowAbout(false)} />}
 
         <ul className="keys">
           <li><kbd>↑</kbd> shuffle</li>
