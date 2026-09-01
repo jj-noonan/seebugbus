@@ -113,7 +113,7 @@ button { font: inherit; color: inherit; }
   z-index: 70;
 }
 
-.foot .search { width: min(92vw, 460px); }
+
 
 .bar__left  { justify-self: start; display: flex; align-items: center; }
 .bar__right { justify-self: end; display: flex; align-items: center; gap: 12px; }

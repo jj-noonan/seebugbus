@@ -386,9 +386,6 @@ export default function App() {
           </svg>
         </button>
 
-        {showAbout && (
-          <About onClose={() => setShowAbout(false)} onRestart={restart} />
-        )}
 
         <ul className="keys">
           <li><kbd>↑</kbd> shuffle</li>
@@ -398,6 +395,10 @@ export default function App() {
           <li><kbd>/</kbd> search</li>
         </ul>
       </div>
+
+      {showAbout && (
+        <About onClose={() => setShowAbout(false)} onRestart={restart} />
+      )}
 
       <footer className="foot">
         <SearchBox pool={pool} onPick={choose} onIngest={addIngested} />

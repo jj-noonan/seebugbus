@@ -91,20 +91,12 @@ export function SearchBox({ pool, onPick, onIngest }: Props) {
     return true;
   };
 
-  useEffect(() => {
-    const onDown = (e: MouseEvent) => {
-      if (!boxRef.current?.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener('mousedown', onDown);
-    return () => document.removeEventListener('mousedown', onDown);
-  }, []);
-
   // "/" focuses search from anywhere, the way every search field on the web does.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === '/' && document.activeElement !== inputRef.current) {
         e.preventDefault();
-        inputRef.current?.focus();
+        setOpen(true);
       }
     };
     window.addEventListener('keydown', onKey);
@@ -177,7 +169,6 @@ export function SearchBox({ pool, onPick, onIngest }: Props) {
     onPick(item);
     setQuery('');
     setOpen(false);
-    inputRef.current?.blur();
   };
 
   const onKeyDown = (e: React.KeyboardEvent) => {
@@ -203,102 +194,115 @@ export function SearchBox({ pool, onPick, onIngest }: Props) {
       pick(results[cursor]);
     } else if (e.key === 'Escape') {
       setOpen(false);
-      inputRef.current?.blur();
     }
   };
 
-  const showing = open && query.trim().length >= 2;
 
   return (
-    <div className="search" ref={boxRef}>
-      <div className="search__field">
+    <>
+      {/* Collapsed: a pill at the bottom of the stage. */}
+      <button className="searchtrigger" onClick={() => setOpen(true)}>
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="11" cy="11" r="7" />
           <path d="m20 20-3.6-3.6" strokeLinecap="round" />
         </svg>
-        <span className="search__wrap">
-          <input
-            ref={inputRef}
-            value={query}
-            placeholder="Search an album or artist to jump there…"
-            aria-label="Search the catalog"
-            autoComplete="off"
-            spellCheck={false}
-            onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
-            onFocus={() => setOpen(true)}
-            onKeyDown={onKeyDown}
-          />
-          {ghost && (
-            <span className="search__ghost" aria-hidden="true">
-              <span className="search__typed">{query}</span>
-              {ghost}
-              <span className="search__tab">tab</span>
-            </span>
-          )}
-        </span>
-        {query && (
-          <button className="search__clear" onClick={() => { setQuery(''); inputRef.current?.focus(); }} aria-label="Clear search">
-            ×
-          </button>
-        )}
-      </div>
+        <span>Search an album or artist…</span>
+        <kbd>/</kbd>
+      </button>
 
-      {showing && (
-        <div className="search__results" role="listbox">
-          {results.length === 0 && !probing && remote.length === 0 ? (
-            <p className="search__empty">
-              Nothing here, and nothing in MusicBrainz either.
-            </p>
-          ) : (
-            results.map((item, i) => (
-              <button
-                key={item.id}
-                className="search__row"
-                role="option"
-                aria-selected={i === cursor}
-                onMouseEnter={() => setCursor(i)}
-                onClick={() => pick(item)}
-              >
-                {item.artThumbUrl ? (
-                  <img className="search__art" src={item.artThumbUrl} alt="" loading="lazy" />
-                ) : (
-                  <span className="search__art" />
+      {open && (
+        <div className="searchpanel" role="dialog" aria-modal="true" aria-label="Search">
+          <div className="searchpanel__scrim" onClick={() => setOpen(false)} />
+          <div className="searchpanel__box" ref={boxRef}>
+            <div className="search__field">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-3.6-3.6" strokeLinecap="round" />
+              </svg>
+              <span className="search__wrap">
+                <input
+                  ref={inputRef}
+                  value={query}
+                  placeholder="Search an album or artist to jump there…"
+                  aria-label="Search the catalog"
+                  autoComplete="off"
+                  spellCheck={false}
+                  autoFocus
+                  onChange={(e) => setQuery(e.target.value)}
+                  onKeyDown={onKeyDown}
+                />
+                {ghost && (
+                  <span className="search__ghost" aria-hidden="true">
+                    <span className="search__typed">{query}</span>
+                    {ghost}
+                    <span className="search__tab">tab</span>
+                  </span>
                 )}
-                <span className="search__meta">
-                  <span className="search__title">{item.title}</span>
-                  <span className="search__artist">{item.subtitle}</span>
-                </span>
-                <span className="search__year">{item.yearStart ?? ''}</span>
+              </span>
+              <button className="search__clear" onClick={() => setOpen(false)} aria-label="Close search">
+                ×
               </button>
-            ))
-          )}
+            </div>
 
-          {(probing || remote.length > 0) && (
-            <>
-              <p className="search__section">
-                {probing ? 'Looking further afield…' : 'Not in the catalog yet'}
-              </p>
-              {remote.map((c) => (
-                <button
-                  key={c.id}
-                  className="search__row search__row--remote"
-                  onClick={() => addRemote(c)}
-                  disabled={adding !== null}
-                >
-                  <span className="search__art search__art--new">+</span>
-                  <span className="search__meta">
-                    <span className="search__title">{c.title}</span>
-                    <span className="search__artist">{c.artistName}</span>
-                  </span>
-                  <span className="search__year">
-                    {adding === c.id ? 'adding…' : c.year ?? ''}
-                  </span>
-                </button>
-              ))}
-            </>
-          )}
+            {query.trim().length >= 2 && (
+              <div className="search__results" role="listbox">
+                {results.length === 0 && !probing && remote.length === 0 ? (
+                  <p className="search__empty">
+                    Nothing here, and nothing in MusicBrainz either.
+                  </p>
+                ) : (
+                  results.map((item, i) => (
+                    <button
+                      key={item.id}
+                      className="search__row"
+                      role="option"
+                      aria-selected={i === cursor}
+                      onMouseEnter={() => setCursor(i)}
+                      onClick={() => pick(item)}
+                    >
+                      {item.artThumbUrl ? (
+                        <img className="search__art" src={item.artThumbUrl} alt="" loading="lazy" />
+                      ) : (
+                        <span className="search__art" />
+                      )}
+                      <span className="search__meta">
+                        <span className="search__title">{item.title}</span>
+                        <span className="search__artist">{item.subtitle}</span>
+                      </span>
+                      <span className="search__year">{item.yearStart ?? ''}</span>
+                    </button>
+                  ))
+                )}
+
+                {(probing || remote.length > 0) && (
+                  <>
+                    <p className="search__section">
+                      {probing ? 'Looking further afield…' : 'Not in the catalog yet'}
+                    </p>
+                    {remote.map((c) => (
+                      <button
+                        key={c.id}
+                        className="search__row search__row--remote"
+                        onClick={() => addRemote(c)}
+                        disabled={adding !== null}
+                      >
+                        <span className="search__art search__art--new">+</span>
+                        <span className="search__meta">
+                          <span className="search__title">{c.title}</span>
+                          <span className="search__artist">{c.artistName}</span>
+                        </span>
+                        <span className="search__year">
+                          {adding === c.id ? 'adding…' : c.year ?? ''}
+                        </span>
+                      </button>
+                    ))}
+                  </>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
