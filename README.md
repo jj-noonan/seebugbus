@@ -178,8 +178,11 @@ items_fts                                  -- FTS5, prefix='2 3 4'
   `excluded` flag, so loading a followed-artists list is a data load rather than
   a refactor.
 - **`catalog.json` is bundled**, so the export is capped (`--export-limit`,
-  default 12k, most-listened first). Past that the app needs an API rather than
-  a bundled catalog.
+  default 12k). The cap samples across all ten popularity deciles rather than
+  taking the most-listened: the far end of the terrain dial aims at the obscure
+  half, and a top-N export would quietly delete the very records it asks for.
+  Within each decile the highest-quality albums win the slots. Past ~30k the app
+  needs an API rather than a bundled catalog.
 - **Vectors are still derived in the browser** on load. They move to write-time
   columns in `items.vector` when the catalog outgrows the export.
 - **Ingest is client-side only.** Searching something the catalog lacks pulls

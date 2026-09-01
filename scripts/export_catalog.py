@@ -105,21 +105,64 @@ def scores(rows) -> dict[str, tuple[float, float]]:
     return {k: (pop[k], qual[k]) for k in raw_pop}
 
 
-def export(conn: sqlite3.Connection, out: Path, limit: int | None = None) -> dict:
-    where = "WHERE i.art_url IS NOT NULL"
-    # Rank the export by reach, so a capped snapshot keeps what people know.
-    order = "ORDER BY i.listener_count IS NULL, i.listener_count DESC, i.listen_count DESC"
-    cap = f" LIMIT {int(limit)}" if limit else ""
+def select(rows, score: dict[str, tuple[float, float]], limit: int | None):
+    """
+    Choose which albums make it into the capped export.
 
-    rows = conn.execute(f"""
+    Not simply the most-listened. Taking the top N by reach quietly truncates
+    the whole obscure half of the catalog — and the far end of the terrain dial
+    aims squarely at that half, so the app would ask for deep cuts it no longer
+    contained. Instead: sample across all ten popularity deciles, tilted
+    modestly toward the well-known because those are also what people search
+    for, keeping the tail genuinely represented.
+
+    Within each decile the highest-quality records win the slots, so a smaller
+    export is a better one rather than merely a shorter one.
+    """
+    if not limit or len(rows) <= limit:
+        return list(rows)
+
+    by_decile: dict[int, list] = {i: [] for i in range(10)}
+    for r in rows:
+        pop = score[r["id"]][0]
+        by_decile[min(9, int(pop))].append(r)
+
+    # 0.7 at the bottom rising to 1.3 at the top.
+    weights = [0.7 + (i / 9) * 0.6 for i in range(10)]
+    live = [i for i in range(10) if by_decile[i]]
+    total = sum(weights[i] for i in live) or 1.0
+
+    out = []
+    for i in live:
+        take = round(limit * weights[i] / total)
+        ranked = sorted(by_decile[i], key=lambda r: score[r["id"]][1], reverse=True)
+        out.extend(ranked[:take])
+
+    # Rounding can leave slack; fill it with the best of what's left over.
+    if len(out) < limit:
+        chosen = {r["id"] for r in out}
+        rest = sorted(
+            (r for r in rows if r["id"] not in chosen),
+            key=lambda r: score[r["id"]][1], reverse=True,
+        )
+        out.extend(rest[: limit - len(out)])
+    return out[:limit]
+
+
+def export(conn: sqlite3.Connection, out: Path, limit: int | None = None) -> dict:
+    all_rows = conn.execute("""
         SELECT i.id, i.title, i.artist_id, i.year_start, i.art_url, i.art_thumb_url,
                i.listen_count, i.listener_count, i.rating, i.rating_votes,
                a.name AS artist_name
         FROM items i LEFT JOIN artists a ON a.id = i.artist_id
-        {where} {order}{cap}
+        WHERE i.art_url IS NOT NULL
     """).fetchall()
-    ids = [r["id"] for r in rows]
-    keep = set(ids)
+
+    # Score against the whole catalog, so percentiles mean the same thing
+    # regardless of what the export happens to keep.
+    score = scores(all_rows)
+    rows = select(all_rows, score, limit)
+    keep = {r["id"] for r in rows}
 
     tags: dict[str, list] = defaultdict(list)
     for r in conn.execute("SELECT item_id, tag, count FROM item_tags"):
@@ -131,7 +174,6 @@ def export(conn: sqlite3.Connection, out: Path, limit: int | None = None) -> dic
         if r["item_id"] in keep:
             corridors[r["item_id"]].append(r["corridor_id"])
 
-    score = scores(rows)
     albums = [{
         "id": r["id"], "title": r["title"], "artistId": r["artist_id"],
         "artistName": r["artist_name"] or "", "year": r["year_start"],
