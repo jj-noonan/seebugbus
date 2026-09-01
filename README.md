@@ -85,6 +85,7 @@ tail -f data/crawl.log
 | `npm run export` | rebuild `catalog.json` from SQLite |
 | `npm run db` | open the catalog in the sqlite3 shell |
 | `npm run walk` | simulate walks in the terminal — the fast loop for tuning recommendations |
+| `npm run ingest-check` | exercise search-driven ingest against the live APIs |
 | `npm run check` | server-render the app and assert its structure |
 
 `npm run walk -- --dial 0.9 --steps 10` is the quickest way to judge whether a
@@ -181,9 +182,13 @@ items_fts                                  -- FTS5, prefix='2 3 4'
   a bundled catalog.
 - **Vectors are still derived in the browser** on load. They move to write-time
   columns in `items.vector` when the catalog outgrows the export.
-- **Search is not built yet.** The `jobs` table and `items_fts` index exist so
-  that search-driven seeding has somewhere to land. When it is built, an ingest
-  job must pull an album's *neighbourhood* (the artist's other releases,
-  same-tag peers at depth 1) — a lone album with no corridor peers is findable
-  but can never be offered as a branch, because the engine works on distance to
-  neighbours.
+- **Ingest is client-side only.** Searching something the catalog lacks pulls
+  it live from MusicBrainz + Cover Art Archive in the browser (both send
+  `Access-Control-Allow-Origin: *`), so the album is usable in about a second
+  and persists in `localStorage`. Making it permanent is still manual:
+  `copy(segueQueue().join('\n'))` in the console, then
+  `pbpaste | python3 scripts/ingest_mbids.py`. A real API would close this loop.
+- **Ingested albums have no neighbourhood.** They land in whichever corridors
+  their tags imply, which makes them offerable — but the artist's other
+  releases and same-tag peers aren't pulled with them, so they sit thinly
+  connected until a crawl sweep catches up.

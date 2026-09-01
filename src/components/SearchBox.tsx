@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ITEMS } from '../data/catalog';
 import type { Item } from '../data/schema';
+import { ingest, validate, enqueue, type Candidate } from '../engine/ingest';
+import { useToast } from './Toast';
 import './SearchBox.css';
 
 const LIMIT = 8;
@@ -33,7 +34,15 @@ function score(item: Item, q: string): number {
   return 0;
 }
 
-export function SearchBox({ onPick }: { onPick: (item: Item) => void }) {
+interface Props {
+  /** The live pool, including anything ingested this session. */
+  pool: Item[];
+  onPick: (item: Item) => void;
+  onIngest: (item: Item) => void;
+}
+
+export function SearchBox({ pool, onPick, onIngest }: Props) {
+  const toast = useToast();
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [cursor, setCursor] = useState(0);
@@ -44,14 +53,14 @@ export function SearchBox({ onPick }: { onPick: (item: Item) => void }) {
     const q = normalise(query.trim());
     if (q.length < 2) return [];
     const hits: { item: Item; s: number }[] = [];
-    for (const item of ITEMS) {
+    for (const item of pool) {
       const s = score(item, q);
       // 10 - obscurity recovers the popularity ordering as a tie-break.
       if (s > 0) hits.push({ item, s: s * 100 + (10 - item.obscurity) });
     }
     hits.sort((a, b) => b.s - a.s);
     return hits.slice(0, LIMIT).map((h) => h.item);
-  }, [query]);
+  }, [query, pool]);
 
   useEffect(() => setCursor(0), [query]);
 
@@ -74,6 +83,68 @@ export function SearchBox({ onPick }: { onPick: (item: Item) => void }) {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);
+
+  /*
+   * When the catalog can't answer, ask MusicBrainz.
+   *
+   * "Inconclusive" is deliberately generous — fewer than three local hits.
+   * A single weak match is usually not the record someone meant, and the whole
+   * point is that a search should never be a dead end.
+   */
+  const [remote, setRemote] = useState<Candidate[]>([]);
+  const [probing, setProbing] = useState(false);
+  const [adding, setAdding] = useState<string | null>(null);
+
+  useEffect(() => {
+    const q = query.trim();
+    if (q.length < 3 || results.length >= 3) {
+      setRemote([]);
+      setProbing(false);
+      return;
+    }
+    const ctl = new AbortController();
+    setProbing(true);
+    const timer = window.setTimeout(async () => {
+      try {
+        const found = await validate(q, ctl.signal);
+        setRemote(found.slice(0, 5));
+        if (found.length === 0) {
+          enqueue({ query: q, mbid: null, title: q, state: 'failed', at: new Date().toISOString() });
+          toast(<>No record named <strong>{q}</strong> in MusicBrainz.</>, 'warn');
+        }
+      } catch (err) {
+        if ((err as Error).name !== 'AbortError') {
+          toast(<>Couldn't reach MusicBrainz just now.</>, 'warn');
+        }
+      } finally {
+        setProbing(false);
+      }
+    }, 650);
+    return () => {
+      ctl.abort();
+      window.clearTimeout(timer);
+    };
+  }, [query, results.length, toast]);
+
+  const addRemote = async (c: Candidate) => {
+    setAdding(c.id);
+    try {
+      const item = await ingest(c);
+      enqueue({ query: query.trim(), mbid: c.id, title: c.title, state: 'ingested', at: new Date().toISOString() });
+      onIngest(item);
+      onPick(item);
+      toast(<>Added <strong>{c.title}</strong> — {c.artistName}</>, 'ok');
+      setQuery('');
+      setOpen(false);
+      inputRef.current?.blur();
+    } catch (err) {
+      enqueue({ query: query.trim(), mbid: c.id, title: c.title, state: 'failed', at: new Date().toISOString() });
+      const why = (err as Error).message;
+      toast(<><strong>{c.title}</strong> couldn't be added — {why}.</>, 'warn');
+    } finally {
+      setAdding(null);
+    }
+  };
 
   const pick = (item: Item) => {
     onPick(item);
@@ -128,9 +199,9 @@ export function SearchBox({ onPick }: { onPick: (item: Item) => void }) {
 
       {showing && (
         <div className="search__results" role="listbox">
-          {results.length === 0 ? (
+          {results.length === 0 && !probing && remote.length === 0 ? (
             <p className="search__empty">
-              Nothing in the catalog yet — it only holds what has been crawled.
+              Nothing here, and nothing in MusicBrainz either.
             </p>
           ) : (
             results.map((item, i) => (
@@ -154,6 +225,31 @@ export function SearchBox({ onPick }: { onPick: (item: Item) => void }) {
                 <span className="search__year">{item.yearStart ?? ''}</span>
               </button>
             ))
+          )}
+
+          {(probing || remote.length > 0) && (
+            <>
+              <p className="search__section">
+                {probing ? 'Looking further afield…' : 'Not in the catalog yet'}
+              </p>
+              {remote.map((c) => (
+                <button
+                  key={c.id}
+                  className="search__row search__row--remote"
+                  onClick={() => addRemote(c)}
+                  disabled={adding !== null}
+                >
+                  <span className="search__art search__art--new">+</span>
+                  <span className="search__meta">
+                    <span className="search__title">{c.title}</span>
+                    <span className="search__artist">{c.artistName}</span>
+                  </span>
+                  <span className="search__year">
+                    {adding === c.id ? 'adding…' : c.year ?? ''}
+                  </span>
+                </button>
+              ))}
+            </>
           )}
         </div>
       )}

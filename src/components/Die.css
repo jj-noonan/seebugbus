@@ -1,0 +1,46 @@
+.die {
+  display: block;
+  width: 68px;
+  height: 68px;
+  filter: drop-shadow(0 7px 16px rgba(0, 0, 0, 0.55));
+  transition: transform 0.2s var(--ease);
+}
+
+.die svg { display: block; width: 100%; height: 100%; }
+
+/* Bone-coloured face, ink pips: a real die reads instantly, and it is the one
+   object on the stage that is not a rectangle of album art. */
+.die__body {
+  fill: var(--sbb-cream);
+  stroke: rgba(43, 33, 24, 0.5);
+  stroke-width: 2;
+}
+
+.die__pip { fill: var(--sbb-ink); }
+
+.shuffle:hover .die { transform: translateY(-3px) rotate(-7deg) scale(1.06); }
+
+/* The tumble: two axes and an overshoot, so it lands rather than stops. */
+@keyframes dieRoll {
+  0%   { transform: rotate(0deg) scale(1); }
+  30%  { transform: rotate(160deg) scale(1.16); }
+  62%  { transform: rotate(310deg) scale(1.1); }
+  85%  { transform: rotate(378deg) scale(0.97); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+.die--rolling { animation: dieRoll 0.56s cubic-bezier(0.3, 0.9, 0.35, 1) 1; }
+
+/* Idle nudge, so it reads as a thing that moves before you touch it. */
+@keyframes dieIdle {
+  0%, 88%, 100% { transform: rotate(-6deg); }
+  93%           { transform: rotate(-1deg) translateY(-2px); }
+  97%           { transform: rotate(-9deg); }
+}
+
+.die:not(.die--rolling) { animation: dieIdle 8s var(--ease) infinite; }
+.shuffle:hover .die:not(.die--rolling) { animation: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .die, .die--rolling { animation: none !important; transition: none; }
+}

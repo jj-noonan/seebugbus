@@ -117,15 +117,15 @@ button { font: inherit; color: inherit; }
 
 .brand:hover { opacity: 0.82; }
 .brand:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; border-radius: 10px; }
-/* Floor of 76px: the dial knob is 76px, and the logo outranks the control. */
-.brand__mark { width: clamp(76px, 6.4vw, 96px); height: auto; flex: none; border-radius: 17px; }
+/* Floor well above the 76px dial knob — the logo outranks the control. */
+.brand__mark { width: clamp(91px, 7.7vw, 115px); height: auto; flex: none; border-radius: 20px; }
 
 .brand__word {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   font-weight: 700;
-  font-size: clamp(22px, 2.1vw, 30px);
+  font-size: clamp(26px, 2.5vw, 36px);
   line-height: 0.84;
   letter-spacing: -0.038em;
   color: var(--sbb-sand);
@@ -354,44 +354,11 @@ button { font: inherit; color: inherit; }
   color: var(--accent);
 }
 
-.shuffle__disc {
-  width: 66px;
-  height: 66px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  border: 2px solid rgba(242, 227, 198, 0.22);
-  /* Solid brand orange, not a dark disc: every other object on this stage is a
-     photographic rectangle, so the one control that ignores the recommendation
-     rules should not look like another one of them. */
-  background:
-    radial-gradient(120% 120% at 32% 24%, #f08a56 0%, var(--sbb-orange) 52%, #b8512a 100%);
-  box-shadow:
-    0 6px 20px rgba(224, 112, 63, 0.34),
-    0 2px 5px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  transition: transform 0.2s var(--ease), box-shadow 0.2s, border-color 0.2s;
-}
 
-.shuffle:hover .shuffle__disc {
-  border-color: rgba(242, 227, 198, 0.55);
-  transform: translateY(-3px) scale(1.05);
-  box-shadow:
-    0 12px 30px rgba(224, 112, 63, 0.5),
-    0 3px 7px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.36);
-}
 
-.shuffle:focus-visible .shuffle__disc { outline: 2px solid var(--accent); outline-offset: 4px; }
+.shuffle:focus-visible .die { outline: 2px solid var(--accent); outline-offset: 6px; border-radius: 16px; }
 
-.shuffle__disc svg {
-  width: 33px; height: 33px;
-  /* Ink on orange — the badge palette inverted, so it reads as a stamp. */
-  stroke: var(--sbb-ink); fill: none;
-  stroke-width: 1.9; stroke-linejoin: round;
-}
 
-.shuffle__disc svg circle { fill: var(--sbb-ink); stroke: none; }
 
 .shuffle__label {
   font-size: 10.5px;
@@ -404,16 +371,6 @@ button { font: inherit; color: inherit; }
 
 .shuffle:hover .shuffle__label { color: var(--sbb-sand); }
 
-/* A slow idle tumble — unsettled, without competing with the covers. */
-@keyframes dieTumble {
-  0%, 80%, 100% { transform: rotate(-7deg); }
-  88%           { transform: rotate(-1deg) translateY(-1.5px); }
-  94%           { transform: rotate(-10deg); }
-}
-
-.shuffle__die { transform-origin: 50% 50%; animation: dieTumble 7s var(--ease) infinite; }
-
-@media (prefers-reduced-motion: reduce) { .shuffle__die { animation: none; } }
 
 /* ── the plate: what this record is, and where to play it ────────────── */
 

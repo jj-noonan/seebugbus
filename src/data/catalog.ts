@@ -15,7 +15,7 @@ const CAA_PREFIX = 'https://coverartarchive.org/release/';
  * pre-generated thumbnail would otherwise hand back a multi-megabyte original
  * into a view that shows four covers at once.
  */
-function coverUrl(path: string | null, px: 250 | 500): string | null {
+export function coverUrl(path: string | null, px: 250 | 500): string | null {
   if (!path) return null;
   if (path.startsWith('http')) return path; // pre-compression export
   return `${CAA_PREFIX}${path}-${px}.jpg`;
@@ -65,32 +65,41 @@ function deriveObscurity(albums: RawAlbum[]): Map<string, number> {
   return out;
 }
 
+/**
+ * Build a live Item from a raw record. Shared by the bundled catalog and by
+ * albums ingested at runtime, so a searched-for record behaves identically to
+ * a crawled one — same axes, same links, same card.
+ */
+export function itemFromRaw(a: RawAlbum, obscurity: number): Item {
+  return {
+    id: a.id,
+    kind: 'album' as const,
+    title: a.title,
+    subtitle: a.artistName,
+    artistId: a.artistId,
+    yearStart: a.year,
+    yearEnd: null,
+    artUrl: coverUrl(a.art, 500),
+    artThumbUrl: coverUrl(a.art, 250),
+    obscurity,
+    corridorIds: a.corridorIds,
+    tags: a.tags,
+    vector: deriveVector(a.tags, a.year),
+    ...searchUrls(a.artistName, a.title, a.id),
+    sourceIds: {
+      musicbrainzReleaseGroup: a.id,
+      musicbrainzArtist: a.artistId,
+    },
+  };
+}
+
 function build(): { items: Item[]; artists: Map<string, Artist> } {
   const obscurity = deriveObscurity(raw.albums);
   const artists = new Map(raw.artists.map((a) => [a.id, a]));
 
   const items: Item[] = raw.albums
     .filter((a) => a.art) // no art, no card — this is a cover flow
-    .map((a) => ({
-      id: a.id,
-      kind: 'album' as const,
-      title: a.title,
-      subtitle: a.artistName,
-      artistId: a.artistId,
-      yearStart: a.year,
-      yearEnd: null,
-      artUrl: coverUrl(a.art, 500),
-      artThumbUrl: coverUrl(a.art, 250),
-      obscurity: obscurity.get(a.id) ?? 5,
-      corridorIds: a.corridorIds,
-      tags: a.tags,
-      vector: deriveVector(a.tags, a.year),
-      ...searchUrls(a.artistName, a.title, a.id),
-      sourceIds: {
-        musicbrainzReleaseGroup: a.id,
-        musicbrainzArtist: a.artistId,
-      },
-    }))
+    .map((a) => itemFromRaw(a, obscurity.get(a.id) ?? 5))
     // Records whose tags we barely recognise get placed at the middle of every
     // axis, which makes them look deceptively similar to everything. Drop them
     // rather than let them pollute the branch offers.

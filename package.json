@@ -13,7 +13,9 @@
     "check": "vite-node scripts/render-check.tsx",
     "crawl:deep": ".venv/bin/python -u scripts/crawl.py --pages 3 --sweeps 100",
     "export": ".venv/bin/python scripts/export_catalog.py",
-    "db": "sqlite3 data/catalog.sqlite"
+    "db": "sqlite3 data/catalog.sqlite",
+    "ingest-check": "vite-node scripts/ingest-check.ts --",
+    "click-check": "vite-node scripts/click-check.tsx"
   },
   "dependencies": {
     "@fontsource/outfit": "^5.3.0",

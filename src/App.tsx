@@ -11,10 +11,12 @@ import {
 } from './engine/recommend';
 import { Flow, type FlowCard } from './components/Flow';
 import { SearchBox } from './components/SearchBox';
+import { Die, ROLL_MS } from './components/Die';
 import { useAmbient } from './hooks/useAmbient';
 import { DistanceDial } from './components/DistanceDial';
 
 const STORAGE_KEY = 'segue.session.v1';
+const INGEST_KEY = 'segue.ingested.v1';
 
 interface Session {
   trail: string[];
@@ -22,13 +24,22 @@ interface Session {
   dial: number;
 }
 
-function loadSession(): Session | null {
+/** Albums pulled in from MusicBrainz this session, kept across reloads. */
+function loadIngested(): Item[] {
+  try {
+    return JSON.parse(localStorage.getItem(INGEST_KEY) ?? '[]') as Item[];
+  } catch {
+    return [];
+  }
+}
+
+function loadSession(validIds: ReadonlySet<string>): Session | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const s = JSON.parse(raw) as Session;
     // A rebuilt catalog can drop albums out from under a saved trail.
-    const trail = s.trail?.filter((id) => ITEM_BY_ID.has(id)) ?? [];
+    const trail = s.trail?.filter((id) => validIds.has(id)) ?? [];
     if (!trail.length) return null;
     return {
       trail,
@@ -41,7 +52,11 @@ function loadSession(): Session | null {
 }
 
 export default function App() {
-  const restored = useMemo(loadSession, []);
+  const initialIngested = useMemo(loadIngested, []);
+  const restored = useMemo(
+    () => loadSession(new Set([...ITEM_BY_ID.keys(), ...initialIngested.map((i) => i.id)])),
+    [initialIngested],
+  );
   const [trail, setTrail] = useState<string[]>(() => {
     if (restored) return restored.trail;
     const start = pickStart(ITEMS, String(Date.now()));
@@ -50,11 +65,37 @@ export default function App() {
   const [focusIndex, setFocusIndex] = useState(restored?.focusIndex ?? 0);
   const [dial, setDial] = useState(restored?.dial ?? 0.5);
 
-  // Read at render time so it changes when the catalog hot-reloads.
-  const catalogSize = ITEMS.length;
+  /*
+   * Albums ingested from search join the same pool as crawled ones, so the
+   * engine treats them identically — they can be offered as branches, land as
+   * a wildcard, and sit in the trail like anything else.
+   */
+  const [ingested, setIngested] = useState<Item[]>(initialIngested);
+  const pool = useMemo(() => (ingested.length ? [...ITEMS, ...ingested] : ITEMS), [ingested]);
+  const byId = useMemo(() => {
+    if (!ingested.length) return ITEM_BY_ID;
+    const m = new Map(ITEM_BY_ID);
+    for (const i of ingested) m.set(i.id, i);
+    return m;
+  }, [ingested]);
+
+  const addIngested = useCallback((item: Item) => {
+    setIngested((cur) => {
+      if (cur.some((i) => i.id === item.id)) return cur;
+      const next = [...cur, item];
+      try {
+        localStorage.setItem(INGEST_KEY, JSON.stringify(next.slice(-300)));
+      } catch {
+        // Storage full or blocked; the album still works this session.
+      }
+      return next;
+    });
+  }, []);
+
+  const catalogSize = pool.length;
 
   const ambient = useAmbient(
-    trail.length ? ITEM_BY_ID.get(trail[focusIndex]) ?? null : null,
+    trail.length ? byId.get(trail[focusIndex]) ?? null : null,
   );
 
   useEffect(() => {
@@ -77,9 +118,9 @@ export default function App() {
    * no longer in a rebuilt catalog.
    */
   useEffect(() => {
-    const valid = trail.filter((id) => ITEM_BY_ID.has(id));
+    const valid = trail.filter((id) => byId.has(id));
     if (valid.length === 0) {
-      const start = pickStart(ITEMS, String(Date.now()));
+      const start = pickStart(pool, String(Date.now()));
       if (start) {
         setTrail([start.id]);
         setFocusIndex(0);
@@ -88,15 +129,15 @@ export default function App() {
       setTrail(valid);
       setFocusIndex((i) => Math.min(i, valid.length - 1));
     }
-  }, [trail, catalogSize]);
+  }, [trail, byId, pool, catalogSize]);
 
-  const current = trail.length ? ITEM_BY_ID.get(trail[focusIndex]) ?? null : null;
-  const previous = focusIndex > 0 ? ITEM_BY_ID.get(trail[focusIndex - 1]) ?? null : null;
+  const current = trail.length ? byId.get(trail[focusIndex]) ?? null : null;
+  const previous = focusIndex > 0 ? byId.get(trail[focusIndex - 1]) ?? null : null;
 
   const branches = useMemo<Branch[]>(() => {
     if (!current) return [];
     const exclude = new Set(trail.slice(0, focusIndex + 1));
-    const picked = pickBranches(current, ITEMS, dial, exclude);
+    const picked = pickBranches(current, pool, dial, exclude);
 
     // If you've walked past this card before, the branch you actually took has
     // to stay on offer — otherwise stepping back and then forward again would
@@ -104,7 +145,7 @@ export default function App() {
     const takenId = trail[focusIndex + 1];
     if (!takenId || picked.some((b) => b.item.id === takenId)) return picked;
 
-    const taken = ITEM_BY_ID.get(takenId);
+    const taken = byId.get(takenId);
     if (!taken || picked.length < 2) return picked;
 
     const shares = taken.corridorIds.some((c) => current.corridorIds.includes(c));
@@ -122,14 +163,14 @@ export default function App() {
     const out = [...picked];
     out[idx === -1 ? 1 : idx] = replacement;
     return out;
-  }, [current, trail, focusIndex, dial]);
+  }, [current, trail, focusIndex, dial, pool, byId]);
 
   const wildcard = useMemo(() => {
     if (!current) return null;
     // Exclude the scored offers too, so the wildcard is never a duplicate door.
     const exclude = new Set([...trail.slice(0, focusIndex + 1), ...branches.map((b) => b.item.id)]);
-    return pickWildcard(ITEMS, exclude, current.id);
-  }, [current, trail, focusIndex, branches]);
+    return pickWildcard(pool, exclude, current.id);
+  }, [current, trail, focusIndex, branches, pool]);
 
   // Named rather than indexed, so key bindings track the role on screen
   // instead of the order the engine happened to return them in.
@@ -146,12 +187,22 @@ export default function App() {
 
   const back = useCallback(() => setFocusIndex((i) => Math.max(0, i - 1)), []);
 
+  const [rolling, setRolling] = useState(false);
+  const rollShuffle = useCallback(() => {
+    if (!wildcard) return;
+    setRolling(true);
+    // The card starts travelling immediately; the die tumbles alongside it, so
+    // the animation never costs the user latency.
+    choose(wildcard);
+    window.setTimeout(() => setRolling(false), ROLL_MS);
+  }, [wildcard, choose]);
+
   const restart = useCallback(() => {
-    const start = pickStart(ITEMS, String(Date.now()));
+    const start = pickStart(pool, String(Date.now()));
     if (!start) return;
     setTrail([start.id]);
     setFocusIndex(0);
-  }, []);
+  }, [pool]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -163,7 +214,7 @@ export default function App() {
       // right, your last card to the left.
       if (e.key === 'ArrowUp' && wildcard) {
         e.preventDefault();
-        choose(wildcard);
+        rollShuffle();
       } else if (e.key === 'ArrowRight' && wider) {
         e.preventDefault();
         choose(wider.item);
@@ -177,7 +228,7 @@ export default function App() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [deeper, wider, choose, wildcard, back]);
+  }, [deeper, wider, choose, wildcard, back, rollShuffle]);
 
   const takenId = trail[focusIndex + 1];
 
@@ -260,11 +311,11 @@ export default function App() {
             <span className="brand__word">
               <span>seebug</span>
               <span>bus</span>
-              <span className="brand__count">{ITEMS.length.toLocaleString()} albums</span>
+              <span className="brand__count">{pool.length.toLocaleString()} albums</span>
             </span>
           </button>
         </div>
-        <SearchBox onPick={choose} />
+        <SearchBox pool={pool} onPick={choose} onIngest={addIngested} />
         <div className="bar__right">
           <DistanceDial value={dial} onChange={setDial} />
         </div>
@@ -277,22 +328,10 @@ export default function App() {
         {wildcard && (
           <button
             className="shuffle"
-            onClick={() => choose(wildcard)}
+            onClick={rollShuffle}
             title="Jump somewhere random — ignores every rule the engine follows"
           >
-            <span className="shuffle__disc">
-              <svg viewBox="0 0 32 32" aria-hidden="true">
-                <g className="shuffle__die">
-                  <rect x="7" y="7" width="18" height="18" rx="4.2" />
-                  {/* quincunx: the face everyone reads as "chance" */}
-                  <circle cx="12" cy="12" r="1.7" />
-                  <circle cx="20" cy="12" r="1.7" />
-                  <circle cx="16" cy="16" r="1.7" />
-                  <circle cx="12" cy="20" r="1.7" />
-                  <circle cx="20" cy="20" r="1.7" />
-                </g>
-              </svg>
-            </span>
+            <Die rolling={rolling} />
             <span className="shuffle__label">Shuffle</span>
           </button>
         )}
