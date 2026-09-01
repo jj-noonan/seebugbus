@@ -117,14 +117,15 @@ button { font: inherit; color: inherit; }
 
 .brand:hover { opacity: 0.82; }
 .brand:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; border-radius: 10px; }
-.brand__mark { width: clamp(48px, 4.6vw, 64px); height: auto; flex: none; border-radius: 13px; }
+/* Floor of 76px: the dial knob is 76px, and the logo outranks the control. */
+.brand__mark { width: clamp(76px, 6.4vw, 96px); height: auto; flex: none; border-radius: 17px; }
 
 .brand__word {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   font-weight: 700;
-  font-size: clamp(18px, 1.7vw, 24px);
+  font-size: clamp(22px, 2.1vw, 30px);
   line-height: 0.84;
   letter-spacing: -0.038em;
   color: var(--sbb-sand);
@@ -339,7 +340,7 @@ button { font: inherit; color: inherit; }
 .shuffle {
   position: absolute;
   left: 50%;
-  top: calc(var(--deck-y) - var(--case-h) * 0.5 - 62px);
+  top: calc(var(--deck-y) - var(--case-h) * 0.5 - 78px);
   transform: translateX(-50%);
   z-index: 55;
   display: flex;
@@ -354,44 +355,54 @@ button { font: inherit; color: inherit; }
 }
 
 .shuffle__disc {
-  width: 46px;
-  height: 46px;
+  width: 66px;
+  height: 66px;
   display: grid;
   place-items: center;
   border-radius: 50%;
-  border: 1px solid rgba(224, 112, 63, 0.34);
+  border: 2px solid rgba(242, 227, 198, 0.22);
+  /* Solid brand orange, not a dark disc: every other object on this stage is a
+     photographic rectangle, so the one control that ignores the recommendation
+     rules should not look like another one of them. */
   background:
-    repeating-conic-gradient(from 0deg at 50% 50%,
-      rgba(224, 112, 63, 0.09) 0deg 2deg, rgba(224, 112, 63, 0) 2deg 10deg),
-    linear-gradient(165deg, #262219 0%, #131211 100%);
-  transition: border-color 0.18s, transform 0.18s var(--ease), box-shadow 0.18s;
+    radial-gradient(120% 120% at 32% 24%, #f08a56 0%, var(--sbb-orange) 52%, #b8512a 100%);
+  box-shadow:
+    0 6px 20px rgba(224, 112, 63, 0.34),
+    0 2px 5px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: transform 0.2s var(--ease), box-shadow 0.2s, border-color 0.2s;
 }
 
 .shuffle:hover .shuffle__disc {
-  border-color: rgba(224, 112, 63, 0.75);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.55);
+  border-color: rgba(242, 227, 198, 0.55);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow:
+    0 12px 30px rgba(224, 112, 63, 0.5),
+    0 3px 7px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.36);
 }
 
 .shuffle:focus-visible .shuffle__disc { outline: 2px solid var(--accent); outline-offset: 4px; }
 
 .shuffle__disc svg {
-  width: 23px; height: 23px;
-  stroke: currentColor; fill: none;
-  stroke-width: 1.5; stroke-linejoin: round;
+  width: 33px; height: 33px;
+  /* Ink on orange — the badge palette inverted, so it reads as a stamp. */
+  stroke: var(--sbb-ink); fill: none;
+  stroke-width: 1.9; stroke-linejoin: round;
 }
 
-.shuffle__disc svg circle { fill: currentColor; stroke: none; }
+.shuffle__disc svg circle { fill: var(--sbb-ink); stroke: none; }
 
 .shuffle__label {
-  font-size: 9px;
-  letter-spacing: 0.16em;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.19em;
   text-transform: uppercase;
-  color: var(--ink-faint);
+  color: var(--ink-muted);
   transition: color 0.18s;
 }
 
-.shuffle:hover .shuffle__label { color: var(--accent); }
+.shuffle:hover .shuffle__label { color: var(--sbb-sand); }
 
 /* A slow idle tumble — unsettled, without competing with the covers. */
 @keyframes dieTumble {
@@ -499,21 +510,21 @@ button { font: inherit; color: inherit; }
   list-style: none;
   z-index: 50;
   pointer-events: none;
-  font-size: 11px;
-  color: var(--ink-faint);
+  font-size: 13.5px;
+  color: var(--ink-muted);
 }
 
 .keys li {
   display: flex;
   align-items: center;
-  gap: 7px;
-  line-height: 1.75;
+  gap: 9px;
+  line-height: 1.85;
 }
 
 .keys kbd {
   font: inherit;
-  font-size: 10px;
-  width: 17px;
+  font-size: 12.5px;
+  width: 21px;
   flex: none;
   text-align: center;
   padding: 1px 0;
@@ -572,22 +583,6 @@ button { font: inherit; color: inherit; }
   color: var(--sbb-orange);
 }
 
-/* Shown only before the first turn, so the welcome recedes once you're moving. */
-.tagline--welcome {
-  position: absolute;
-  left: 50%;
-  top: clamp(6px, 2vh, 26px);
-  transform: translateX(-50%);
-  z-index: 45;
-  font-size: clamp(15px, 2.6vw, 30px);
-  pointer-events: none;
-  animation: welcomeIn 0.7s var(--ease) both;
-}
-
-@keyframes welcomeIn {
-  from { opacity: 0; transform: translate(-50%, -8px); }
-  to   { opacity: 0.92; transform: translate(-50%, 0); }
-}
 
 .loading .tagline { font-size: clamp(15px, 4.4vw, 27px); }
 

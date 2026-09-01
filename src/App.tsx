@@ -273,11 +273,6 @@ export default function App() {
       <div className="flow">
         <Flow cards={cards} />
 
-        {trail.length === 1 && (
-          <p className="tagline tagline--welcome">
-            Choose your own <em>music</em> adventure
-          </p>
-        )}
 
         {wildcard && (
           <button

@@ -5,13 +5,19 @@ const MIN_ANGLE = -138;
 const MAX_ANGLE = 138;
 const BALLS = 13;
 
-/** Named stops, so the number has a meaning attached to it. */
+/**
+ * Named stops, so the number has a meaning attached to it.
+ *
+ * Trail terms rather than numbers: how far the next record sits from this one
+ * is much easier to feel as terrain than as a distance. A sidewalk keeps you on
+ * pavement you already know; bushwhacking means no path at all.
+ */
 const STOPS: [number, string][] = [
-  [0.00, 'Nearby'],
-  [0.25, 'Close'],
-  [0.50, 'Wander'],
-  [0.75, 'Reach'],
-  [1.00, 'Far'],
+  [0.00, 'Sidewalk'],
+  [0.25, 'Footpath'],
+  [0.50, 'Ridgeline'],
+  [0.75, 'Backcountry'],
+  [1.00, 'Bushwhack'],
 ];
 
 function wordFor(v: number): string {
@@ -113,12 +119,12 @@ export function DistanceDial({ value, onChange }: Props) {
       <button
         className="dial__knob"
         role="slider"
-        aria-label="Distance between the two offered paths"
+        aria-label="How far the offered paths travel"
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={Math.round(value * 100)}
         aria-valuetext={`${Math.round(value * 100)}, ${wordFor(value)}`}
-        title="Drag up or down to change how far each step travels"
+        title="Drag up or down: sidewalk keeps you close, bushwhack goes off-trail"
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}
@@ -181,7 +187,7 @@ export function DistanceDial({ value, onChange }: Props) {
       <div className="dial__readout">
         <span className="dial__number">{Math.round(value * 100)}</span>
         <span className="dial__word">{wordFor(value)}</span>
-        <span className="dial__caption">Distance · drag ↕</span>
+        <span className="dial__caption">Terrain · drag ↕</span>
       </div>
     </div>
   );
