@@ -19,6 +19,22 @@ densest cluster of your taste and serving the same adjacency canon. So the
 engine is built to do the opposite: it offers two options that diverge *from
 each other*, and a distance dial that moves both further out together.
 
+## Brand
+
+Assets live in `public/` (marks, favicons, social cards, manifest). Fonts are
+self-hosted Outfit + Playfair Display Black — no CDN.
+
+The stage stays dark even though the brand is warm and light: Cover Flow's
+depth cues are shadow and reflection, and album art is composed against black
+far more often than cream, so a sand ground would flatten every cover on it.
+The palette is the brand's own dark-mode block — warm ink `#1C1611`, sand text,
+orange as the accent.
+
+The tagline is live text, never the SVG: an SVG in an `<img>` is font-isolated
+and would fall back to a generic serif, and recolouring the raster for a dark
+ground turns the orange `music` teal — flattening the two-face, two-colour
+switch that carries the joke.
+
 ## Hosting
 
 Static app on GitHub Pages, catalog on Turso (both free at this scale — see

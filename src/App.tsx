@@ -237,7 +237,9 @@ export default function App() {
     return (
       <div className="loading">
         <img className="loading__logo" src="./svg/logo-stacked.svg" alt="seebugbus" width={190} />
-        <img className="loading__tagline" src="./svg/tagline.svg" alt="choose your own music adventure" width={300} />
+        <p className="tagline">
+          Choose your own <em>music</em> adventure
+        </p>
         <div style={{ fontSize: 12, opacity: 0.6 }}>
           {catalogSize.toLocaleString()} albums aboard ·{' '}
           {CATALOG_STATS.corridorsComplete.length} of 11 routes mapped
@@ -271,6 +273,12 @@ export default function App() {
 
       <div className="flow">
         <Flow cards={cards} />
+
+        {trail.length === 1 && (
+          <p className="tagline tagline--welcome">
+            Choose your own <em>music</em> adventure
+          </p>
+        )}
 
         {wildcard && (
           <button

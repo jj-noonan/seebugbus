@@ -499,11 +499,55 @@ button { font: inherit; color: inherit; }
 /* The loading screen is the one place the full lockup gets room to breathe. */
 .loading__logo { width: min(46vw, 190px); height: auto; }
 
-.loading__tagline {
-  width: min(72vw, 300px);
-  height: auto;
-  /* The tagline artwork is drawn in brand ink for a sand ground; on the dark
-     stage it needs lifting rather than recolouring, which would break the
-     deliberate two-typeface, two-colour switch that carries the joke. */
-  filter: invert(1) hue-rotate(180deg) saturate(1.25) brightness(1.06);
+/*
+ * The tagline, set as live text rather than the SVG.
+ *
+ * An SVG loaded through <img> is font-isolated — it cannot see webfonts loaded
+ * by the page — so tagline.svg would render in a fallback serif and lose
+ * Playfair entirely. Recolouring the raster with a filter was worse: it turns
+ * the orange "music" teal, flattening the very two-colour switch the brand
+ * notes say carries the joke. Live text keeps both faces and both colours, and
+ * stays crisp at any size.
+ */
+.tagline {
+  margin: 0;
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.012em;
+  line-height: 1;
+  color: var(--sbb-sand);
+  white-space: nowrap;
 }
+
+.tagline em {
+  font-family: "Outfit", system-ui, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  text-transform: lowercase;
+  /* Sized up so the lowercase x-height optically matches the surrounding caps. */
+  font-size: 1.18em;
+  letter-spacing: -0.02em;
+  color: var(--sbb-orange);
+}
+
+/* Shown only before the first turn, so the welcome recedes once you're moving. */
+.tagline--welcome {
+  position: absolute;
+  left: 50%;
+  top: clamp(6px, 2vh, 26px);
+  transform: translateX(-50%);
+  z-index: 45;
+  font-size: clamp(15px, 2.6vw, 30px);
+  pointer-events: none;
+  animation: welcomeIn 0.7s var(--ease) both;
+}
+
+@keyframes welcomeIn {
+  from { opacity: 0; transform: translate(-50%, -8px); }
+  to   { opacity: 0.92; transform: translate(-50%, 0); }
+}
+
+.loading .tagline { font-size: clamp(15px, 4.4vw, 27px); }
+
+@media (max-width: 640px) { .tagline { white-space: normal; text-align: center; } }
