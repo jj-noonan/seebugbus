@@ -41,11 +41,11 @@ MB = "https://musicbrainz.org/ws/2"
 CAA = "https://coverartarchive.org"
 LB = "https://api.listenbrainz.org/1"
 
-# MusicBrainz allows ~1 req/sec, but throttles bursts even when the average is
-# legal — and a deep crawl sends its pages back-to-back. At 1.1s roughly 9% of
-# slices were failing, and each failure costs five retries with backoff, which
-# is far more time than the extra 0.2s ever saves.
-MB_INTERVAL = 1.3
+# MusicBrainz allows ~1 req/sec and throttles bursts even when the average is
+# legal. A deep crawl sends its pages back-to-back and needed 1.3s to stay under
+# 3% failures; single rating lookups are far gentler, so 1.05 is safe here and
+# the retry path absorbs the occasional 503.
+MB_INTERVAL = 1.05
 POOL_FACTOR = 3    # harvest this many times `per_tag` before stratifying down
 _mb_lock = threading.Lock()
 _mb_last = [0.0]

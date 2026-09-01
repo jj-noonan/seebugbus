@@ -16,6 +16,8 @@ from __future__ import annotations
 
 import importlib.util
 import sys
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -32,17 +34,41 @@ def main() -> int:
     conn = db.connect()
     db.init(conn)
     todo = db.missing_ratings(conn, limit)
-    print(f"rating {len(todo)} albums (~{len(todo) * 1.3 / 60:.0f} min at 1 req/sec)")
+
+    """
+    Three workers, not one.
+
+    A rating lookup takes about 2s of round-trip, so a serial loop runs at
+    0.5 req/sec — only half of what MusicBrainz allows. The rate gate in
+    mb_get paces request *starts* and releases its lock before the call, so
+    overlapping a few in flight keeps the cadence legal while roughly tripling
+    throughput. Writes stay on this thread; SQLite connections are not
+    thread-safe.
+    """
+    print(f"rating {len(todo)} albums, deployed first "
+          f"(~{len(todo) * 1.1 / 3600:.1f}h at ~1 req/sec)", flush=True)
 
     got = 0
-    for i, mbid in enumerate(todo, 1):
-        value, votes = crawl.fetch_rating(mbid)
-        db.set_rating(conn, mbid, value, votes)
-        if value is not None:
-            got += 1
-        if i % 100 == 0:
-            conn.commit()
-            print(f"  {i}/{len(todo)} — {got} had a rating", flush=True)
+    done = 0
+    started = time.time()
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        futures = {pool.submit(crawl.fetch_rating, m): m for m in todo}
+        for fut in as_completed(futures):
+            mbid = futures[fut]
+            try:
+                value, votes = fut.result()
+            except Exception:
+                continue
+            db.set_rating(conn, mbid, value, votes)
+            if value is not None:
+                got += 1
+            done += 1
+            if done % 200 == 0:
+                conn.commit()
+                rate = done / max(1e-6, time.time() - started)
+                print(f"  {done}/{len(todo)} — {got} rated "
+                      f"({rate:.2f}/sec, {(len(todo)-done)/rate/3600:.1f}h left)",
+                      flush=True)
     conn.commit()
     print(f"done: {got}/{len(todo)} rated; {db.stats(conn)['withRating']} overall")
     return 0

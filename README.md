@@ -82,7 +82,7 @@ tail -f data/crawl.log
 | `npm run build` | production build to `dist/` |
 | `npm run crawl` | harvest albums from MusicBrainz (resumable) |
 | `npm run crawl:deep` | long-running deep crawl, 3 pages per slice per sweep |
-| `npm run ratings` | fetch MusicBrainz community ratings, most-listened first |
+| `npm run ratings` | fetch MusicBrainz community ratings, deployed albums first |
 | `npm run backfill` | fill in ListenBrainz popularity for new albums |
 | `npm run export` | rebuild `catalog.json` from SQLite |
 | `npm run db` | open the catalog in the sqlite3 shell |
@@ -147,6 +147,28 @@ rather than in the crawler so tuning it is a hot-reload away, not a re-crawl.
 
 Offers are deterministic per album, so stepping back and forward again gives
 you the same two choices.
+
+## The two scores
+
+**Popularity** is distinct listeners, not plays — plays are dominated by
+whoever put a record on two hundred times.
+
+**Quality** is devotion: listens per listener, shrunk toward the catalog median
+by listener count, boosted by the MusicBrainz community rating where one
+exists. Burial's *Untrue* draws 48 plays per listener against a chart hit's 10
+on comparable totals.
+
+Ratings have no bulk endpoint — one request per album — so coverage is always
+partial and the queue order is what makes it worth having. Priority is
+**deployed albums first, then most-listened**. The export samples across every
+popularity decile, so ranking purely by listeners would leave the obscure half
+of the *live* catalog unrated for hours, and that half is exactly what the far
+end of the terrain dial serves.
+
+Once the deployed set is covered the same queue rolls onto everything else, so
+the crawler's interleaved pass (every 15 slices) keeps rating freshly harvested
+albums without a separate step. Re-exporting re-marks the deployed set, so the
+priority follows whatever is actually live.
 
 ## Data model
 

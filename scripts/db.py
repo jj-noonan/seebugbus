@@ -153,6 +153,8 @@ def init(conn: sqlite3.Connection) -> None:
         ("listener_count", "INTEGER"),
         ("rating", "REAL"),
         ("rating_votes", "INTEGER"),
+        # Set by the exporter: is this album in the snapshot the site serves?
+        ("exported", "INTEGER"),
     ):
         if col not in have:
             conn.execute(f"ALTER TABLE items ADD COLUMN {col} {decl}")
@@ -167,6 +169,11 @@ def init(conn: sqlite3.Connection) -> None:
     conn.execute(
         "CREATE INDEX IF NOT EXISTS idx_items_unrated "
         "ON items(rating_votes, listener_count DESC)"
+    )
+    # Covers the priority order: unrated, deployed-first, then most-listened.
+    conn.execute(
+        "CREATE INDEX IF NOT EXISTS idx_items_ratequeue "
+        "ON items(rating_votes, exported DESC, listener_count DESC)"
     )
     conn.commit()
 
@@ -288,18 +295,26 @@ def set_rating(conn: sqlite3.Connection, mbid: str, value: float | None, votes: 
 
 def missing_ratings(conn: sqlite3.Connection, limit: int) -> list[str]:
     """
-    Albums still lacking a rating lookup, most-listened first.
+    Albums still lacking a rating lookup, in priority order.
 
-    MusicBrainz has no bulk ratings endpoint — it is one request per album at
-    1 req/sec — so the order matters far more than the coverage. Rating the
-    records someone might actually be offered is worth vastly more than
-    grinding alphabetically through the tail.
+    MusicBrainz has no bulk ratings endpoint — one request per album at
+    1 req/sec — so coverage will always be partial and the ORDER is what makes
+    it valuable.
+
+    Deployed albums come first. The export samples across every popularity
+    decile, so ranking purely by listeners would leave the obscure half of the
+    live catalog unrated for many hours — and that half is exactly what the far
+    end of the terrain dial serves. Within each group, most-listened first.
+
+    Once the deployed set is covered this naturally rolls onto everything else,
+    so freshly crawled albums keep getting picked up rather than needing a
+    separate pass.
     """
     return [
         r["id"] for r in conn.execute(
             """SELECT id FROM items
                WHERE rating_votes IS NULL
-               ORDER BY listener_count DESC
+               ORDER BY exported DESC, listener_count DESC
                LIMIT ?""", (limit,))
     ]
 
