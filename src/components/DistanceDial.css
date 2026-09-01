@@ -1,0 +1,96 @@
+/*
+ * A mid-century instrument: a Nelson-ball-clock face driving a numeric
+ * readout. It reads as a machined object, but it also has to read as a
+ * *control* — hence the visible travel arc, the chevrons, and a readout that
+ * changes while you drag, so there is never a doubt that it did something.
+ */
+.dial {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  user-select: none;
+  padding: 7px 13px 7px 9px;
+  border-radius: 11px;
+  border: 1px solid var(--hairline);
+  background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.012));
+  transition: border-color .18s;
+}
+
+.dial:hover { border-color: rgba(224,112,63,.34); }
+
+.dial__knob {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  border: 0;
+  padding: 0;
+  border-radius: 50%;
+  cursor: grab;
+  background: none;
+  touch-action: none;
+  flex: none;
+}
+
+.dial__knob:active { cursor: grabbing; }
+.dial__knob:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.dial__knob svg { display: block; overflow: visible; }
+
+/* Chevrons: a second, discoverable way to change the value, and a standing
+   hint that this thing moves vertically. */
+.dial__chevrons {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.dial__chev {
+  width: 19px;
+  height: 15px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink-muted);
+  cursor: pointer;
+  line-height: 1;
+  font-size: 8px;
+  transition: background .14s, color .14s, border-color .14s;
+}
+
+.dial__chev:hover {
+  background: rgba(224, 112, 63, 0.16);
+  border-color: rgba(224, 112, 63, 0.45);
+  color: var(--accent);
+}
+
+.dial__readout {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 74px;
+}
+
+.dial__number {
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.dial__word {
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.dial__caption {
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-top: 2px;
+}

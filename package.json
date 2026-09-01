@@ -1,0 +1,36 @@
+{
+  "name": "seebugbus",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "preview": "vite preview",
+    "crawl": ".venv/bin/python -u scripts/crawl.py",
+    "walk": "vite-node scripts/walk.ts --",
+    "check": "vite-node scripts/render-check.tsx",
+    "crawl:deep": ".venv/bin/python -u scripts/crawl.py --pages 3 --sweeps 100",
+    "export": ".venv/bin/python scripts/export_catalog.py",
+    "db": "sqlite3 data/catalog.sqlite"
+  },
+  "dependencies": {
+    "@fontsource/bevan": "^5.3.0",
+    "@fontsource/outfit": "^5.3.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.1.0",
+    "jsdom": "^30.0.1",
+    "oxlint": "^1.79.0",
+    "tsx": "^4.23.13",
+    "typescript": "~6.0.2",
+    "vite": "^8.2.2",
+    "vite-node": "^6.0.0"
+  }
+}

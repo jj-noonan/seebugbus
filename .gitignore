@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.venv/
+__pycache__/
+scripts/.crawl-state.json
+*.log
+.DS_Store
+data/*.sqlite
+data/*.sqlite-wal
+data/*.sqlite-shm
