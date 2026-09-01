@@ -1,10 +1,13 @@
-.search { position: relative; width: 100%; }
+/* Fills the header row so it stands as tall as the logo and dial beside it. */
+.search { position: relative; width: 100%; display: flex; }
 
 .search__field {
   display: flex;
+  flex: 1;
+  min-width: 0;
   align-items: center;
-  gap: 9px;
-  padding: 8px 13px;
+  gap: 11px;
+  padding: 8px clamp(14px, 1.8vw, 22px);
   border-radius: 999px;
   border: 1px solid var(--hairline);
   background: rgba(255, 255, 255, 0.05);
@@ -17,7 +20,9 @@
 }
 
 .search__field svg {
-  width: 14px; height: 14px; flex: none;
+  width: clamp(15px, 1.4vw, 19px);
+  height: clamp(15px, 1.4vw, 19px);
+  flex: none;
   stroke: var(--ink-faint); fill: none; stroke-width: 1.8;
 }
 
@@ -29,7 +34,7 @@
   background: none;
   color: var(--ink);
   font: inherit;
-  font-size: 13px;
+  font-size: clamp(13px, 1.2vw, 15px);
 }
 
 .search input::placeholder { color: var(--ink-faint); }
