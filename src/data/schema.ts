@@ -94,6 +94,8 @@ export interface Item {
   /** Deep links. Search URLs today; exact IDs once we have them. */
   spotifyUrl: string;
   appleMusicUrl: string;
+  /** Authoritative reference page for this release. */
+  infoUrl: string;
 
   sourceIds: {
     musicbrainzReleaseGroup?: string;

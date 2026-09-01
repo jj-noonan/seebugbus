@@ -21,9 +21,18 @@ function coverUrl(path: string | null, px: 250 | 500): string | null {
   return `${CAA_PREFIX}${path}-${px}.jpg`;
 }
 
-function searchUrls(artist: string, title: string) {
+function searchUrls(artist: string, title: string, releaseGroupId: string) {
   const q = `${artist} ${title}`;
   return {
+    /*
+     * MusicBrainz rather than Wikipedia, despite the obvious appeal of the
+     * latter: we hold the exact release-group MBID, so this always resolves to
+     * this record — tracklist, credits, release history, and outbound links to
+     * Wikipedia and Discogs where they exist. A Wikipedia search link would be
+     * a guess, and most of this catalog is obscure enough that the guess would
+     * usually land on "no results found".
+     */
+    infoUrl: `https://musicbrainz.org/release-group/${releaseGroupId}`,
     // Exact album IDs would be better, but they need a Spotify app + secret.
     // Search URLs open the right record in both apps with no credentials.
     spotifyUrl: `https://open.spotify.com/search/${encodeURIComponent(q)}`,
@@ -76,7 +85,7 @@ function build(): { items: Item[]; artists: Map<string, Artist> } {
       corridorIds: a.corridorIds,
       tags: a.tags,
       vector: deriveVector(a.tags, a.year),
-      ...searchUrls(a.artistName, a.title),
+      ...searchUrls(a.artistName, a.title, a.id),
       sourceIds: {
         musicbrainzReleaseGroup: a.id,
         musicbrainzArtist: a.artistId,

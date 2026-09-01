@@ -255,19 +255,18 @@ export default function App() {
     <div className="stage" style={{ '--ambient': ambient } as CSSProperties}>
       <header className="bar">
         <div className="bar__left">
-          <a className="brand" href="./" aria-label="seebugbus — home">
-            <img className="brand__mark" src="./svg/logo-mark-sm.svg" alt="" width={40} height={40} />
+          <button className="brand" onClick={restart} title="Start a new path">
+            <img className="brand__mark" src="./svg/logo-mark-sm.svg" alt="seebugbus" width={64} height={64} />
             <span className="brand__word">
               <span>seebug</span>
               <span>bus</span>
               <span className="brand__count">{ITEMS.length.toLocaleString()} albums</span>
             </span>
-          </a>
-          <DistanceDial value={dial} onChange={setDial} />
+          </button>
         </div>
         <SearchBox onPick={choose} />
         <div className="bar__right">
-          <button className="play play--ghost" onClick={restart}>New path</button>
+          <DistanceDial value={dial} onChange={setDial} />
         </div>
       </header>
 
@@ -305,7 +304,11 @@ export default function App() {
 
         <div className="plate">
           <div className="plate__text" key={current.id}>
-            <h1 className="plate__title">{current.title}</h1>
+            <h1 className="plate__title">
+              <a href={current.infoUrl} target="_blank" rel="noreferrer" title="Look this record up on MusicBrainz">
+                {current.title}
+              </a>
+            </h1>
             <p className="plate__sub">
               {current.subtitle}
               {current.yearStart ? ` · ${current.yearStart}` : ''}
@@ -329,12 +332,13 @@ export default function App() {
           </div>
         </div>
 
-        <p className="hint">
-          <kbd>↑</kbd> shuffle · <kbd>→</kbd> wider · <kbd>↓</kbd> deeper ·{' '}
-          <kbd>←</kbd> back · <kbd>/</kbd> search
-          <br />
-          Hover a cover to see why it's offered.
-        </p>
+        <ul className="keys">
+          <li><kbd>↑</kbd> shuffle</li>
+          <li><kbd>→</kbd> wider</li>
+          <li><kbd>↓</kbd> deeper</li>
+          <li><kbd>←</kbd> back</li>
+          <li><kbd>/</kbd> search</li>
+        </ul>
       </div>
 
     </div>
