@@ -29,54 +29,71 @@ crawl = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(crawl)
 
 
+CHUNK = 400
+
+
 def main() -> int:
     limit = int(sys.argv[1]) if len(sys.argv) > 1 else 2000
     conn = db.connect()
     db.init(conn)
-    todo = db.missing_ratings(conn, limit)
 
     """
-    Three workers, not one.
+    Work in chunks, re-querying the priority queue between each.
 
-    A rating lookup takes about 2s of round-trip, so a serial loop runs at
-    0.5 req/sec — only half of what MusicBrainz allows. The rate gate in
-    mb_get paces request *starts* and releases its lock before the call, so
-    overlapping a few in flight keeps the cadence legal while roughly tripling
-    throughput. Writes stay on this thread; SQLite connections are not
-    thread-safe.
+    The queue is "unrated, deployed first, then most-listened" — but computed
+    once it goes stale immediately. A re-export reshuffles which albums are
+    deployed, and a crawl adds new ones; both should jump the line, and with a
+    single up-front snapshot neither does. Over a run this long that quietly
+    turns the priority ordering into no ordering at all.
+
+    Three workers per chunk: a lookup costs ~2s of round-trip, so serial runs at
+    half the rate MusicBrainz allows. The gate in mb_get paces request starts and
+    releases its lock before the call, so overlapping stays within the limit.
     """
-    print(f"rating {len(todo)} albums, deployed first "
-          f"(~{len(todo) * 1.1 / 3600:.1f}h at ~1 req/sec)", flush=True)
+    print(f"rating up to {limit} albums, re-prioritising every {CHUNK}", flush=True)
 
     got = 0
     done = 0
     started = time.time()
-    with ThreadPoolExecutor(max_workers=3) as pool:
-        futures = {pool.submit(crawl.fetch_rating, m): m for m in todo}
-        for fut in as_completed(futures):
-            mbid = futures[fut]
-            try:
-                value, votes = fut.result()
-            except Exception:
-                continue
-            db.set_rating(conn, mbid, value, votes)
-            if value is not None:
-                got += 1
-            done += 1
-            # Commit often. Each set_rating opens a write transaction, so
-            # batching 200 of them held SQLite's write lock for ~4 minutes at a
-            # time — long enough to blow through a 30s busy_timeout and abort a
-            # concurrent export.
-            if done % 25 == 0:
-                conn.commit()
-            if done % 200 == 0:
-                rate = done / max(1e-6, time.time() - started)
-                print(f"  {done}/{len(todo)} — {got} rated "
-                      f"({rate:.2f}/sec, {(len(todo)-done)/rate/3600:.1f}h left)",
-                      flush=True)
-    conn.commit()
-    print(f"done: {got}/{len(todo)} rated; {db.stats(conn)['withRating']} overall")
+
+    while done < limit:
+        todo = db.missing_ratings(conn, min(CHUNK, limit - done))
+        if not todo:
+            print("nothing left unrated")
+            break
+
+        with ThreadPoolExecutor(max_workers=3) as pool:
+            futures = {pool.submit(crawl.fetch_rating, m): m for m in todo}
+            for i, fut in enumerate(as_completed(futures), 1):
+                mbid = futures[fut]
+                try:
+                    value, votes = fut.result()
+                except Exception:
+                    # Leave it unrated; the next chunk will offer it again.
+                    continue
+                db.set_rating(conn, mbid, value, votes)
+                if value is not None:
+                    got += 1
+                done += 1
+                # Commit often: each write opens a transaction, and holding the
+                # lock for a whole chunk would stall a concurrent export.
+                if i % 25 == 0:
+                    conn.commit()
+        conn.commit()
+
+        rate = done / max(1e-6, time.time() - started)
+        left = c_left(conn)
+        print(f"  {done} done — {got} rated ({rate:.2f}/sec) "
+              f"| deployed still unrated: {left}", flush=True)
+
+    print(f"done: {got}/{done} rated; {db.stats(conn)['withRating']} overall")
     return 0
+
+
+def c_left(conn) -> int:
+    return conn.execute(
+        "SELECT COUNT(*) FROM items WHERE exported=1 AND rating_votes IS NULL"
+    ).fetchone()[0]
 
 
 if __name__ == "__main__":
