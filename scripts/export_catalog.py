@@ -39,6 +39,9 @@ def art_path(url: str | None) -> str | None:
     return rest
 
 
+PRIOR_RATING = 3.4  # catalog-wide expectation for an unrated record
+
+
 def scores(rows) -> dict[str, tuple[float, float]]:
     """
     Two 0-10 scores per album: popularity, then quality.
@@ -88,8 +91,17 @@ def scores(rows) -> dict[str, tuple[float, float]]:
         rating, votes = r["rating"], r["rating_votes"] or 0
         if rating is not None and votes >= 2:
             # Same shrink for a 5-star score with few votes.
-            adj = (rating * votes + 3.4 * 6) / (votes + 6)
-            devotion *= 0.65 + (adj / 5.0) * 0.7
+            adj = (rating * votes + PRIOR_RATING * 6) / (votes + 6)
+            # Centred on the prior, so an average rating is worth exactly 1.0.
+            #
+            # The earlier curve bottomed out at 0.65 and passed 1.0 well below
+            # the median, which made *having* a rating a bonus in itself — 634
+            # deployed albums gained more than a point of quality and not one
+            # lost any. Since well-known records are far likelier to be rated,
+            # that quietly smuggled popularity back into the quality score,
+            # which is the bias this app exists to avoid. Now only the value
+            # moves the needle: above the prior lifts, below it cuts.
+            devotion *= 1 + ((adj - PRIOR_RATING) / 5.0) * 1.2
         raw_q[r["id"]] = devotion
 
     def percentiles(raw: dict[str, float]) -> dict[str, float]:
