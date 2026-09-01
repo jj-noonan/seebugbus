@@ -1,8 +1,13 @@
 .about { position: fixed; inset: 0; z-index: 300; }
 
+/*
+ * The panel is centred with translate(-50%, -50%), so these keyframes must
+ * carry that translate at every step — `transform: none` at the end would
+ * silently drop the centring and leave the panel hanging off the right edge.
+ */
 @keyframes aboutIn {
-  from { opacity: 0; transform: translateY(14px) scale(0.985); }
-  to   { opacity: 1; transform: none; }
+  from { opacity: 0; transform: translate(-50%, calc(-50% + 14px)) scale(0.985); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
 .about__scrim {
@@ -156,3 +161,20 @@
 
 /* Room for the key legend above it on desktop; on mobile the legend is gone. */
 .keys { bottom: calc(clamp(12px, 2.4vh, 30px) + 42px); }
+
+.about__restart {
+  display: block;
+  width: 100%;
+  margin: 4px 0 20px;
+  padding: 11px;
+  border-radius: 10px;
+  border: 1px solid rgba(224, 112, 63, 0.45);
+  background: rgba(224, 112, 63, 0.12);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.16s;
+}
+
+.about__restart:hover { background: rgba(224, 112, 63, 0.24); }

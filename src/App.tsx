@@ -309,7 +309,11 @@ export default function App() {
     <div className="stage" style={{ '--ambient': ambient } as CSSProperties}>
       <header className="bar">
         <div className="bar__left">
-          <button className="brand" onClick={restart} title="Start a new path">
+          <button
+            className="brand"
+            onClick={() => setShowAbout(true)}
+            title="What this is, and how to drive it"
+          >
             <img className="brand__mark" src="./svg/logo-mark-sm.svg" alt="seebugbus" width={64} height={64} />
             <span className="brand__word">
               <span>seebug</span>
@@ -382,7 +386,9 @@ export default function App() {
           </svg>
         </button>
 
-        {showAbout && <About onClose={() => setShowAbout(false)} />}
+        {showAbout && (
+          <About onClose={() => setShowAbout(false)} onRestart={restart} />
+        )}
 
         <ul className="keys">
           <li><kbd>↑</kbd> shuffle</li>

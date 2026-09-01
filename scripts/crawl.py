@@ -435,8 +435,10 @@ def main() -> int:
     ap.add_argument("--export", default=str(ROOT / "src" / "data" / "catalog.json"),
                     help="JSON the dev app reads; '' to skip")
     ap.add_argument("--export-limit", type=int, default=12000)
-    ap.add_argument("--ratings", type=int, default=400,
-                    help="MusicBrainz rating lookups per sweep; 0 to skip")
+    ap.add_argument("--ratings", type=int, default=60,
+                    help="rating lookups per batch; 0 to skip")
+    ap.add_argument("--ratings-every", type=int, default=15,
+                    help="run a rating batch every N slices")
     ap.add_argument("--reset", action="store_true")
     args = ap.parse_args()
 
@@ -512,6 +514,23 @@ def main() -> int:
                     f"{len(found)} found, {len(fresh)} new, kept {len(kept)}"
                     f"{' (slice exhausted)' if exhausted else ''} of {total}")
 
+            # Ratings, interleaved rather than saved for the end of a sweep.
+            # A sweep is 700+ slices and many hours; a pass that only runs after
+            # all of them had never executed once. Sharing the crawl's rate gate
+            # keeps this safely inside MusicBrainz's one-request-per-second.
+            if args.ratings and n % args.ratings_every == 0:
+                todo = db.missing_ratings(conn, args.ratings)
+                if todo:
+                    got = 0
+                    for mbid in todo:
+                        value, votes = fetch_rating(mbid)
+                        db.set_rating(conn, mbid, value, votes)
+                        if value is not None:
+                            got += 1
+                    conn.commit()
+                    log(f"    rated {got}/{len(todo)} (most-listened first); "
+                        f"{db.stats(conn)['withRating']} rated overall")
+
             if n % 40 == 0 and export_path:
                 export_catalog(conn, export_path, args.export_limit)
                 log(f"    ...{db.stats(conn)['albums']} albums in db")
@@ -524,20 +543,6 @@ def main() -> int:
             conn.commit()
             log(f"  got popularity for {len(pop)}")
 
-        # Ratings, most-listened first: one request each, so coverage will
-        # always be partial and the order is what makes it worth having.
-        if args.ratings:
-            todo = db.missing_ratings(conn, args.ratings)
-            if todo:
-                log(f"fetching ratings for {len(todo)} albums (most-listened first)")
-                rated = 0
-                for mbid in todo:
-                    value, votes = fetch_rating(mbid)
-                    db.set_rating(conn, mbid, value, votes)
-                    if value is not None:
-                        rated += 1
-                conn.commit()
-                log(f"  {rated} of {len(todo)} had a community rating")
 
         if export_path:
             export_catalog(conn, export_path, args.export_limit)

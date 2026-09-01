@@ -92,6 +92,7 @@ button { font: inherit; color: inherit; }
 /* ── header: dial · search · reset ───────────────────────────────────── */
 
 .bar {
+  position: relative;
   display: grid;
   /* minmax(0, 1fr) — not minmax(190px, …): a floor here becomes a floor on the
      whole page, and the deck then centres on a box wider than the screen. */
@@ -173,21 +174,10 @@ button { font: inherit; color: inherit; }
     --deck-y: 45%;
   }
 
-  /*
-   * Two rows. Squeezed onto one, the search field collapsed to just its
-   * magnifier between the logo and the dial — a search box you cannot type a
-   * word into is worse than one that costs a row.
-   */
-  .bar {
-    grid-template-columns: auto auto;
-    grid-template-rows: auto auto;
-    row-gap: 10px;
-    align-items: center;
-  }
-
-  .bar__left  { grid-column: 1; grid-row: 1; }
-  .bar__right { grid-column: 2; grid-row: 1; }
-  .search     { grid-column: 1 / -1; grid-row: 2; }
+  /* Logo and gauge at the edges; the die is absolutely centred between them. */
+  .bar { grid-template-columns: auto 1fr auto; }
+  .bar__left  { grid-column: 1; }
+  .bar__right { grid-column: 3; }
 
   .brand__mark { width: clamp(56px, 16vw, 78px); border-radius: 14px; }
 
@@ -394,16 +384,20 @@ button { font: inherit; color: inherit; }
 /* ── shuffle, directly above the focused card ────────────────────────── */
 
 .shuffle {
-  justify-self: center;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   background: none;
   border: 0;
   padding: 0;
   cursor: pointer;
   color: var(--accent);
+  z-index: 2;
 }
 
 

@@ -3,7 +3,13 @@ import { STOPS } from './DistanceDial';
 import './About.css';
 
 /** What this thing is and how to drive it. */
-export function About({ onClose }: { onClose: () => void }) {
+interface Props {
+  onClose: () => void;
+  /** Reachable from here now that the header carries no reset button. */
+  onRestart: () => void;
+}
+
+export function About({ onClose, onRestart }: Props) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -113,6 +119,13 @@ export function About({ onClose }: { onClose: () => void }) {
             the completion.
           </p>
         </section>
+
+        <button
+          className="about__restart"
+          onClick={() => { onRestart(); onClose(); }}
+        >
+          Start a fresh path
+        </button>
 
         <footer className="about__foot">
           Titles link to MusicBrainz. Play buttons open a search in Spotify or

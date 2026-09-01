@@ -82,6 +82,8 @@ tail -f data/crawl.log
 | `npm run build` | production build to `dist/` |
 | `npm run crawl` | harvest albums from MusicBrainz (resumable) |
 | `npm run crawl:deep` | long-running deep crawl, 3 pages per slice per sweep |
+| `npm run ratings` | fetch MusicBrainz community ratings, most-listened first |
+| `npm run backfill` | fill in ListenBrainz popularity for new albums |
 | `npm run export` | rebuild `catalog.json` from SQLite |
 | `npm run db` | open the catalog in the sqlite3 shell |
 | `npm run walk` | simulate walks in the terminal — the fast loop for tuning recommendations |
