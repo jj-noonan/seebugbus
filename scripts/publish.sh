@@ -13,6 +13,12 @@ log "publishing — db state:"
 import sys; sys.path.insert(0,'scripts'); import db
 c = db.connect(); print('   ', db.stats(c)); print('   ', db.crawl_progress(c))"
 
+# Freshly crawled albums have no listener count until a sweep ends, and the
+# export stratifies by popularity — without this they would all pile into the
+# bottom decile and crowd out the real deep cuts.
+log "backfilling popularity before export"
+.venv/bin/python scripts/backfill_popularity.py 2>&1 | tail -2
+
 .venv/bin/python scripts/export_catalog.py || { log "export failed"; exit 1; }
 
 if git diff --quiet -- src/data/catalog.json; then
