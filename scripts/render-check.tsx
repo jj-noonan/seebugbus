@@ -30,7 +30,7 @@ console.log('play links:     ', count(/class="play play--(spotify|apple)"/g));
 console.log('dial present:   ', /dial__face/.test(html));
 console.log('search present: ', /class="searchtrigger"/.test(html));
 console.log('shuffle present:', /class="shuffle"/.test(html));
-console.log('info button:   ', /class="infobtn"/.test(html));
+console.log('brand opens info:', /class="brand"/.test(html));
 console.log('gauge stops:   ', (html.match(/gauge__num/g) ?? []).length);
 console.log(
   'focus card:     ',
@@ -48,7 +48,6 @@ if (count(/class="case"/g) < 3) problems.push('expected a focus card plus two of
 if (count(/data-slot="focus"/g) !== 1) problems.push('expected exactly one focus slot');
 if (!/class="shuffle"/.test(html)) problems.push('shuffle control missing');
 if (!/class="searchtrigger"/.test(html)) problems.push('search trigger missing');
-if (!/class="infobtn"/.test(html)) problems.push('info button missing');
 if (!/gauge__needle/.test(html)) problems.push('gauge needle missing');
 if (!/dial__face/.test(html)) problems.push('distance dial missing');
 if (count(/class="play play--(spotify|apple)"/g) !== 2) problems.push('expected two streaming buttons');

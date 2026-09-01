@@ -374,18 +374,6 @@ export default function App() {
           </div>
         </div>
 
-        <button
-          className="infobtn"
-          onClick={() => setShowAbout(true)}
-          aria-label="How this works"
-          title="How this works"
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="9.2" />
-            <path d="M11.05 10.4h1.9v6.6h-1.9zM12 6.6a1.15 1.15 0 1 1 0 2.3 1.15 1.15 0 0 1 0-2.3z" />
-          </svg>
-        </button>
-
 
         <ul className="keys">
           <li><kbd>↑</kbd> shuffle</li>

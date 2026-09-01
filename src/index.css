@@ -59,7 +59,7 @@
   --offer-y: calc(var(--case-h) * 0.44);
   --exit-x:  80vw;
 
-  --deck-y: 46%;
+  --deck-y: 43%;
 
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   --glide: 0.56s;
@@ -115,8 +115,8 @@ button { font: inherit; color: inherit; }
 
 
 
-.bar__left  { justify-self: start; display: flex; align-items: center; }
-.bar__right { justify-self: end; display: flex; align-items: center; gap: 12px; }
+.bar__left  { grid-column: 1; justify-self: start; display: flex; align-items: center; }
+.bar__right { grid-column: 3; justify-self: end; display: flex; align-items: center; gap: 12px; }
 
 /* Nothing may make the page wider than the screen. */
 .stage { overflow-x: clip; }
@@ -425,6 +425,25 @@ button { font: inherit; color: inherit; }
   to   { opacity: 1; transform: none; }
 }
 
+.plate::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -30px;
+  transform: translateX(-50%);
+  width: 150vw;
+  height: calc(100% + 90px);
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    var(--stage-far) 0%,
+    rgba(16, 12, 9, 0.92) 42%,
+    rgba(16, 12, 9, 0.6) 72%,
+    transparent 100%
+  );
+}
+
 .plate {
   position: absolute;
   left: 50%;
@@ -437,6 +456,7 @@ button { font: inherit; color: inherit; }
   text-align: center;
   z-index: 50;
   width: min(92vw, 460px);
+  isolation: isolate;
 }
 
 .plate__text { animation: metaIn 0.42s var(--ease) both; }
