@@ -63,8 +63,13 @@ def main() -> int:
             if value is not None:
                 got += 1
             done += 1
-            if done % 200 == 0:
+            # Commit often. Each set_rating opens a write transaction, so
+            # batching 200 of them held SQLite's write lock for ~4 minutes at a
+            # time — long enough to blow through a 30s busy_timeout and abort a
+            # concurrent export.
+            if done % 25 == 0:
                 conn.commit()
+            if done % 200 == 0:
                 rate = done / max(1e-6, time.time() - started)
                 print(f"  {done}/{len(todo)} — {got} rated "
                       f"({rate:.2f}/sec, {(len(todo)-done)/rate/3600:.1f}h left)",

@@ -221,16 +221,22 @@ def export(conn: sqlite3.Connection, out: Path, limit: int | None = None) -> dic
         },
         "artists": artists, "albums": albums,
     }
-    # Record what shipped, so the ratings pass can target exactly this set.
-    conn.execute("UPDATE items SET exported = 0 WHERE exported IS NOT 0")
-    conn.executemany(
-        "UPDATE items SET exported = 1 WHERE id = ?", [(r["id"],) for r in rows]
-    )
-    conn.commit()
-
     tmp = out.with_suffix(".json.tmp")
     tmp.write_text(json.dumps(payload, ensure_ascii=False))
     tmp.replace(out)  # atomic: the dev server never reads a half-written file
+
+    # Record what shipped, so the ratings pass can target exactly this set.
+    # Deliberately after the file is on disk: this is bookkeeping, and a write
+    # conflict here must never cost us the export.
+    try:
+        conn.execute("UPDATE items SET exported = 0 WHERE exported IS NOT 0")
+        conn.executemany(
+            "UPDATE items SET exported = 1 WHERE id = ?", [(r["id"],) for r in rows]
+        )
+        conn.commit()
+    except sqlite3.OperationalError as e:
+        print(f"  (could not mark exported set: {e})")
+
     return payload["stats"]
 
 

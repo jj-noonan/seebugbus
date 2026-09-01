@@ -142,6 +142,10 @@ def connect(path: Path | str = DEFAULT_DB) -> sqlite3.Connection:
     conn.execute("PRAGMA synchronous=NORMAL")
     conn.execute("PRAGMA foreign_keys=ON")
     conn.execute("PRAGMA cache_size=-64000")
+    # Ratings, crawl and export all write; without this a concurrent writer
+    # raises "database is locked" immediately instead of waiting its turn — it
+    # aborted an export mid-run and nearly shipped a stale catalog.
+    conn.execute("PRAGMA busy_timeout=30000")
     return conn
 
 
