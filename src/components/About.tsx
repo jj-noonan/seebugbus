@@ -27,7 +27,7 @@ export function About({ onClose, onRestart }: Props) {
         <button className="about__close" onClick={onClose} aria-label="Close">×</button>
 
         <header className="about__head">
-          <img src="./svg/logo-stacked.svg" alt="seebugbus" width={116} />
+          <img src="./svg/logo-stacked-reversed.svg" alt="seebugbus" width={116} />
           <p className="tagline">Choose your own <em>music</em> adventure</p>
         </header>
 

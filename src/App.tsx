@@ -292,7 +292,7 @@ export default function App() {
     // stuck, so it must never be a dead end.
     return (
       <div className="loading">
-        <img className="loading__logo" src="./svg/logo-stacked.svg" alt="seebugbus" width={190} />
+        <img className="loading__logo" src="./svg/logo-stacked-reversed.svg" alt="seebugbus" width={190} />
         <p className="tagline">
           Choose your own <em>music</em> adventure
         </p>
