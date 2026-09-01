@@ -159,6 +159,15 @@ def init(conn: sqlite3.Connection) -> None:
     # Only now that the columns certainly exist.
     conn.execute("CREATE INDEX IF NOT EXISTS idx_items_listeners ON items(listener_count)")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_items_rating ON items(rating_votes)")
+    # Composite and covering: lets "unrated, most-listened first" be answered by
+    # walking one index. With only idx_items_rating, SQLite found the NULL rows
+    # but then had to read listener_count from the table for every one of them
+    # and sort — tens of thousands of random reads on an 87MB file, which stalled
+    # the ratings pass before it wrote a single row.
+    conn.execute(
+        "CREATE INDEX IF NOT EXISTS idx_items_unrated "
+        "ON items(rating_votes, listener_count DESC)"
+    )
     conn.commit()
 
 
@@ -290,7 +299,7 @@ def missing_ratings(conn: sqlite3.Connection, limit: int) -> list[str]:
         r["id"] for r in conn.execute(
             """SELECT id FROM items
                WHERE rating_votes IS NULL
-               ORDER BY listener_count DESC NULLS LAST, listen_count DESC NULLS LAST
+               ORDER BY listener_count DESC
                LIMIT ?""", (limit,))
     ]
 
