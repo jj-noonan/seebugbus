@@ -67,7 +67,14 @@ def mb_get(path: str, params: dict) -> dict | None:
                 time.sleep(wait)
             _mb_last[0] = time.time()
         try:
-            r = session.get(f"{MB}{path}", params={**params, "fmt": "json"}, timeout=30)
+            # (connect, read). MusicBrainz answers in well under a second
+            # normally, but intermittently hangs — 53 requests stalled in one
+            # hour during a bad patch. At a 30s read timeout each of those held
+            # a worker for 30 seconds; at 12s we give up and retry, which is far
+            # cheaper when the retry usually lands in under half a second.
+            r = session.get(
+                f"{MB}{path}", params={**params, "fmt": "json"}, timeout=(5, 12)
+            )
         except requests.RequestException as e:
             log(f"  mb error {e}; retrying")
             time.sleep(2 * (attempt + 1))
