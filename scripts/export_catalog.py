@@ -117,6 +117,24 @@ def scores(rows) -> dict[str, tuple[float, float]]:
     return {k: (pop[k], qual[k]) for k in raw_pop}
 
 
+# Share of the export reserved for artists confirmed to be from the US.
+# Not a hard filter: several corridors are non-US lineages by definition
+# (krautrock, Tropicália, ethio-jazz), and cutting them entirely would leave
+# those roads with nothing on them. A strong majority plus intact lineages
+# beats a pure-US catalog that can't branch.
+US_SHARE = 0.72
+# Artists whose origin MusicBrainz doesn't record are not the same as foreign
+# ones — they get the remainder ahead of confirmed-elsewhere.
+UNKNOWN_SHARE = 0.13
+
+
+def origin_of(row) -> str:
+    c = row["artist_country"]
+    if c == "US":
+        return "us"
+    return "unknown" if c is None else "foreign"
+
+
 def select(rows, score: dict[str, tuple[float, float]], limit: int | None):
     """
     Choose which albums make it into the capped export.
@@ -134,21 +152,35 @@ def select(rows, score: dict[str, tuple[float, float]], limit: int | None):
     if not limit or len(rows) <= limit:
         return list(rows)
 
-    by_decile: dict[int, list] = {i: [] for i in range(10)}
+    # Split the budget by origin first, then stratify popularity inside each
+    # group — so weighting toward the US doesn't quietly undo the decile
+    # balance that keeps the far end of the terrain dial supplied.
+    groups: dict[str, list] = {"us": [], "unknown": [], "foreign": []}
     for r in rows:
-        pop = score[r["id"]][0]
-        by_decile[min(9, int(pop))].append(r)
+        groups[origin_of(r)].append(r)
 
-    # 0.7 at the bottom rising to 1.3 at the top.
-    weights = [0.7 + (i / 9) * 0.6 for i in range(10)]
-    live = [i for i in range(10) if by_decile[i]]
-    total = sum(weights[i] for i in live) or 1.0
+    budget = {
+        "us": round(limit * US_SHARE),
+        "unknown": round(limit * UNKNOWN_SHARE),
+    }
+    budget["foreign"] = limit - budget["us"] - budget["unknown"]
+
+    # A group that can't fill its share hands the surplus on rather than
+    # shrinking the export.
+    surplus = 0
+    for key in ("us", "unknown", "foreign"):
+        if len(groups[key]) < budget[key]:
+            surplus += budget[key] - len(groups[key])
+            budget[key] = len(groups[key])
+    for key in ("us", "unknown", "foreign"):
+        room = len(groups[key]) - budget[key]
+        take = min(surplus, room)
+        budget[key] += take
+        surplus -= take
 
     out = []
-    for i in live:
-        take = round(limit * weights[i] / total)
-        ranked = sorted(by_decile[i], key=lambda r: score[r["id"]][1], reverse=True)
-        out.extend(ranked[:take])
+    for key, members in groups.items():
+        out.extend(_by_decile(members, budget[key], score))
 
     # Rounding can leave slack; fill it with the best of what's left over.
     if len(out) < limit:
@@ -161,11 +193,41 @@ def select(rows, score: dict[str, tuple[float, float]], limit: int | None):
     return out[:limit]
 
 
+def _by_decile(members, take: int, score) -> list:
+    """Stratify one origin group across popularity deciles, best quality first."""
+    if take <= 0 or not members:
+        return []
+    if len(members) <= take:
+        return list(members)
+
+    by_decile: dict[int, list] = {i: [] for i in range(10)}
+    for r in members:
+        by_decile[min(9, int(score[r["id"]][0]))].append(r)
+
+    # 0.7 at the bottom rising to 1.3 at the top.
+    weights = [0.7 + (i / 9) * 0.6 for i in range(10)]
+    live = [i for i in range(10) if by_decile[i]]
+    total = sum(weights[i] for i in live) or 1.0
+
+    picked = []
+    for i in live:
+        n = round(take * weights[i] / total)
+        ranked = sorted(by_decile[i], key=lambda r: score[r["id"]][1], reverse=True)
+        picked.extend(ranked[:n])
+
+    if len(picked) < take:
+        chosen = {r["id"] for r in picked}
+        rest = sorted((r for r in members if r["id"] not in chosen),
+                      key=lambda r: score[r["id"]][1], reverse=True)
+        picked.extend(rest[: take - len(picked)])
+    return picked[:take]
+
+
 def export(conn: sqlite3.Connection, out: Path, limit: int | None = None) -> dict:
     all_rows = conn.execute("""
         SELECT i.id, i.title, i.artist_id, i.year_start, i.art_url, i.art_thumb_url,
                i.listen_count, i.listener_count, i.rating, i.rating_votes,
-               a.name AS artist_name
+               a.name AS artist_name, a.country AS artist_country
         FROM items i LEFT JOIN artists a ON a.id = i.artist_id
         WHERE i.art_url IS NOT NULL
     """).fetchall()
@@ -197,6 +259,7 @@ def export(conn: sqlite3.Connection, out: Path, limit: int | None = None) -> dic
         "tags": tags.get(r["id"], []), "corridorIds": corridors.get(r["id"], []),
         "listenCount": r["listen_count"],
         "listenerCount": r["listener_count"],
+        "country": r["artist_country"],
         "popularity": score[r["id"]][0],
         "quality": score[r["id"]][1],
     } for r in rows]

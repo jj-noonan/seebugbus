@@ -97,6 +97,24 @@ CREATE TABLE IF NOT EXISTS crawl_units (
   PRIMARY KEY (corridor_id, tag, decade)
 );
 
+-- Progress for the US-artist crawl: one row per (corridor tag, page).
+CREATE TABLE IF NOT EXISTS us_tags (
+  tag         TEXT PRIMARY KEY,
+  next_offset INTEGER NOT NULL DEFAULT 0,
+  exhausted   INTEGER NOT NULL DEFAULT 0,
+  total       INTEGER,
+  artists     INTEGER NOT NULL DEFAULT 0,
+  updated_at  TEXT
+);
+
+-- Artists whose discography we have already pulled, so a second corridor
+-- naming the same artist costs nothing.
+CREATE TABLE IF NOT EXISTS artist_done (
+  artist_id TEXT PRIMARY KEY,
+  albums    INTEGER NOT NULL DEFAULT 0,
+  done_at   TEXT DEFAULT (datetime('now'))
+);
+
 -- Ingest queue. Nothing drains it yet; it exists so search-driven seeding has
 -- somewhere to put work when we build it, without another migration.
 CREATE TABLE IF NOT EXISTS jobs (
@@ -162,6 +180,12 @@ def init(conn: sqlite3.Connection) -> None:
     ):
         if col not in have:
             conn.execute(f"ALTER TABLE items ADD COLUMN {col} {decl}")
+    have_a = {r["name"] for r in conn.execute("PRAGMA table_info(artists)")}
+    for col, decl in (("area", "TEXT"), ("checked_at", "TEXT")):
+        if col not in have_a:
+            conn.execute(f"ALTER TABLE artists ADD COLUMN {col} {decl}")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_artists_country ON artists(country)")
+
     # Only now that the columns certainly exist.
     conn.execute("CREATE INDEX IF NOT EXISTS idx_items_listeners ON items(listener_count)")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_items_rating ON items(rating_votes)")
@@ -374,4 +398,98 @@ def crawl_progress(conn: sqlite3.Connection) -> dict:
         "exhausted": row["done"] or 0,
         "reachable": row["reachable"] or 0,
         "scanned": row["seen"] or 0,
+    }
+
+
+# ── artist origin ──────────────────────────────────────────────────────────
+
+
+def artists_missing_origin(conn: sqlite3.Connection, limit: int) -> list[str]:
+    """Artists never looked up, most-albums-first so the catalog moves soonest."""
+    return [
+        r["id"] for r in conn.execute(
+            """SELECT a.id FROM artists a
+               LEFT JOIN items i ON i.artist_id = a.id
+               WHERE a.checked_at IS NULL
+               GROUP BY a.id
+               ORDER BY COUNT(i.id) DESC
+               LIMIT ?""", (limit,))
+    ]
+
+
+def set_artist_origin(conn: sqlite3.Connection, rows: list[tuple]) -> None:
+    """rows: (id, country|None, area|None). checked_at marks it as looked up,
+    so a legitimately blank country is never mistaken for pending work."""
+    conn.executemany(
+        """UPDATE artists SET country=?, area=?, checked_at=datetime('now')
+           WHERE id=?""",
+        [(country, area, aid) for aid, country, area in rows],
+    )
+
+
+def origin_summary(conn: sqlite3.Connection) -> dict:
+    one = lambda q: conn.execute(q).fetchone()[0]
+    return {
+        "artists": one("SELECT COUNT(*) FROM artists"),
+        "checked": one("SELECT COUNT(*) FROM artists WHERE checked_at IS NOT NULL"),
+        "us": one("SELECT COUNT(*) FROM artists WHERE country='US'"),
+        "foreign": one(
+            "SELECT COUNT(*) FROM artists WHERE country IS NOT NULL AND country<>'US'"),
+        "unknown": one(
+            "SELECT COUNT(*) FROM artists WHERE checked_at IS NOT NULL AND country IS NULL"),
+        "usAlbums": one(
+            """SELECT COUNT(*) FROM items i JOIN artists a ON a.id=i.artist_id
+               WHERE a.country='US'"""),
+    }
+
+
+# ── US-artist crawl bookkeeping ────────────────────────────────────────────
+
+
+def us_tag_state(conn: sqlite3.Connection) -> dict[str, sqlite3.Row]:
+    return {r["tag"]: r for r in conn.execute("SELECT * FROM us_tags")}
+
+
+def save_us_tag(conn: sqlite3.Connection, tag: str, next_offset: int,
+                exhausted: bool, total: int | None, artists: int) -> None:
+    conn.execute(
+        """INSERT INTO us_tags (tag, next_offset, exhausted, total, artists, updated_at)
+           VALUES (?,?,?,?,?,datetime('now'))
+           ON CONFLICT(tag) DO UPDATE SET
+             next_offset=excluded.next_offset,
+             exhausted=excluded.exhausted,
+             total=COALESCE(excluded.total, us_tags.total),
+             artists=us_tags.artists + excluded.artists,
+             updated_at=datetime('now')""",
+        (tag, next_offset, 1 if exhausted else 0, total, artists),
+    )
+
+
+def artists_pending(conn: sqlite3.Connection, ids: list[str]) -> list[str]:
+    """Which of these US artists we have not pulled a discography for yet."""
+    if not ids:
+        return []
+    out = []
+    for i in range(0, len(ids), 500):
+        chunk = ids[i : i + 500]
+        q = f"SELECT artist_id FROM artist_done WHERE artist_id IN ({','.join('?' * len(chunk))})"
+        seen = {r["artist_id"] for r in conn.execute(q, chunk)}
+        out.extend(a for a in chunk if a not in seen)
+    return out
+
+
+def mark_artist_done(conn: sqlite3.Connection, artist_id: str, albums: int) -> None:
+    conn.execute(
+        "INSERT OR REPLACE INTO artist_done (artist_id, albums) VALUES (?,?)",
+        (artist_id, albums),
+    )
+
+
+def us_progress(conn: sqlite3.Connection) -> dict:
+    one = lambda q: conn.execute(q).fetchone()[0]
+    return {
+        "tags": one("SELECT COUNT(*) FROM us_tags"),
+        "tagsDone": one("SELECT COUNT(*) FROM us_tags WHERE exhausted=1"),
+        "artistsSeen": one("SELECT COUNT(*) FROM artist_done"),
+        "reachable": one("SELECT COALESCE(SUM(total),0) FROM us_tags"),
     }
