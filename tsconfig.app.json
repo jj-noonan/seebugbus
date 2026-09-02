@@ -15,7 +15,6 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
-    "resolveJsonModule": true,
 
     /* Type safety */
     "strict": true,

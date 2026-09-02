@@ -2,7 +2,7 @@ import rawCatalog from './catalog.json';
 import { deriveVector, lexiconCoverage } from './lexicon';
 import type { Artist, Item, RawAlbum, RawCatalog } from './schema';
 
-const raw = rawCatalog as unknown as RawCatalog;
+const raw: RawCatalog = rawCatalog;
 
 const CAA_PREFIX = 'https://coverartarchive.org/release/';
 
