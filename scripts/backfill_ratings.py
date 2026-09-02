@@ -46,9 +46,19 @@ def main() -> int:
     single up-front snapshot neither does. Over a run this long that quietly
     turns the priority ordering into no ordering at all.
 
-    Three workers per chunk: a lookup costs ~2s of round-trip, so serial runs at
-    half the rate MusicBrainz allows. The gate in mb_get paces request starts and
-    releases its lock before the call, so overlapping stays within the limit.
+    Two workers.
+
+    Measured, not reasoned. Three gave 0.83/sec decaying to 0.54 as MusicBrainz
+    began delaying responses (47 read timeouts per 400 lookups). One gave 0.44
+    with almost no timeouts — so concurrency does buy net throughput even paying
+    the timeout tax, and serial is not the safe-and-fast option it looks like.
+    Two sits between them without pushing hard enough to provoke the delays.
+
+    Worth knowing for any future tuning: MusicBrainz throttles by slowing
+    responses rather than returning 503, so over-reach looks like their outage
+    rather than our load. The only way to tell them apart is to pause all
+    requests and probe — ~0.4s responses with the load off means the fault is
+    ours.
     """
     print(f"rating up to {limit} albums, re-prioritising every {CHUNK}", flush=True)
 
@@ -62,7 +72,7 @@ def main() -> int:
             print("nothing left unrated")
             break
 
-        with ThreadPoolExecutor(max_workers=3) as pool:
+        with ThreadPoolExecutor(max_workers=2) as pool:
             futures = {pool.submit(crawl.fetch_rating, m): m for m in todo}
             for i, fut in enumerate(as_completed(futures), 1):
                 mbid = futures[fut]
