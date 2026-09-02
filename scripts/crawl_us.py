@@ -110,6 +110,8 @@ def main() -> int:
     ap.add_argument("--hours", type=float, default=0)
     ap.add_argument("--export", default=str(HERE.parent / "src" / "data" / "catalog.json"))
     ap.add_argument("--export-limit", type=int, default=12000)
+    ap.add_argument("--ratings", type=int, default=50,
+                    help="rating lookups per tag; 0 to skip")
     args = ap.parse_args()
 
     conn = db.connect()
@@ -172,6 +174,25 @@ def main() -> int:
                 log(f"  [{n}/{len(open_tags)}] {tag} @{offset}: {len(found)} US artists, "
                     f"{len(fresh)} new, +{kept_albums} albums"
                     f"{' (tag exhausted)' if exhausted else ''} of {total}")
+
+            # Ratings run inside this loop rather than as a second process.
+            # Two processes would each pace themselves at 1 req/sec and
+            # together exceed MusicBrainz's limit — the rate gate is
+            # per-process — which is what caused the throttling stalls before.
+            # Sharing one gate keeps both inside the budget, and the queue is
+            # already "deployed first, then most-listened", so albums this
+            # crawl just added get picked up on their own.
+            if args.ratings:
+                todo = db.missing_ratings(conn, args.ratings)
+                if todo:
+                    got = 0
+                    for mbid in todo:
+                        value, votes = crawl.fetch_rating(mbid)
+                        db.set_rating(conn, mbid, value, votes)
+                        got += value is not None
+                    conn.commit()
+                    log(f"    rated {got}/{len(todo)}; "
+                        f"{db.stats(conn)['withRating']:,} rated overall")
 
             if n % 10 == 0 and args.export:
                 import export_catalog as ex
