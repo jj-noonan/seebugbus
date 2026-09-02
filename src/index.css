@@ -118,7 +118,7 @@ button { font: inherit; color: inherit; }
 .foot {
   display: flex;
   justify-content: center;
-  padding: 0 clamp(12px, 2vw, 30px) clamp(12px, 2.2vh, 26px);
+  padding: clamp(6px, 1.2vh, 14px) clamp(12px, 2vw, 30px) clamp(12px, 2.2vh, 26px);
 }
 
 
@@ -437,10 +437,12 @@ button { font: inherit; color: inherit; }
   content: "";
   position: absolute;
   left: 50%;
-  bottom: -30px;
+  /* Stops short of the footer — this gradient exists to keep the title legible
+     over the reflection, not to tint the search bar. */
+  bottom: -8px;
   transform: translateX(-50%);
   width: 150vw;
-  height: calc(100% + 90px);
+  height: calc(100% + 64px);
   z-index: -1;
   pointer-events: none;
   background: linear-gradient(
@@ -455,7 +457,9 @@ button { font: inherit; color: inherit; }
 .plate {
   position: absolute;
   left: 50%;
-  bottom: clamp(12px, 2.4vh, 30px);
+  /* Clear of the footer: the search pill sits directly below this, and at the
+     old 12-30px the two ran together on shorter screens. */
+  bottom: clamp(26px, 5vh, 56px);
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
