@@ -14,7 +14,12 @@ import { SearchBox } from './components/SearchBox';
 import { Die, ROLL_MS } from './components/Die';
 import { About } from './components/About';
 import { Feedback } from './components/Feedback';
-import { weights as feedbackWeights, verdictFor } from './engine/feedback';
+import {
+  weights as feedbackWeights,
+  verdictFor,
+  record as recordVerdict,
+  type Verdict,
+} from './engine/feedback';
 import { Debug } from './components/Debug';
 import { useAmbient } from './hooks/useAmbient';
 import { DistanceDial } from './components/DistanceDial';
@@ -219,6 +224,28 @@ export default function App() {
 
   const back = useCallback(() => setFocusIndex((i) => Math.max(0, i - 1)), []);
 
+  const castVerdict = useCallback(
+    (verdict: Verdict) => {
+      if (!current) return;
+      recordVerdict({
+        id: current.id,
+        verdict,
+        at: new Date().toISOString(),
+        fromId: previous?.id,
+        dial,
+        role: roleById[current.id],
+        title: current.title,
+        artist: current.subtitle,
+        fromTitle: previous?.title,
+      });
+      setFbVersion((v) => v + 1);
+      setFlash(verdict);
+      window.setTimeout(() => setFlash(null), 900);
+    },
+    [current, previous, dial, roleById],
+  );
+  const [flash, setFlash] = useState<Verdict | null>(null);
+
   const [showAbout, setShowAbout] = useState(false);
   const [showDebug, setShowDebug] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -254,6 +281,17 @@ export default function App() {
       if (showAbout || searchOpen) return;
       // The dial is arrow-driven too; let it keep its own keys when focused.
       if ((e.target as HTMLElement | null)?.closest?.('.dial')) return;
+
+      /*
+       * Verdicts on the focused card. Worth a key each: the rest of the app is
+       * navigable without the mouse, and a rating people have to reach for is
+       * a rating that mostly does not get given.
+       */
+      if (current && (e.key === 'g' || e.key === 'm' || e.key === 'x')) {
+        e.preventDefault();
+        castVerdict(e.key === 'g' ? 'good' : e.key === 'm' ? 'meh' : 'bad');
+        return;
+      }
 
       // The keymap is the layout: shuffle sits above, the two offers to the
       // right, your last card to the left.
@@ -421,6 +459,8 @@ export default function App() {
             dial={dial}
             role={roleById[current.id]}
             onChange={noteFeedback}
+            onCast={castVerdict}
+            flash={flash}
           />
         </div>
 
@@ -431,6 +471,7 @@ export default function App() {
           <li><kbd>↓</kbd> deeper</li>
           <li><kbd>←</kbd> back</li>
           <li><kbd>/</kbd> search</li>
+          <li><kbd>g</kbd>/<kbd>m</kbd>/<kbd>x</kbd> rate</li>
         </ul>
       </div>
 

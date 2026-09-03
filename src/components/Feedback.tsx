@@ -1,6 +1,5 @@
-import { useCallback } from 'react';
 import type { Item } from '../data/schema';
-import { record, verdictFor, type Verdict } from '../engine/feedback';
+import { verdictFor, type Verdict } from '../engine/feedback';
 import './Feedback.css';
 
 interface Props {
@@ -10,12 +9,17 @@ interface Props {
   role?: 'deeper' | 'wider' | 'shuffle';
   /** Bump so the parent re-reads weights and re-picks the offers. */
   onChange: () => void;
+  /** Casting lives in the parent, so a key and a click take the same path. */
+  onCast: (v: Verdict) => void;
+  /** Briefly lit after a keyboard verdict, where the eye is on the cover
+   *  rather than on these marks and the change of state is easy to miss. */
+  flash: Verdict | null;
 }
 
-const CHOICES: { verdict: Verdict; glyph: string; label: string }[] = [
-  { verdict: 'good', glyph: '♥', label: 'Good call' },
-  { verdict: 'meh', glyph: '~', label: 'Fine, not for me' },
-  { verdict: 'bad', glyph: '✕', label: 'Wrong turn' },
+const CHOICES: { verdict: Verdict; glyph: string; label: string; key: string }[] = [
+  { verdict: 'good', glyph: '♥', label: 'Good call', key: 'g' },
+  { verdict: 'meh', glyph: '~', label: 'Fine, not for me', key: 'm' },
+  { verdict: 'bad', glyph: '✕', label: 'Wrong turn', key: 'x' },
 ];
 
 /**
@@ -29,26 +33,8 @@ const CHOICES: { verdict: Verdict; glyph: string; label: string }[] = [
  * The judgement is stored against the *step* as well as the album, because the
  * same record can be right after one thing and wrong after another.
  */
-export function Feedback({ item, from, dial, role, onChange }: Props) {
+export function Feedback({ item, from, onCast, flash }: Props) {
   const current = verdictFor(item.id, from?.id);
-
-  const cast = useCallback(
-    (verdict: Verdict) => {
-      record({
-        id: item.id,
-        verdict,
-        at: new Date().toISOString(),
-        fromId: from?.id,
-        dial,
-        role,
-        title: item.title,
-        artist: item.subtitle,
-        fromTitle: from?.title,
-      });
-      onChange();
-    },
-    [item, from, dial, role, onChange],
-  );
 
   return (
     <div className="fb" role="group" aria-label="Rate this recommendation">
@@ -56,11 +42,15 @@ export function Feedback({ item, from, dial, role, onChange }: Props) {
         <button
           key={c.verdict}
           type="button"
-          className={`fb__btn fb__btn--${c.verdict}${current === c.verdict ? ' is-on' : ''}`}
+          className={
+            `fb__btn fb__btn--${c.verdict}` +
+            (current === c.verdict ? ' is-on' : '') +
+            (flash === c.verdict ? ' is-flash' : '')
+          }
           aria-pressed={current === c.verdict}
-          title={c.label}
+          title={`${c.label}  (${c.key})`}
           aria-label={c.label}
-          onClick={() => cast(c.verdict)}
+          onClick={() => onCast(c.verdict)}
         >
           {c.glyph}
         </button>

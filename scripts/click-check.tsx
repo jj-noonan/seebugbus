@@ -128,6 +128,20 @@ else {
   const input = container.querySelector('.search__field input') as any;
   if (!input) problems.push('search overlay did not open');
   else {
+    /*
+     * The rating keys are plain letters, so while the search field is open they
+     * have to stay letters. If this ever regresses, searching for "grunge"
+     * silently rates three records on the way to the 'r'.
+     */
+    dom.window.localStorage.clear();
+    await key('g');
+    await key('x');
+    const strayed = JSON.parse(dom.window.localStorage.getItem('segue.feedback.v1') ?? '[]');
+    if (strayed.length !== 0) {
+      problems.push(`typing in search recorded ${strayed.length} verdict(s)`);
+    }
+    console.log('verdicts recorded while typing in search:', strayed.length, '(want 0)');
+
     const setter = Object.getOwnPropertyDescriptor(
       dom.window.HTMLInputElement.prototype, 'value',
     )!.set!;
@@ -169,6 +183,22 @@ else {
   await key('d');
   if (container.querySelector('.debug')) problems.push('debug did not close on second d');
   else console.log('debug closes on d again: yes');
+}
+
+/*
+ * Keyboard verdicts. These must take the same path as the buttons, and must
+ * stay out of the way of typing — 'g', 'm' and 'x' are letters in the search
+ * field before they are ratings.
+ */
+{
+  dom.window.localStorage.clear();
+  await key('g');
+  const viaKey = JSON.parse(dom.window.localStorage.getItem('segue.feedback.v1') ?? '[]');
+  console.log('after g:', viaKey.length, viaKey[0]?.verdict);
+  if (viaKey.length !== 1 || viaKey[0]?.verdict !== 'good') {
+    problems.push('g did not record a good verdict');
+  }
+  dom.window.localStorage.clear();
 }
 
 /*

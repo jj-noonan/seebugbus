@@ -45,3 +45,18 @@
   .fb, .fb__btn { transition: none; }
   .fb__btn:hover { transform: none; }
 }
+
+/* Keyboard verdicts land while the eye is on the cover, so the mark says so. */
+.fb__btn.is-flash {
+  animation: fbflash 900ms ease-out;
+}
+
+@keyframes fbflash {
+  0%   { transform: scale(1); }
+  22%  { transform: scale(1.45); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fb__btn.is-flash { animation: none; }
+}
