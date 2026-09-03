@@ -42,6 +42,16 @@ def art_path(url: str | None) -> str | None:
 PRIOR_RATING = 3.4  # catalog-wide expectation for an unrated record
 
 
+def percentile_rank(raw: dict[str, float]) -> dict[str, float]:
+    """Map values to 0..10 by rank. Negatives mean "unknown" and stay at 0."""
+    known = sorted((v, k) for k, v in raw.items() if v >= 0)
+    n = max(1, len(known) - 1)
+    out = {k: 0.0 for k in raw}
+    for i, (_, k) in enumerate(known):
+        out[k] = round((i / n) * 10, 1)
+    return out
+
+
 def scores(rows) -> dict[str, tuple[float, float]]:
     """
     Two 0-10 scores per album: popularity, then quality.
@@ -286,6 +296,29 @@ def export(conn: sqlite3.Connection, out: Path, limit: int | None = None) -> dic
     score = scores(all_rows)
     rows = select(all_rows, score, limit)
     keep = {r["id"] for r in rows}
+
+    # Re-rank both scores over the albums actually shipped.
+    #
+    # The scores above are percentiles over the whole database, which is the
+    # right basis for *choosing* what to ship — but the export deliberately
+    # over-samples the popular end, so those percentiles do not describe the
+    # catalog the engine ends up with. Measured on the last export, 24% of
+    # shipped albums landed in a single popularity bucket spanning 786 to
+    # 10,711 listeners, and the engine cannot tell apart records that differ
+    # by 13x in reach.
+    #
+    # That broke the dial rather than merely blurring it. Aiming at 8.4 for a
+    # close pick, Nirvana's Nevermind (10.0) was further from target than a
+    # record with 1,079 listeners (9.2) — so the fame term actively preferred
+    # the middle of the pack to the records people know.
+    #
+    # Selection uses database ranks; the shipped numbers are ranks within the
+    # shipped set, so 0..10 spans the catalog the engine can actually see.
+    export_pop = {r["id"]: float(r["listener_count"] or -1) for r in rows}
+    export_qual = {r["id"]: score[r["id"]][1] for r in rows}
+    ranked_pop = percentile_rank(export_pop)
+    ranked_qual = percentile_rank(export_qual)
+    score = {k: (ranked_pop[k], ranked_qual[k]) for k in keep}
 
     tags: dict[str, list] = defaultdict(list)
     for r in conn.execute("SELECT item_id, tag, count FROM item_tags"):
