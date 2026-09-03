@@ -68,6 +68,36 @@ export const TUNING = {
    */
   idiomWeight: 0.65,
 
+  /**
+   * Which signal leads.
+   *
+   * 'texture' targets a distance radius and lets idiom overlap re-rank what
+   * lands there. 'idiom' inverts it: the dial targets a level of shared idiom
+   * and texture distance becomes the tiebreak among records already in the
+   * right musical world.
+   *
+   * 'idiom' is the more defensible ordering on the face of it — a listener asks
+   * "something like this" before "something with these textures". Measured, it
+   * barely matters: 17.6% near-end agreement against texture-first's 18.9%.
+   *
+   * What did matter, by a wide margin, was making the overlap measure itself
+   * trustworthy — see idiomOverlap. Evidence-weighting it moved both modes from
+   * ~11-13% to ~18%. The ordering of the two signals was the wrong thing to
+   * argue about; the quality of one of them was the whole game.
+   *
+   * Kept switchable because it is now a measurement rather than an opinion:
+   * `npm run eval` scores either in about a minute.
+   */
+  mode: 'texture' as 'texture' | 'idiom',
+
+  /** Idiom overlap the dial aims at, near end to far end. */
+  idiomNear: 0.85,
+  idiomFar: 0.0,
+  idiomSigma: 0.26,
+
+  /** How much the secondary signal still counts, as an exponent on its band. */
+  secondaryExp: 0.45,
+
   /** Two offers that lead to the same place are only one offer. */
   divergenceBonus: 1.6,
 
@@ -132,8 +162,27 @@ export function idiomOverlap(a: Item, b: Item): number {
   for (const t of small) if (large.has(t)) shared++;
   // Overlap coefficient rather than Jaccard: a record with 21 tags and one
   // with 2 can still be the same idiom, and Jaccard would punish that.
-  return shared / small.size;
+  const raw = shared / small.size;
+
+  /*
+   * Shrunk by how much evidence there is for it.
+   *
+   * The coefficient divides by the smaller tag set, so an album tagged only
+   * ["rock"] scores 1.0 against anything else tagged rock. That is absence of
+   * evidence read as evidence, and it dominated: 57% of all pairs scoring 0.75+
+   * involved a single-tag album, 83% one or two. Those thin records became
+   * false neighbours of everything.
+   *
+   * So the score is pulled toward the catalog's baseline overlap until enough
+   * tags support it — the same shrink the quality signal needed, for the same
+   * reason.
+   */
+  const evidence = Math.min(1, Math.sqrt(small.size / 5));
+  return raw * evidence + NEUTRAL_OVERLAP * (1 - evidence);
 }
+
+/** Roughly the overlap of two unrelated albums; the prior thin pairs shrink to. */
+const NEUTRAL_OVERLAP = 0.12;
 
 /** Deterministic hash -> [0,1). Keeps branch offers stable across backtracking. */
 function hash01(seed: string): number {
@@ -243,6 +292,7 @@ export function pickBranches(
   const sigma = lerp(TUNING.sigmaNear, TUNING.sigmaFar, dial);
   const targetPop = lerp(TUNING.popularityNear, TUNING.popularityFar, dial);
   const qWeight = lerp(TUNING.qualityWeightNear, TUNING.qualityWeightFar, dial);
+  const targetIdiom = lerp(TUNING.idiomNear, TUNING.idiomFar, dial);
 
 
   const scored: Scored[] = [];
@@ -278,18 +328,34 @@ export function pickBranches(
     const jitter =
       1 - TUNING.jitter + 2 * TUNING.jitter * hash01(current.id + item.id);
 
-    // Shared idiom, so a texture coincidence across unrelated genres cannot
-    // masquerade as a near neighbour.
-    const idiom =
-      1 - TUNING.idiomWeight + TUNING.idiomWeight * idiomOverlap(current, item);
+    const overlap = idiomOverlap(current, item);
 
+    /*
+     * Which band leads depends on the mode. Either way both signals are
+     * present — the difference is which one the dial aims with and which one
+     * merely breaks ties.
+     */
+    let idiom: number;
+    let combined: number;
+    if (TUNING.mode === 'idiom') {
+      const idiomBand = Math.exp(
+        -((overlap - targetIdiom) ** 2) / (2 * TUNING.idiomSigma ** 2),
+      );
+      idiom = idiomBand;
+      combined = idiomBand * Math.pow(band, TUNING.secondaryExp);
+    } else {
+      // Exactly as before the experiment, so the comparison is honest.
+      idiom = 1 - TUNING.idiomWeight + TUNING.idiomWeight * overlap;
+      combined = band * idiom;
+    }
+
+    const score = combined * fame * merit * sameArtist * jitter;
     scored.push({
       item,
       d,
-      score: band * fame * merit * idiom * sameArtist * jitter,
+      score,
       parts: {
-        score: band * fame * merit * idiom * sameArtist * jitter,
-        band, fame, merit, idiom, sameArtist, jitter,
+        score, band, fame, merit, idiom, sameArtist, jitter,
         targetR, targetPop, qWeight,
       },
     });
