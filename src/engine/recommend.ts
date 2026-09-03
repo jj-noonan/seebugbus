@@ -120,7 +120,7 @@ export const TUNING = {
    * card re-offers the same records — but +-25% instead of +-10% lets the
    * many near-equal candidates take turns rather than one always winning.
    */
-  jitter: 0.25,
+  jitter: 0.6,
   /** Same artist twice running reads as a dead end, not a discovery. */
   sameArtistPenalty: 0.25,
 } as const;
