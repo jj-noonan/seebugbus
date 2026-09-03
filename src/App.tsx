@@ -13,6 +13,7 @@ import { Flow, type FlowCard } from './components/Flow';
 import { SearchBox } from './components/SearchBox';
 import { Die, ROLL_MS } from './components/Die';
 import { About } from './components/About';
+import { Debug } from './components/Debug';
 import { useAmbient } from './hooks/useAmbient';
 import { DistanceDial } from './components/DistanceDial';
 
@@ -189,6 +190,7 @@ export default function App() {
   const back = useCallback(() => setFocusIndex((i) => Math.max(0, i - 1)), []);
 
   const [showAbout, setShowAbout] = useState(false);
+  const [showDebug, setShowDebug] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [rolling, setRolling] = useState(false);
   const rollShuffle = useCallback(() => {
@@ -210,6 +212,14 @@ export default function App() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === 'd' || e.key === 'D') {
+        // Not while the search field has focus — 'd' is a letter there.
+        if (!searchOpen) {
+          e.preventDefault();
+          setShowDebug((v) => !v);
+        }
+        return;
+      }
       // While a panel is up it owns the arrow keys; the flow stands down.
       if (showAbout || searchOpen) return;
       // The dial is arrow-driven too; let it keep its own keys when focused.
@@ -388,6 +398,18 @@ export default function App() {
 
       {showAbout && (
         <About onClose={() => setShowAbout(false)} onRestart={restart} />
+      )}
+
+      {showDebug && (
+        <Debug
+          current={current}
+          branches={branches}
+          wildcard={wildcard}
+          trail={trail.map((id) => byId.get(id)).filter((x): x is Item => Boolean(x))}
+          dial={dial}
+          poolSize={pool.length}
+          onClose={() => setShowDebug(false)}
+        />
       )}
 
       <footer className="foot">

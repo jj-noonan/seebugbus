@@ -71,7 +71,7 @@ def scores(rows) -> dict[str, tuple[float, float]]:
     for r in rows:
         listeners = r["listener_count"] or 0
         if listeners >= 5:
-            devotions.append((r["listen_count"] or 0) / listeners)
+            devotions.append(min(DEVOTION_CAP, (r["listen_count"] or 0) / listeners))
     prior = statistics.median(devotions) if devotions else 8.0
 
     raw_pop: dict[str, float] = {}
@@ -82,8 +82,23 @@ def scores(rows) -> dict[str, tuple[float, float]]:
         raw_pop[r["id"]] = float(listeners) if listeners is not None else -1.0
 
         if listeners:
-            # Bayesian shrink: with few listeners, trust the catalog median.
-            k = 12
+            # Cap first, then shrink: the two do different jobs. The cap removes
+            # impossible ratios; the shrink withholds trust until enough people
+            # have actually listened.
+            listens = min(listens, DEVOTION_CAP * listeners)
+            # Bayesian shrink toward the catalog median.
+            #
+            # k was 12, which trusted the ratio far too readily: an album with
+            # 28 listeners kept 70% of its observed devotion and could score a
+            # perfect 10 — 1,588 albums scored 9.5+ on fewer than 100 listeners,
+            # a third of everything the engine considered excellent. Devotion is
+            # a ratio, and a ratio over 28 people is noise, not acclaim.
+            #
+            # At k=80 an album needs a few hundred listeners before its own
+            # ratio outweighs the catalog's: 28 listeners keeps 26%, 500 keeps
+            # 86%. Records that are genuinely beloved still rise; records nobody
+            # has heard no longer arrive pre-crowned.
+            k = 80
             devotion = (listens + prior * k) / (listeners + k)
         else:
             devotion = prior * 0.6  # unknown reads slightly below average
@@ -137,6 +152,13 @@ UNKNOWN_SHARE = 0.13
 # raw reach is what keeps recognisable records in a catalog that otherwise
 # selects relentlessly for the beloved-and-obscure.
 ANCHOR_FRACTION = 0.18
+
+# Devotion above this many plays per listener is treated as an artefact, not
+# acclaim. The catalog's median is 7.6 and its 90th percentile 20.6, but the tail
+# runs to 1,782 — 23,169 plays from thirteen people. That is a looping scrobbler,
+# and shrinkage cannot rescue an observed value two hundred times the prior, so
+# the ratio is capped before it is ever blended.
+DEVOTION_CAP = 30.0
 
 
 def origin_of(row) -> str:
@@ -287,6 +309,7 @@ def export(conn: sqlite3.Connection, out: Path, limit: int | None = None) -> dic
         "listenCount": r["listen_count"],
         "listenerCount": r["listener_count"],
         "country": r["artist_country"],
+        "rating": r["rating"],
         "popularity": score[r["id"]][0],
         "quality": score[r["id"]][1],
     } for r in rows]

@@ -1,3 +1,4 @@
+import { AXIS_SD, TAG_SETS } from '../data/catalog';
 import { CORRIDOR_BY_ID } from '../data/corridors';
 import { AXES, AXIS_POLES, type Axis, type Item, type Vector } from '../data/schema';
 
@@ -59,6 +60,14 @@ export const TUNING = {
   qualityWeightNear: 0.28,
   qualityWeightFar: 0.55,
 
+  /**
+   * How much shared idiom counts. A candidate with no tags in common with
+   * where you are gets multiplied by (1 - idiomWeight); one that shares its
+   * whole tag set keeps full score. This is what stops a texture match between
+   * unrelated genres reading as a good recommendation.
+   */
+  idiomWeight: 0.65,
+
   /** Two offers that lead to the same place are only one offer. */
   divergenceBonus: 1.6,
 
@@ -86,14 +95,44 @@ const WEIGHT_NORM = Math.sqrt(
   AXES.reduce((sum, a) => sum + AXIS_WEIGHT[a] * AXIS_WEIGHT[a], 0),
 );
 
-/** Weighted euclidean distance, normalised to roughly 0..1. */
+/**
+ * Weighted euclidean distance, normalised to roughly 0..1.
+ *
+ * Each axis is divided by its own spread first. Without that, `synthetic`
+ * (sd 0.275) and `voice` (sd 0.252) dominated: "distance" was largely a
+ * measure of how electronic and how sung a record is, while `density`
+ * (sd 0.092) barely registered.
+ */
 export function distance(a: Vector, b: Vector): number {
   let sum = 0;
   for (const axis of AXES) {
-    const d = (a[axis] - b[axis]) * AXIS_WEIGHT[axis];
+    const z = (a[axis] - b[axis]) / AXIS_SD[axis];
+    const d = z * AXIS_WEIGHT[axis];
     sum += d * d;
   }
-  return Math.sqrt(sum) / WEIGHT_NORM;
+  // /3 keeps the result on roughly the old 0..1 scale now that the axes are
+  // expressed in standard deviations, so the dial's radii still mean something.
+  return Math.sqrt(sum) / (WEIGHT_NORM * 3);
+}
+
+/**
+ * How much musical idiom two records share, 0..1, from their tags.
+ *
+ * The seven axes describe texture, not genre — so Born in the U.S.A. and
+ * Ornette Coleman's In All Languages scored 0.41 apart, a textbook Ridgeline
+ * step, despite sharing not one tag out of 21 and 2. Nothing in a texture
+ * vector knows that one is heartland rock and the other free jazz. This does.
+ */
+export function idiomOverlap(a: Item, b: Item): number {
+  const sa = TAG_SETS.get(a.id);
+  const sb = TAG_SETS.get(b.id);
+  if (!sa || !sb || !sa.size || !sb.size) return 0.5; // unknown, not disjoint
+  let shared = 0;
+  const [small, large] = sa.size <= sb.size ? [sa, sb] : [sb, sa];
+  for (const t of small) if (large.has(t)) shared++;
+  // Overlap coefficient rather than Jaccard: a record with 21 tags and one
+  // with 2 can still be the same idiom, and Jaccard would punish that.
+  return shared / small.size;
 }
 
 /** Deterministic hash -> [0,1). Keeps branch offers stable across backtracking. */
@@ -106,6 +145,20 @@ function hash01(seed: string): number {
   return ((h >>> 0) % 100000) / 100000;
 }
 
+/** Score components, kept so debug mode can show why a pick won. */
+export interface BranchDebug {
+  score: number;
+  band: number;
+  fame: number;
+  merit: number;
+  idiom: number;
+  sameArtist: number;
+  jitter: number;
+  targetR: number;
+  targetPop: number;
+  qWeight: number;
+}
+
 export interface Branch {
   item: Item;
   /** Hover-revealed rationale, e.g. "sparser and stranger — 14 years later". */
@@ -114,6 +167,7 @@ export interface Branch {
   corridorLabel: string | null;
   role: 'deeper' | 'wider';
   distance: number;
+  debug?: BranchDebug;
 }
 
 /**
@@ -122,10 +176,21 @@ export interface Branch {
  * large era gap as a fact worth stating outright rather than as "later".
  */
 export function describeMove(from: Item, to: Item): string {
+  /*
+   * Ranked by how far each axis moved *relative to its own spread*, not in raw
+   * units. Judged raw, `voice` and `synthetic` were named in 64% of all
+   * rationales and `density` and `brightness` in 8% between them — not because
+   * those records differed that way, but because those two axes are three times
+   * wider than the rest, so they always won the comparison.
+   */
   const deltas = AXES.filter((a) => a !== 'era')
-    .map((axis) => ({ axis, delta: to.vector[axis] - from.vector[axis] }))
-    .filter((d) => Math.abs(d.delta) > 0.11)
-    .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))
+    .map((axis) => ({
+      axis,
+      delta: to.vector[axis] - from.vector[axis],
+      z: (to.vector[axis] - from.vector[axis]) / AXIS_SD[axis],
+    }))
+    .filter((d) => Math.abs(d.z) > 0.7)
+    .sort((a, b) => Math.abs(b.z) - Math.abs(a.z))
     .slice(0, 2);
 
   const phrases = deltas.map(({ axis, delta }) =>
@@ -149,6 +214,7 @@ interface Scored {
   item: Item;
   d: number;
   score: number;
+  parts?: BranchDebug;
 }
 
 /**
@@ -216,7 +282,21 @@ export function pickBranches(
     const jitter =
       1 - TUNING.jitter + 2 * TUNING.jitter * hash01(current.id + item.id);
 
-    scored.push({ item, d, score: band * fame * merit * sameArtist * jitter });
+    // Shared idiom, so a texture coincidence across unrelated genres cannot
+    // masquerade as a near neighbour.
+    const idiom =
+      1 - TUNING.idiomWeight + TUNING.idiomWeight * idiomOverlap(current, item);
+
+    scored.push({
+      item,
+      d,
+      score: band * fame * merit * idiom * sameArtist * jitter,
+      parts: {
+        score: band * fame * merit * idiom * sameArtist * jitter,
+        band, fame, merit, idiom, sameArtist, jitter,
+        targetR, targetPop, qWeight,
+      },
+    });
   }
 
   if (scored.length < 2) return [];
@@ -260,6 +340,7 @@ export function pickBranches(
           : null,
       role,
       distance: s.d,
+      debug: s.parts,
     };
   };
 

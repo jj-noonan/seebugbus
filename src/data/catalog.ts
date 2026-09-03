@@ -1,6 +1,6 @@
 import rawCatalog from './catalog.json';
 import { deriveVector, lexiconCoverage } from './lexicon';
-import type { Artist, Item, RawAlbum, RawCatalog } from './schema';
+import { AXES, type Artist, type Axis, type Item, type RawAlbum, type RawCatalog } from './schema';
 
 const raw: RawCatalog = rawCatalog;
 
@@ -88,6 +88,10 @@ export function itemFromRaw(a: RawAlbum, obscurity: number): Item {
     // like a loved record, nor buried like a bad one.
     quality: a.quality ?? 4.5,
     corridorIds: a.corridorIds,
+    listenCount: a.listenCount ?? null,
+    listenerCount: a.listenerCount ?? null,
+    rating: a.rating ?? null,
+    country: a.country ?? null,
     tags: a.tags,
     vector: deriveVector(a.tags, a.year),
     ...searchUrls(a.artistName, a.title, a.id),
@@ -118,6 +122,31 @@ function build(): { items: Item[]; artists: Map<string, Artist> } {
 const built = build();
 
 export const ITEMS: Item[] = built.items;
+
+/**
+ * Standard deviation of each axis across the catalog.
+ *
+ * The axes are not comparably scaled: `synthetic` varies with sd 0.275 and
+ * `density` only 0.092, so a raw 0.15 move means something very different on
+ * each. Anything comparing axes — distance, or the wording of a rationale —
+ * has to divide by these or it silently becomes a measure of the two widest
+ * axes alone.
+ */
+export const AXIS_SD: Record<Axis, number> = (() => {
+  const out = {} as Record<Axis, number>;
+  for (const axis of AXES) {
+    if (!ITEMS.length) { out[axis] = 1; continue; }
+    const mean = ITEMS.reduce((s, i) => s + i.vector[axis], 0) / ITEMS.length;
+    const varc = ITEMS.reduce((s, i) => s + (i.vector[axis] - mean) ** 2, 0) / ITEMS.length;
+    out[axis] = Math.max(0.02, Math.sqrt(varc));
+  }
+  return out;
+})();
+
+/** Tag sets, for measuring idiom overlap without rebuilding them per query. */
+export const TAG_SETS: Map<string, Set<string>> = new Map(
+  ITEMS.map((i) => [i.id, new Set(i.tags.map((t) => t.tag))]),
+);
 export const ITEM_BY_ID = new Map(ITEMS.map((i) => [i.id, i]));
 export const ARTISTS = built.artists;
 export const CATALOG_STATS = raw.stats;

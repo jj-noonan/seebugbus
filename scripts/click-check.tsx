@@ -152,5 +152,21 @@ else {
   }
 }
 
+// Debug overlay: 'd' toggles it, and it must show real score components.
+await key('d');
+const dbg = container.querySelector('.debug');
+console.log('debug opens on d:', dbg ? 'yes' : 'NO');
+if (!dbg) problems.push('debug panel did not open');
+else {
+  const txt = dbg.textContent ?? '';
+  for (const want of ['distance', 'idiom', 'band', 'jitter', 'vector', 'path']) {
+    if (!txt.includes(want)) problems.push(`debug panel missing "${want}"`);
+  }
+  console.log('debug shows score factors:', /band/.test(txt) && /idiom/.test(txt) ? 'yes' : 'NO');
+  await key('d');
+  if (container.querySelector('.debug')) problems.push('debug did not close on second d');
+  else console.log('debug closes on d again: yes');
+}
+
 console.log(problems.length ? `\nPROBLEMS: ${problems.join('; ')}` : '\nREACT LOGIC OK');
 process.exit(problems.length ? 1 : 0);

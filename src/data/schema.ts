@@ -101,6 +101,13 @@ export interface Item {
   tags: ItemTag[];
   vector: Vector;
 
+  /** Raw evidence behind the scores above — surfaced in debug mode. */
+  listenCount: number | null;
+  listenerCount: number | null;
+  rating: number | null;
+  /** Artist origin, ISO country code; null when MusicBrainz doesn't record it. */
+  country: string | null;
+
   /** Deep links. Search URLs today; exact IDs once we have them. */
   spotifyUrl: string;
   appleMusicUrl: string;
@@ -173,6 +180,8 @@ export interface RawAlbum {
   /** ListenBrainz counts where available; null when unknown. */
   listenCount: number | null;
   listenerCount?: number | null;
+  rating?: number | null;
+  country?: string | null;
   /** Precomputed 0..10 scores from the exporter. */
   popularity?: number;
   quality?: number;

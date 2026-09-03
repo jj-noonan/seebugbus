@@ -1,0 +1,92 @@
+/*
+ * Debug overlay: a scrolling panel on the right, deliberately dense and plain.
+ * It exists to be read while the deck stays visible behind it, so it doesn't
+ * dim the page or take the whole screen.
+ */
+.debug {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(96vw, 460px);
+  z-index: 400;
+  overflow-y: auto;
+  padding: 0 0 20px;
+  background: rgba(10, 8, 6, 0.97);
+  border-left: 1px solid var(--hairline);
+  box-shadow: -18px 0 50px rgba(0, 0, 0, 0.6);
+  color: var(--ink);
+  font-size: 11.5px;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+
+.debug__head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  padding: 11px 14px;
+  background: rgba(14, 11, 8, 0.98);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.debug__head b { color: var(--sbb-orange); letter-spacing: 0.1em; text-transform: uppercase; font-size: 10px; }
+.debug__head span { flex: 1; color: var(--ink-muted); font-size: 10.5px; }
+.debug__head button {
+  border: 0; background: none; color: var(--ink-muted);
+  font-size: 17px; line-height: 1; cursor: pointer;
+}
+
+.debug section { padding: 12px 14px; border-bottom: 1px solid var(--hairline); }
+
+.debug h4 {
+  margin: 0 0 8px;
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sbb-orange);
+}
+
+.debug table { width: 100%; border-collapse: collapse; }
+.debug th {
+  text-align: left; font-weight: 400; color: var(--ink-faint);
+  width: 82px; vertical-align: top; padding: 1px 8px 1px 0;
+}
+.debug td { padding: 1px 0; vertical-align: top; }
+.debug em { color: var(--ink-faint); font-style: italic; }
+.debug__tags { color: var(--ink-muted); font-size: 10.5px; word-break: break-word; }
+.debug__mono { font-family: ui-monospace, monospace; font-size: 10px; color: var(--ink-faint); }
+
+.debug__axes { display: flex; flex-direction: column; gap: 3px; margin-top: 6px; }
+.debug__axis { display: grid; grid-template-columns: 68px 1fr 34px 52px; align-items: center; gap: 7px; }
+.debug__axis > span:first-child { color: var(--ink-faint); }
+.debug__bar { height: 6px; border-radius: 3px; background: rgba(242,227,198,.1); overflow: hidden; }
+.debug__bar i { display: block; height: 100%; background: var(--sbb-orange); }
+.debug__num { text-align: right; }
+.debug__sd { color: var(--ink-faint); font-size: 10px; }
+
+.debug__offer { padding: 8px 0; border-top: 1px dashed rgba(242,227,198,.1); }
+.debug__offer:first-of-type { border-top: 0; }
+.debug__offerhead b {
+  display: inline-block; min-width: 46px;
+  color: var(--sbb-orange); text-transform: uppercase; font-size: 9.5px; letter-spacing: .08em;
+}
+.debug__offerhead span { color: var(--ink-faint); }
+
+.debug__factors { display: flex; flex-wrap: wrap; gap: 4px 11px; margin: 4px 0 0 46px; color: var(--ink-muted); font-size: 10.5px; }
+.debug__factors b { color: var(--ink); font-weight: 600; }
+.debug__factors--calc { color: var(--ink-faint); font-size: 10px; }
+.debug__why { margin: 3px 0 0 46px; color: var(--ink-muted); font-style: italic; }
+
+.debug__path { margin: 0; padding-left: 18px; color: var(--ink-muted); }
+.debug__path li { padding: 1px 0; }
+.debug__path span { color: var(--ink-faint); font-size: 10.5px; }
+
+.debug footer { padding: 11px 14px; color: var(--ink-faint); font-size: 10px; line-height: 1.6; }
+.debug footer kbd {
+  font: inherit; padding: 1px 4px; border-radius: 3px;
+  border: 1px solid var(--hairline); background: rgba(242,227,198,.05);
+}
