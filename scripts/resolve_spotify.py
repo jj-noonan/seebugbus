@@ -47,11 +47,26 @@ load_dotenv(HERE.parent / ".env")
 TOKEN_URL = "https://accounts.spotify.com/api/token"
 SEARCH_URL = "https://api.spotify.com/v1/search"
 
+LONG_BAN = 300  # seconds; beyond this we stop rather than poll a ban
+
+
+class RateLimited(RuntimeError):
+    """Raised when Spotify imposes a ban too long to wait out."""
+
+    def __init__(self, seconds: int):
+        super().__init__(f"Spotify rate limit for {seconds}s ({seconds/3600:.1f}h)")
+        self.seconds = seconds
+
+
 _token: dict = {"value": None, "expires": 0.0}
 
 # Spotify's limit is a rolling window of roughly 180 requests/minute. Running at
 # 3/sec sat exactly on that ceiling and eventually drew a long Retry-After.
-MIN_INTERVAL = 0.45
+# Spotify's published guidance is vague, and the real limit is far stricter than
+# the commonly-cited ~180/minute. Running at 3/sec drew a 82,646-second ban —
+# 23 hours — so this is deliberately conservative. Throughput is not the
+# constraint that matters here; staying un-banned is.
+MIN_INTERVAL = 1.2
 _last_call = [0.0]
 
 
@@ -108,11 +123,14 @@ def resolve(title: str, artist: str) -> str | None:
             time.sleep(1 + attempt)
             continue
         if r.status_code == 429:
-            # Obey Retry-After, but cap it: an hour-long backoff is worth
-            # abandoning this album for, not blocking the whole run over.
-            wait = min(int(r.headers.get("Retry-After", "2")) + 1, 90)
-            print(f"  rate limited, waiting {wait}s", flush=True)
-            time.sleep(wait)
+            wait = int(r.headers.get("Retry-After", "2"))
+            if wait > LONG_BAN:
+                # A ban measured in hours is not something to wait out or retry
+                # into — continuing to poll during one can extend it. Stop, and
+                # let the run resume later; every lookup so far is committed.
+                raise RateLimited(wait)
+            print(f"  rate limited, waiting {wait + 1}s", flush=True)
+            time.sleep(wait + 1)
             continue
         if r.status_code == 401:
             _token["value"] = None
@@ -144,7 +162,13 @@ def main() -> int:
         # inside that transaction, froze at 500 albums, and locked out every
         # other writer — a stall that looked like SQLite contention but was
         # really an HTTP backoff holding a lock it had no business holding.
-        album_id = resolve(row["title"], row["artist"])
+        try:
+            album_id = resolve(row["title"], row["artist"])
+        except RateLimited as e:
+            print(f"\nstopping: {e}")
+            print(f"resolved {hit:,} before the limit; rerun after it lifts.")
+            safe_commit(conn)
+            return 2
         db.set_spotify(conn, row["id"], album_id)
         safe_commit(conn)
         if album_id:
