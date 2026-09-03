@@ -289,6 +289,19 @@ def export(conn: sqlite3.Connection, out: Path, limit: int | None = None) -> dic
           -- No tags means no vector: the client derives every axis from them
           -- and drops such albums anyway, so including one only wastes a slot.
           AND EXISTS (SELECT 1 FROM item_tags t WHERE t.item_id = i.id)
+          -- Tempting to go further and drop albums the engine rarely offers
+          -- — under ~28 listeners, or fewer than three tags — since a short
+          -- walk never surfaces them and they appear to be dead weight. It was
+          -- tried and measured, and it makes the catalog worse: distinct
+          -- albums reachable over a 76,000-offer walk fell from 3,236 to
+          -- 3,040, and over a short one from 1,895 to 1,727.
+          --
+          -- The thin tail is not wasted. Individually each of those records
+          -- almost never wins, but collectively they are a large pool of
+          -- occasional winners, and replacing them with more mid-catalog
+          -- albums just adds competition to a band that is already crowded.
+          -- Rarely offered is not the same as never offered, and only the
+          -- second is dead weight.
     """).fetchall()
 
     # Score against the whole catalog, so percentiles mean the same thing
