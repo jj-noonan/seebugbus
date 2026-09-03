@@ -75,16 +75,42 @@ export function About({ onClose, onRestart }: Props) {
           <p>
             Crawled from <a href="https://musicbrainz.org" target="_blank" rel="noreferrer">MusicBrainz</a> and
             the <a href="https://coverartarchive.org" target="_blank" rel="noreferrer">Cover Art Archive</a>,
-            organised as eleven walkable lineages — krautrock through post-punk to
-            early techno, spiritual jazz through sampling-era hip-hop, and so on.
-            Each is sampled across popularity <em>and</em> decade, so the canon and
-            the deep cuts both show up and no era swamps the rest.
+            starting from eleven lineages — krautrock through post-punk to early
+            techno, spiritual jazz through sampling-era hip-hop, and so on — each
+            sampled across popularity <em>and</em> decade so the canon and the
+            deep cuts both show up and no era swamps the rest.
+          </p>
+          <p>
+            Crawling by tag has a blind spot: it finds artists that tags describe
+            well, and a lot of very famous pop is tagged thinly or not at all.
+            Whole swathes of it were simply missing. So the catalog is topped up
+            in the opposite direction — by asking what listeners actually play
+            alongside what's already here, and fetching whatever isn't.
           </p>
           <p>
             Every album is placed on seven axes — era, energy, density, brightness,
             organic↔electronic, conventional↔experimental, instrumental↔vocal —
             mapped by hand from its tags. Hover any cover to see which of those
             moved, and why it's being offered.
+          </p>
+        </section>
+
+        <section>
+          <h3>Deeper and wider</h3>
+          <p>
+            The two offers differ in <em>vocabulary</em>, not just distance.
+            Among the records at the right remove, the one sharing more of this
+            album's tags becomes the deeper step and the one sharing less
+            becomes the wider — measured against the candidates each pick
+            actually has, so both doors stay meaningful at every dial setting.
+          </p>
+          <p>
+            Not every tag counts alike. A shared <em>rock</em> is worth little
+            when a large share of the catalog carries it; a shared{' '}
+            <em>grunge</em> says a great deal. Weighing them equally made thinly
+            tagged records look like neighbours of everything, which is a good
+            way to be handed a record that has nothing to do with the one you
+            are listening to.
           </p>
         </section>
 
