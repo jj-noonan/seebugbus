@@ -44,7 +44,26 @@ export const TUNING = {
    * a sidewalk — proximity alone still served strangers.
    */
   popularityNear: 8.4,
-  popularityFar: 1.8,
+  /*
+   * Not lower. Aiming at 1.8 asked for records with 12-28 listeners, where the
+   * quality signal is deliberately shrunk to the catalog prior because a
+   * devotion ratio over that few people is noise. The far end was selecting on
+   * nothing: median quality of its offers was 5.1 against a catalog median of
+   * 5.0 — indistinguishable from picking at random, which is the opposite of
+   * the point of a wide setting. It passed every assertion in the suite,
+   * because the far end is built to disagree with co-listening and noise
+   * disagrees beautifully.
+   *
+   * At 3.0 a record still has only ~28-58 listeners, so the setting stays
+   * genuinely obscure, but there is enough evidence to tell a lost classic
+   * from a demo: far-end quality rises to 6.6. Near-end agreement does not
+   * move at all, since this steers only the wide end.
+   *
+   * Not higher either. 4.0 buys another 0.7 of quality and costs twice as much
+   * reach (16.5% -> 15.2% of the catalog ever offered), and breadth is half
+   * the point of the dial.
+   */
+  popularityFar: 3.0,
   popularitySigma: 2.7,
 
   /**

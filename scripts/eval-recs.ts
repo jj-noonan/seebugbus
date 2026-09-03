@@ -111,7 +111,7 @@ console.log('ground-truth reachability:');
 reach.forEach((r) => console.log(r));
 console.log(`\nchance rate (mean): ${(100 * chance).toFixed(2)}%\n`);
 
-const rows: { dial: number; hits: number; offers: number }[] = [];
+const rows: { dial: number; hits: number; offers: number; qual: number[] }[] = [];
 /*
  * Two numbers, because they measure different things.
  *
@@ -126,6 +126,7 @@ const perSeed = new Map<string, { hits: number; offers: number }>();
 
 for (const dial of DIALS) {
   let hits = 0, offers = 0;
+  const qual: number[] = [];
   for (const [seedId, seed] of Object.entries(fx.seeds)) {
     const accepted = new Set(seed.similar.map((s) => s.mbid));
     const starts = ITEMS.filter((i) => i.artistId === seedId).slice(0, STARTS);
@@ -133,6 +134,7 @@ for (const dial of DIALS) {
       const bs = pickBranches(start, ITEMS, dial, new Set([start.id]));
       for (const b of bs) {
         offers++;
+        qual.push(b.item.quality);
         const ok = Boolean(b.item.artistId) &&
           (accepted.has(b.item.artistId!) ||
             b.item.artistId === seedId ||
@@ -158,7 +160,7 @@ for (const dial of DIALS) {
       }
     }
   }
-  rows.push({ dial, hits, offers });
+  rows.push({ dial, hits, offers, qual });
 }
 
 console.log('agreement by terrain setting (should fall as the dial opens):');
@@ -197,7 +199,42 @@ console.log('\nper-seed at the near end:');
 [...perSeed.entries()].sort((a,b)=>(b[1].hits/b[1].offers)-(a[1].hits/a[1].offers))
   .forEach(([n,v]) => console.log(`  ${n.padEnd(20)} ${v.hits}/${v.offers}  ${(100*v.hits/v.offers).toFixed(0)}%`));
 
+/*
+ * Is the far end actually any good?
+ *
+ * Everything above measures agreement, and the far end is built to disagree —
+ * so an engine that returned uniform noise out there would pass every
+ * assertion in this file by scoring 0% exactly as intended. The whole point of
+ * the wide end is records worth hearing that a similarity model would never
+ * reach, and "worth hearing" is the half nothing was checking.
+ *
+ * Quality is independent of the co-listening ground truth (it comes from
+ * devotion and MusicBrainz ratings), so it is a fair thing to hold the far end
+ * to. Against a uniform random baseline it says whether the engine is still
+ * selecting out there or merely wandering.
+ */
+const med = (xs: number[]) =>
+  xs.length ? [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)] : 0;
+const catalogMedQual = med(ITEMS.map((i) => i.quality));
+
+console.log('\noffered quality by terrain setting (far end must still select):');
+for (const r of rows) {
+  const m = med(r.qual);
+  console.log(
+    `  dial ${r.dial.toFixed(2)}   median quality ${m.toFixed(1)}` +
+    `   ${(m - catalogMedQual >= 0 ? '+' : '')}${(m - catalogMedQual).toFixed(1)} vs catalog ${catalogMedQual.toFixed(1)}`,
+  );
+}
+
+const farQual = med(rows[rows.length - 1].qual);
+
 const problems: string[] = [];
+if (farQual <= catalogMedQual) {
+  problems.push(
+    `far-end offers median quality ${farQual.toFixed(1)} is no better than the ` +
+    `catalog median ${catalogMedQual.toFixed(1)} — the wide end is wandering, not selecting`,
+  );
+}
 
 /*
  * Gated on the held-out seeds when there are any. The overall figure includes

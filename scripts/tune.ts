@@ -54,6 +54,28 @@ function agreement(): number {
   return offers ? hits / offers : 0;
 }
 
+/*
+ * Median quality of what the widest setting offers, against the catalog's own
+ * median.
+ *
+ * The far end is built to disagree with co-listening, so agreement cannot
+ * judge it — an engine returning noise out there scores 0% exactly as
+ * designed. Quality comes from devotion and MusicBrainz ratings, independent
+ * of the co-listening ground truth, so it is a fair test of whether the wide
+ * end is still choosing records worth hearing or has stopped choosing at all.
+ */
+function farQuality(): { far: number; catalog: number } {
+  const med = (xs: number[]) =>
+    xs.length ? [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)] : 0;
+  const qs: number[] = [];
+  for (const start of ITEMS.filter((_, i) => i % 89 === 0).slice(0, 120)) {
+    for (const b of pickBranches(start, ITEMS, 1, new Set([start.id]))) {
+      qs.push(b.item.quality);
+    }
+  }
+  return { far: med(qs), catalog: med(ITEMS.map((i) => i.quality)) };
+}
+
 /** How much of the catalog a long random walk ever puts in front of anyone. */
 function reach(): { share: number; repeats: number } {
   const seen = new Map<string, number>();
@@ -92,8 +114,8 @@ const grid: [keyof typeof TUNING, number[]][] = argKnob
   : GRID;
 
 console.log(`catalog ${ITEMS.length.toLocaleString()}, ${seeds.length} seeds\n`);
-console.log('knob                value   agreement    reach   repeats');
-console.log('-'.repeat(58));
+console.log('knob                value   agreement    reach   repeats  farQual');
+console.log('-'.repeat(68));
 
 for (const [knob, values] of grid) {
   const original = TUNING[knob];
@@ -102,11 +124,13 @@ for (const [knob, values] of grid) {
     (TUNING as Record<string, number>)[knob as string] = v;
     const a = agreement();
     const r = reach();
+    const q = farQuality();
     const mark = v === original ? ' (current)' : '';
     console.log(
       `${String(knob).padEnd(18)} ${String(v).padStart(6)}   ` +
       `${(100 * a).toFixed(1).padStart(6)}%  ${(100 * r.share).toFixed(1).padStart(6)}%  ` +
-      `${r.repeats.toFixed(1).padStart(6)}x${mark}`,
+      `${r.repeats.toFixed(1).padStart(6)}x  ` +
+      `${q.far.toFixed(1).padStart(5)}${mark}`,
     );
     if (a > best.a) best = { v, a };
   }
