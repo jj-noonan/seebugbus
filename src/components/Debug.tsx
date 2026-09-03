@@ -42,6 +42,23 @@ function sharedTags(a: Item, b: Item) {
     .slice(0, 10);
 }
 
+/** Last-resort copy for contexts without the clipboard API. */
+function fallback(text: string, done: (ok: boolean) => void) {
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    // Off-screen rather than hidden: a display:none textarea cannot be selected.
+    ta.style.cssText = 'position:fixed;left:-9999px;top:0';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    done(ok);
+  } catch {
+    done(false);
+  }
+}
+
 const n = (v: number | null | undefined, d = 2) =>
   v == null ? '—' : v.toFixed(d);
 
@@ -62,14 +79,23 @@ export function Debug({
   // reading the whole log. `copy` hands over everything.
   const recent = [...entries].reverse().slice(0, 12);
 
+  /*
+   * navigator.clipboard is absent outside a secure context — plain http, some
+   * embedded webviews — and calling it there throws rather than failing
+   * quietly. Falling back to a selected textarea means the feedback log can
+   * still be got out of the browser, which is the whole point of the button.
+   */
   const copy = () => {
-    navigator.clipboard.writeText(exportText(ITEM_BY_ID)).then(
-      () => {
-        setCopied(true);
-        window.setTimeout(() => setCopied(false), 1500);
-      },
-      () => setCopied(false),
-    );
+    const text = exportText(ITEM_BY_ID);
+    const done = (ok: boolean) => {
+      setCopied(ok);
+      if (ok) window.setTimeout(() => setCopied(false), 1500);
+    };
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(text).then(() => done(true), () => fallback(text, done));
+    } else {
+      fallback(text, done);
+    }
   };
 
   const stop = STOPS[Math.round(dial * (STOPS.length - 1))];
