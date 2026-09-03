@@ -24,6 +24,9 @@ g.MouseEvent = dom.window.MouseEvent;
 g.Image = dom.window.Image;
 g.HTMLCanvasElement = dom.window.HTMLCanvasElement;
 g.getComputedStyle = dom.window.getComputedStyle;
+// feedback.ts reaches for a bare `localStorage`, as it can in a browser.
+// Without this it silently catches and no-ops, and the check tests nothing.
+g.localStorage = dom.window.localStorage;
 g.requestAnimationFrame = (cb: any) => setTimeout(() => cb(Date.now()), 0);
 g.cancelAnimationFrame = (id: any) => clearTimeout(id);
 g.IS_REACT_ACT_ENVIRONMENT = true;
@@ -166,6 +169,58 @@ else {
   await key('d');
   if (container.querySelector('.debug')) problems.push('debug did not close on second d');
   else console.log('debug closes on d again: yes');
+}
+
+/*
+ * Feedback. The click has to reach the button AND the verdict has to reach the
+ * scorer: the failure mode worth catching is a mark that lights up, writes its
+ * row, and changes nothing about what is offered next.
+ */
+const marks = container.querySelectorAll('.fb__btn');
+if (marks.length !== 3) problems.push(`expected 3 feedback marks, got ${marks.length}`);
+else {
+  const offers = () =>
+    [...container.querySelectorAll('[data-slot="up"] .slot__card, [data-slot="down"] .slot__card')]
+      .map((n) => n.textContent?.trim().slice(0, 30)).join(' | ');
+  const offeredBefore = offers();
+  const bad = container.querySelector('.fb__btn--bad') as any;
+  await act(async () => {
+    bad.dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true, cancelable: true }));
+  });
+  const pressed = bad.getAttribute('aria-pressed') === 'true';
+  if (!pressed) problems.push('feedback mark did not register as pressed');
+  const stored = JSON.parse(dom.window.localStorage.getItem('segue.feedback.v1') ?? '[]');
+  if (stored.length !== 1) problems.push(`expected 1 stored verdict, got ${stored.length}`);
+  if (stored[0]?.verdict !== 'bad') problems.push(`stored verdict was ${stored[0]?.verdict}`);
+  console.log('after bad mark:', { pressed, stored: stored.length, verdict: stored[0]?.verdict });
+
+  /*
+   * The offers ahead should NOT move. A mark on the focused card judges the
+   * step that arrived at it, not the doors leading onward from it.
+   */
+  if (offers() !== offeredBefore) {
+    problems.push('marking the focus changed the offers ahead of it');
+  }
+
+  /*
+   * The loop that matters is visible one step back: return to where the
+   * rejected card was offered, and it should no longer be on offer. This is
+   * the whole feature end to end — click, store, score, re-pick.
+   */
+  const rejected = container.querySelector('.plate__title')?.textContent;
+  const backCard = container.querySelector('[data-slot="past"] .slot__card') as any;
+  if (!backCard) problems.push('no past card to step back to');
+  else {
+    await act(async () => {
+      backCard.dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true, cancelable: true }));
+    });
+    const doorsNow = offers();
+    console.log('rejected:', rejected);
+    console.log('doors on return:', doorsNow.slice(0, 90));
+    if (rejected && doorsNow.includes(rejected)) {
+      problems.push(`rejected card "${rejected}" is still offered after stepping back`);
+    }
+  }
 }
 
 console.log(problems.length ? `\nPROBLEMS: ${problems.join('; ')}` : '\nREACT LOGIC OK');

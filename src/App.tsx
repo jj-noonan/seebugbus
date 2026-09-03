@@ -14,7 +14,7 @@ import { SearchBox } from './components/SearchBox';
 import { Die, ROLL_MS } from './components/Die';
 import { About } from './components/About';
 import { Feedback } from './components/Feedback';
-import { weights as feedbackWeights } from './engine/feedback';
+import { weights as feedbackWeights, verdictFor } from './engine/feedback';
 import { Debug } from './components/Debug';
 import { useAmbient } from './hooks/useAmbient';
 import { DistanceDial } from './components/DistanceDial';
@@ -158,6 +158,15 @@ export default function App() {
     // silently rewrite your own history.
     const takenId = trail[focusIndex + 1];
     if (!takenId || picked.some((b) => b.item.id === takenId)) return picked;
+
+    /*
+     * Unless it was rejected. Preserving the taken branch normally beats
+     * re-scoring it, but a "wrong turn" mark is the one case where the
+     * listener has explicitly said this step should not have happened —
+     * putting it back on screen would answer their judgement by repeating it.
+     * The history it protects is the history they just disowned.
+     */
+    if (verdictFor(takenId, current.id) === 'bad') return picked;
 
     const taken = byId.get(takenId);
     if (!taken || picked.length < 2) return picked;
