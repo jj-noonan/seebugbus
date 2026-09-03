@@ -54,7 +54,17 @@ def main() -> int:
         )
         if not data:
             continue
+
+        # A browse returns the artist's whole release-group list, including
+        # ones we never stored — filtered out earlier for missing cover art or
+        # an unusable date. Tagging those violates the foreign key, so keep to
+        # the albums we actually hold.
+        ours = {r["id"] for r in conn.execute(
+            "SELECT id FROM items WHERE artist_id = ?", (aid,))}
+
         for rg in data.get("release-groups", []):
+            if rg["id"] not in ours:
+                continue
             tags = [
                 {"tag": t["name"].lower(), "count": int(t.get("count") or 1)}
                 for t in (rg.get("tags") or []) if t.get("name")
