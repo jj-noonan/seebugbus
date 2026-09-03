@@ -127,6 +127,17 @@ US_SHARE = 0.72
 # ones — they get the remainder ahead of confirmed-elsewhere.
 UNKNOWN_SHARE = 0.13
 
+# Share of each origin group reserved for its most-listened albums outright.
+#
+# Without this the export dropped every one of the twelve biggest records it
+# held — To Pimp a Butterfly, good kid m.A.A.d city, My Beautiful Dark Twisted
+# Fantasy. Deciles are assigned by popularity but ranked internally by quality,
+# and quality is devotion: listens per listener. A hit with devotion 19 loses
+# its slot to a cult record with devotion 45, every time. Reserving a slice for
+# raw reach is what keeps recognisable records in a catalog that otherwise
+# selects relentlessly for the beloved-and-obscure.
+ANCHOR_FRACTION = 0.18
+
 
 def origin_of(row) -> str:
     c = row["artist_country"]
@@ -180,7 +191,20 @@ def select(rows, score: dict[str, tuple[float, float]], limit: int | None):
 
     out = []
     for key, members in groups.items():
-        out.extend(_by_decile(members, budget[key], score))
+        take = budget[key]
+        if take <= 0 or not members:
+            continue
+        # Anchors first: the plainly most-listened records in this group.
+        n_anchor = min(int(take * ANCHOR_FRACTION), len(members))
+        anchors = sorted(
+            members, key=lambda r: r["listener_count"] or 0, reverse=True
+        )[:n_anchor]
+        picked = {r["id"] for r in anchors}
+        out.extend(anchors)
+        # The remainder keeps the decile spread, so the terrain dial still has
+        # material at every distance.
+        rest = [r for r in members if r["id"] not in picked]
+        out.extend(_by_decile(rest, take - len(anchors), score))
 
     # Rounding can leave slack; fill it with the best of what's left over.
     if len(out) < limit:

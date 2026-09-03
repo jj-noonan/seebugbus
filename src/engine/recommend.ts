@@ -48,11 +48,34 @@ export const TUNING = {
    * quality finds noise rather than discovery. Out there, devotion is the only
    * thing separating a lost classic from a nobody's demo.
    */
-  qualityWeightNear: 0.40,
-  qualityWeightFar: 0.85,
+  /*
+   * Softened from 0.40/0.85. At those values quality swung the score 5x
+   * between a poor record and a great one, which made it behave as a filter
+   * rather than a preference: across 400 walks the engine offered only 8.5%
+   * of the catalog, every album surfacing about six times. That is the
+   * repetition this app exists to avoid. Quality still leads — it just no
+   * longer excludes the merely very good.
+   */
+  qualityWeightNear: 0.28,
+  qualityWeightFar: 0.55,
 
   /** Two offers that lead to the same place are only one offer. */
   divergenceBonus: 1.6,
+
+  /**
+   * How many candidates each role considers, and how many pairs are weighed.
+   * Wider pools are the other half of breadth: with a shortlist of 12 the same
+   * few albums won every time, however the scores were weighted.
+   */
+  poolSize: 30,
+  pairSearch: 12,
+
+  /**
+   * Deterministic tie-break spread. Stays keyed to (from, to) so revisiting a
+   * card re-offers the same records — but +-25% instead of +-10% lets the
+   * many near-equal candidates take turns rather than one always winning.
+   */
+  jitter: 0.25,
   /** Same artist twice running reads as a dead end, not a discovery. */
   sameArtistPenalty: 0.25,
 } as const;
@@ -190,7 +213,8 @@ export function pickBranches(
       item.artistId === current.artistId ? TUNING.sameArtistPenalty : 1;
 
     // Stable tie-break so revisiting a card re-offers the same two records.
-    const jitter = 0.9 + 0.2 * hash01(current.id + item.id);
+    const jitter =
+      1 - TUNING.jitter + 2 * TUNING.jitter * hash01(current.id + item.id);
 
     scored.push({ item, d, score: band * fame * merit * sameArtist * jitter });
   }
@@ -202,21 +226,21 @@ export function pickBranches(
     !shares(i) && i.corridorIds.some((c) => bridgeCorridors.has(c));
 
   const byScore = (a: Scored, b: Scored) => b.score - a.score;
-  const deeperPool = scored.filter((s) => shares(s.item)).sort(byScore).slice(0, 12);
-  let widerPool = scored.filter((s) => bridges(s.item)).sort(byScore).slice(0, 12);
+  const deeperPool = scored.filter((s) => shares(s.item)).sort(byScore).slice(0, TUNING.poolSize);
+  let widerPool = scored.filter((s) => bridges(s.item)).sort(byScore).slice(0, TUNING.poolSize);
 
   // Early in the crawl a corridor may have no neighbours loaded yet; fall back
   // to anything outside the current lineage before giving up on contrast.
   if (widerPool.length === 0) {
-    widerPool = scored.filter((s) => !shares(s.item)).sort(byScore).slice(0, 12);
+    widerPool = scored.filter((s) => !shares(s.item)).sort(byScore).slice(0, TUNING.poolSize);
   }
 
-  const a = deeperPool.length ? deeperPool : scored.sort(byScore).slice(0, 12);
-  const b = widerPool.length ? widerPool : scored.sort(byScore).slice(0, 12);
+  const a = deeperPool.length ? deeperPool : scored.sort(byScore).slice(0, TUNING.poolSize);
+  const b = widerPool.length ? widerPool : scored.sort(byScore).slice(0, TUNING.poolSize);
 
   let best: { a: Scored; b: Scored; total: number } | null = null;
-  for (const ca of a.slice(0, 8)) {
-    for (const cb of b.slice(0, 8)) {
+  for (const ca of a.slice(0, TUNING.pairSearch)) {
+    for (const cb of b.slice(0, TUNING.pairSearch)) {
       if (ca.item.id === cb.item.id) continue;
       const divergence = distance(ca.item.vector, cb.item.vector);
       const total = ca.score + cb.score + divergence * TUNING.divergenceBonus;
@@ -271,10 +295,16 @@ export function pickWildcard(
  * something unplaceable gives you nothing to steer away from.
  */
 export function pickStart(pool: Item[], seed: string): Item | null {
-  // Open on something well-liked and mid-known: a canonical record makes the
-  // first branches feel obvious, an unloved one gives nothing to steer from.
+  /*
+   * Open on something recognisable and well-liked.
+   *
+   * The first card is the only one a visitor judges with no context, so it has
+   * to be a record they might plausibly know — opening on an obscure one makes
+   * the app look random before it has made a single recommendation. Not the
+   * very top of the charts either: those make the first branches feel obvious.
+   */
   const eligible = pool.filter(
-    (i) => i.obscurity >= 2 && i.obscurity <= 7.5 && i.quality >= 5,
+    (i) => i.popularity >= 5.5 && i.popularity <= 9.2 && i.quality >= 6.5,
   );
   const from = eligible.length ? eligible : pool;
   if (!from.length) return null;
