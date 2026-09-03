@@ -116,3 +116,31 @@
 }
 
 .debug__fbactions button:hover { background: rgba(255, 255, 255, 0.12); }
+
+/* The shared vocabulary behind an offer, priced by informativeness. */
+.debug__tagshare {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin: 4px 0 2px;
+}
+
+.debug__tag {
+  padding: 1px 5px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 2px;
+  opacity: 0.4;
+  white-space: nowrap;
+}
+
+.debug__tag.is-shared {
+  opacity: 1;
+  border-color: rgba(242, 135, 155, 0.5);
+  color: #f2879b;
+}
+
+.debug__tag i {
+  margin-left: 4px;
+  font-style: normal;
+  opacity: 0.6;
+}

@@ -180,6 +180,14 @@ else {
     if (!txt.includes(want)) problems.push(`debug panel missing "${want}"`);
   }
   console.log('debug shows score factors:', /band/.test(txt) && /idiom/.test(txt) ? 'yes' : 'NO');
+{
+  // The priced tag row is the thing that makes a bad pick legible; if it
+  // renders empty the panel still looks fine and explains nothing.
+  const priced = container.querySelectorAll('.debug__tag');
+  const shared = container.querySelectorAll('.debug__tag.is-shared');
+  console.log('debug prices tags:', priced.length, 'of which shared:', shared.length);
+  if (priced.length === 0) problems.push('debug panel shows no priced tags');
+}
   await key('d');
   if (container.querySelector('.debug')) problems.push('debug did not close on second d');
   else console.log('debug closes on d again: yes');

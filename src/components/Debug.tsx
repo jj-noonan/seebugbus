@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { AXES, type Item } from '../data/schema';
 import { CORRIDOR_BY_ID } from '../data/corridors';
-import { AXIS_SD } from '../data/catalog';
+import { AXIS_SD, TAG_IDF, MEAN_IDF } from '../data/catalog';
 import { STOPS } from './DistanceDial';
 import { idiomOverlap, TUNING, type Branch } from '../engine/recommend';
 import { all as allFeedback, summary as feedbackSummary, exportText, clear as clearFeedback } from '../engine/feedback';
@@ -18,6 +18,28 @@ interface Props {
   onClose: () => void;
   /** Re-read weights after the log is cleared here. */
   onFeedbackChange: () => void;
+}
+
+/*
+ * The tags of whichever record has fewer, priced and marked for sharing.
+ *
+ * Overlap divides by the smaller set, so these are the terms that actually
+ * decided the score — and their idf is why a pick that looks arbitrary often
+ * is not, or is. A row of cheap shared words (rock 0.9, pop 2.3) next to a
+ * high score is the signature of the failure this panel exists to catch.
+ */
+function sharedTags(a: Item, b: Item) {
+  const at = new Set(a.tags.map((t) => t.tag));
+  const bt = new Set(b.tags.map((t) => t.tag));
+  const [small, large] = at.size <= bt.size ? [at, bt] : [bt, at];
+  return [...small]
+    .map((tag) => ({
+      tag,
+      idf: TAG_IDF.get(tag) ?? MEAN_IDF,
+      shared: large.has(tag),
+    }))
+    .sort((x, y) => Number(y.shared) - Number(x.shared) || y.idf - x.idf)
+    .slice(0, 10);
 }
 
 const n = (v: number | null | undefined, d = 2) =>
@@ -139,6 +161,18 @@ export function Debug({
                 <span>× jitter {n(b.debug.jitter)}</span>
               </div>
             )}
+            <div className="debug__tagshare">
+              {sharedTags(current, b.item).map(({ tag, idf, shared }) => (
+                <span
+                  key={tag}
+                  className={shared ? 'debug__tag is-shared' : 'debug__tag'}
+                  title={`${shared ? 'shared' : 'not shared'} — idf ${idf.toFixed(2)}`}
+                >
+                  {tag}
+                  <i>{idf.toFixed(1)}</i>
+                </span>
+              ))}
+            </div>
             <div className="debug__why">{b.reason}</div>
           </div>
         ))}
