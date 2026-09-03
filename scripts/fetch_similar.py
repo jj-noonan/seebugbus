@@ -36,10 +36,36 @@ UA = "seebugbus-eval/0.1 (jj@noonan.cc)"
 # Deliberately spread across idioms so the suite can't pass by being good at
 # one kind of music: stadium pop, heartland rock, jam band, blues revival,
 # alt-country, hip-hop, indie rock, classic soul.
+# Seeds for the evaluation fixture.
+#
+# The first ten were the artists picked to sanity-check paths by hand. Ten
+# seeds and 100 offers turned out to be too thin to tune against: a three-point
+# difference is three offers, which is noise, and knob sweeps were landing
+# inside it. The rest widen the base deliberately across era, genre and fame,
+# because a suite drawn only from canonical American rock would happily approve
+# an engine that is good at canonical American rock.
+#
+# Skipped silently if absent from the catalog, so this list can name artists
+# the crawl has not reached yet.
 SEEDS = [
+    # The original hand-checked set.
     "Taylor Swift", "Bruce Springsteen", "Grateful Dead", "Alabama Shakes",
     "Wilco", "Kendrick Lamar", "The National", "Stevie Wonder",
     "Fleetwood Mac", "Nirvana",
+    # Rock and pop across five decades.
+    "The Beatles", "David Bowie", "Fleet Foxes", "Radiohead", "Pixies",
+    "Talking Heads", "Joni Mitchell", "Prince", "Beyoncé", "Lana Del Rey",
+    "R.E.M.", "Pavement", "The Cure", "Kate Bush", "Sonic Youth",
+    # Country, folk and soul.
+    "Dolly Parton", "Johnny Cash", "Aretha Franklin", "Marvin Gaye",
+    "Emmylou Harris", "Sturgill Simpson", "Bill Withers",
+    # Hip hop and R&B.
+    "OutKast", "A Tribe Called Quest", "Missy Elliott", "Frank Ocean",
+    "Nas", "SZA",
+    # Electronic, jazz and further out.
+    "Aphex Twin", "Daft Punk", "Burial", "Miles Davis", "John Coltrane",
+    "Alice Coltrane", "Portishead", "Björk", "Brian Eno", "Fela Kuti",
+    "Sigur Rós", "Massive Attack",
 ]
 
 

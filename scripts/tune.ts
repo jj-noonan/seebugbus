@@ -30,8 +30,10 @@ try {
   );
 } catch { /* one-directional scoring, as eval-recs warns */ }
 
+const edgeSets = new Map<string, Set<string>>();
+for (const [k, v] of Object.entries(graph?.edges ?? {})) edgeSets.set(k, new Set(v));
 const knows = (a: string, b: string) =>
-  Boolean(graph?.edges[a]?.includes(b)) || Boolean(graph?.edges[b]?.includes(a));
+  Boolean(edgeSets.get(a)?.has(b)) || Boolean(edgeSets.get(b)?.has(a));
 
 const STARTS = 20;
 const seeds = Object.entries(fx.seeds);

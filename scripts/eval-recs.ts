@@ -53,6 +53,7 @@ const showPaths = process.argv.includes('--paths');
  * different source.
  */
 interface Graph { algorithm: string; edges: Record<string, string[]> }
+
 let graph: Graph | null = null;
 try {
   graph = JSON.parse(
@@ -64,8 +65,13 @@ try {
 }
 
 /** Does either artist's similarity list know the other? */
+// Sets, not arrays: the chance baseline asks this for every seed against
+// every artist in the catalog, and `includes` over 100-element lists turned
+// that into tens of millions of string comparisons once the seed list grew.
+const edgeSets = new Map<string, Set<string>>();
+for (const [k, v] of Object.entries(graph?.edges ?? {})) edgeSets.set(k, new Set(v));
 const knows = (a: string, b: string): boolean =>
-  Boolean(graph?.edges[a]?.includes(b)) || Boolean(graph?.edges[b]?.includes(a));
+  Boolean(edgeSets.get(a)?.has(b)) || Boolean(edgeSets.get(b)?.has(a));
 const DIALS = [0, 0.25, 0.5, 0.75, 1];
 const STARTS = 20;
 

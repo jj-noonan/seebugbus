@@ -73,6 +73,12 @@ export const TUNING = {
    * unrelated genres reading as a good recommendation.
    */
   idiomWeight: 0.65,
+  /**
+   * Idf mass at which a tag overlap is trusted outright — about three
+   * averagely-informative tags. Lives here so the sweep can reach it; it was
+   * picked on a 74-offer sample and is worth re-checking as the suite grows.
+   */
+  evidenceFull: 24,
 
   /**
    * Which signal leads.
@@ -205,16 +211,13 @@ export function idiomOverlap(a: Item, b: Item): number {
    * Evidence is now measured in idf mass rather than tag count, for the same
    * reason the overlap is: four generic tags are less to go on than two
    * specific ones, and counting them gave the thin record the benefit twice.
-   * EVIDENCE_FULL is roughly the mass of three averagely-informative tags.
+   * evidenceFull is roughly the mass of three averagely-informative tags.
    */
-  const evidence = Math.min(1, Math.sqrt(smallMass / EVIDENCE_FULL));
+  const evidence = Math.min(1, Math.sqrt(smallMass / TUNING.evidenceFull));
   return raw * evidence + NEUTRAL_OVERLAP * (1 - evidence);
 }
 
 /** Roughly the overlap of two unrelated albums; the prior thin pairs shrink to. */
-/** Idf mass at which an overlap is trusted outright — about three average tags. */
-const EVIDENCE_FULL = 11;
-
 /**
  * How shared tag mass becomes a 0..1 overlap.
  *
