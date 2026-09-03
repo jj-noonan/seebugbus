@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -163,7 +164,7 @@ def connect(path: Path | str = DEFAULT_DB) -> sqlite3.Connection:
     # Ratings, crawl and export all write; without this a concurrent writer
     # raises "database is locked" immediately instead of waiting its turn — it
     # aborted an export mid-run and nearly shipped a stale catalog.
-    conn.execute("PRAGMA busy_timeout=30000")
+    conn.execute("PRAGMA busy_timeout=60000")
     return conn
 
 
@@ -206,6 +207,31 @@ def init(conn: sqlite3.Connection) -> None:
         "ON items(rating_votes, exported DESC, listener_count DESC)"
     )
     conn.commit()
+
+
+def retrying(fn, *args, attempts: int = 6, **kwargs):
+    """
+    Run a write, waiting out a busy database rather than dying on it.
+
+    Several processes write here at once — the crawler, the ratings pass, the
+    Spotify resolver — and WAL plus a busy_timeout still isn't enough under
+    sustained contention: two writers each committing every 25 rows will
+    eventually collide, and an unhandled "database is locked" kills a job that
+    was hours in. Backing off and retrying costs milliseconds and makes
+    concurrent writers genuinely safe.
+    """
+    delay = 0.25
+    for attempt in range(attempts):
+        try:
+            return fn(*args, **kwargs)
+        except sqlite3.OperationalError as e:
+            if "locked" not in str(e).lower() and "busy" not in str(e).lower():
+                raise
+            if attempt == attempts - 1:
+                raise
+            time.sleep(delay)
+            delay *= 2
+    return None
 
 
 def upsert_artist(conn: sqlite3.Connection, a: dict) -> None:
@@ -317,7 +343,8 @@ def set_popularity(conn: sqlite3.Connection, rows: dict[str, tuple[int, int]]) -
 
 
 def set_rating(conn: sqlite3.Connection, mbid: str, value: float | None, votes: int) -> None:
-    conn.execute(
+    retrying(
+        conn.execute,
         """UPDATE items SET rating=?, rating_votes=?, updated_at=datetime('now') WHERE id=?""",
         (value, votes, mbid),
     )
@@ -517,6 +544,7 @@ def missing_spotify(conn: sqlite3.Connection, limit: int) -> list[sqlite3.Row]:
 
 def set_spotify(conn: sqlite3.Connection, item_id: str, album_id: str | None) -> None:
     """Records the lookup either way, so a genuine miss is never retried forever."""
-    conn.execute(
+    retrying(
+        conn.execute,
         """UPDATE items SET spotify_id=?, spotify_checked_at=datetime('now')
            WHERE id=?""", (album_id, item_id))

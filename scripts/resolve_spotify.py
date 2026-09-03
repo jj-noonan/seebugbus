@@ -38,11 +38,28 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import db  # noqa: E402
 
+
+def safe_commit(conn) -> None:
+    """Commit, waiting out another writer rather than dying on it."""
+    db.retrying(conn.commit)
+
 load_dotenv(HERE.parent / ".env")
 TOKEN_URL = "https://accounts.spotify.com/api/token"
 SEARCH_URL = "https://api.spotify.com/v1/search"
 
 _token: dict = {"value": None, "expires": 0.0}
+
+# Spotify's limit is a rolling window of roughly 180 requests/minute. Running at
+# 3/sec sat exactly on that ceiling and eventually drew a long Retry-After.
+MIN_INTERVAL = 0.45
+_last_call = [0.0]
+
+
+def paced() -> None:
+    wait = MIN_INTERVAL - (time.time() - _last_call[0])
+    if wait > 0:
+        time.sleep(wait)
+    _last_call[0] = time.time()
 
 
 def token() -> str:
@@ -83,6 +100,7 @@ def accepts(want_title: str, want_artist: str, got_title: str, got_artist: str) 
 def resolve(title: str, artist: str) -> str | None:
     q = f'album:"{title}" artist:"{artist}"'
     for attempt in range(4):
+        paced()
         try:
             r = requests.get(SEARCH_URL, params={"q": q, "type": "album", "limit": 10},
                              headers={"Authorization": f"Bearer {token()}"}, timeout=25)
@@ -90,8 +108,11 @@ def resolve(title: str, artist: str) -> str | None:
             time.sleep(1 + attempt)
             continue
         if r.status_code == 429:
-            # Spotify tells us exactly how long to wait; obey it.
-            time.sleep(int(r.headers.get("Retry-After", "2")) + 1)
+            # Obey Retry-After, but cap it: an hour-long backoff is worth
+            # abandoning this album for, not blocking the whole run over.
+            wait = min(int(r.headers.get("Retry-After", "2")) + 1, 90)
+            print(f"  rate limited, waiting {wait}s", flush=True)
+            time.sleep(wait)
             continue
         if r.status_code == 401:
             _token["value"] = None
@@ -116,17 +137,23 @@ def main() -> int:
     hit = 0
     start = time.time()
     for n, row in enumerate(todo, 1):
-        db.set_spotify(conn, row["id"], resolve(row["title"], row["artist"]))
-        hit += 1 if conn.execute(
-            "SELECT spotify_id FROM items WHERE id=?", (row["id"],)
-        ).fetchone()[0] else 0
-        if n % 25 == 0:
-            conn.commit()
+        # Resolve BEFORE touching the database, and commit immediately after.
+        #
+        # Batching commits held a write transaction open across the network
+        # call. When Spotify returned a long Retry-After the process slept
+        # inside that transaction, froze at 500 albums, and locked out every
+        # other writer — a stall that looked like SQLite contention but was
+        # really an HTTP backoff holding a lock it had no business holding.
+        album_id = resolve(row["title"], row["artist"])
+        db.set_spotify(conn, row["id"], album_id)
+        safe_commit(conn)
+        if album_id:
+            hit += 1
         if n % 500 == 0:
             rate = n / max(1e-6, time.time() - start)
             print(f"  {n:,}/{len(todo):,} — {hit:,} matched "
                   f"({100*hit/n:.0f}%, {rate:.1f}/sec)", flush=True)
-    conn.commit()
+    safe_commit(conn)
     total = conn.execute("SELECT COUNT(*) FROM items WHERE spotify_id IS NOT NULL").fetchone()[0]
     print(f"done: {hit:,}/{len(todo):,} matched; {total:,} albums now have a Spotify link")
     return 0

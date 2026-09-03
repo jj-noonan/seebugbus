@@ -24,6 +24,11 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import db  # noqa: E402
 
+
+def safe_commit(conn) -> None:
+    """Commit, waiting out another writer rather than dying on it."""
+    db.retrying(conn.commit)
+
 spec = importlib.util.spec_from_file_location("crawl", HERE / "crawl.py")
 crawl = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(crawl)
@@ -88,8 +93,8 @@ def main() -> int:
                 # Commit often: each write opens a transaction, and holding the
                 # lock for a whole chunk would stall a concurrent export.
                 if i % 25 == 0:
-                    conn.commit()
-        conn.commit()
+                    safe_commit(conn)
+        safe_commit(conn)
 
         rate = done / max(1e-6, time.time() - started)
         left = c_left(conn)
