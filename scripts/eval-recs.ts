@@ -36,6 +36,36 @@ const fx: Fixture = JSON.parse(
   readFileSync(new URL('../data/similar-artists.json', import.meta.url), 'utf8'),
 );
 const showPaths = process.argv.includes('--paths');
+
+/*
+ * Similarity is not symmetric, and the per-seed lists are cut at 100.
+ * Calexico does not appear in Wilco's top 100; Wilco appears in Calexico's.
+ * Measured against a sample of 40 apparent failures, 6 were similar in the
+ * reverse direction only — so a one-directional test was calling roughly 15%
+ * of good picks wrong, and every Wilco pick worth defending was in that group.
+ *
+ * The graph over the catalog's most-listened artists lets a pair count when
+ * EITHER direction knows the other. That is both more accurate and steadier:
+ * an artist near the truncation boundary stops flipping on list length.
+ *
+ * The graph is evaluation ground truth. If it is ever fed into the engine as a
+ * recommendation signal it stops being independent, and the suite needs a
+ * different source.
+ */
+interface Graph { algorithm: string; edges: Record<string, string[]> }
+let graph: Graph | null = null;
+try {
+  graph = JSON.parse(
+    readFileSync(new URL('../data/similarity-graph.json', import.meta.url), 'utf8'),
+  );
+} catch {
+  console.log('note: no similarity-graph.json — scoring one-directionally only,');
+  console.log('      which undercounts. Build it with fetch_similar.py --graph.\n');
+}
+
+/** Does either artist's similarity list know the other? */
+const knows = (a: string, b: string): boolean =>
+  Boolean(graph?.edges[a]?.includes(b)) || Boolean(graph?.edges[b]?.includes(a));
 const DIALS = [0, 0.25, 0.5, 0.75, 1];
 const STARTS = 6;
 
@@ -51,11 +81,20 @@ console.log(`catalog: ${ITEMS.length.toLocaleString()} albums\n`);
 let chanceSum = 0, chanceN = 0;
 const reach: string[] = [];
 for (const [seedId, seed] of Object.entries(fx.seeds)) {
-  const present = seed.similar.filter((s) => albumsByArtist.has(s.mbid));
-  const albums = present.reduce((n, s) => n + (albumsByArtist.get(s.mbid) ?? 0), 0)
+  /*
+   * Chance must be counted exactly as hits are. Accepting reverse matches in
+   * the numerator while leaving them out of the denominator would inflate the
+   * lift for free — the baseline has to widen by the same rule the test did.
+   */
+  const acceptedIds = new Set(seed.similar.map((s) => s.mbid));
+  for (const other of albumsByArtist.keys()) {
+    if (!acceptedIds.has(other) && knows(seedId, other)) acceptedIds.add(other);
+  }
+  const present = [...acceptedIds].filter((id) => albumsByArtist.has(id));
+  const albums = present.reduce((n, id) => n + (albumsByArtist.get(id) ?? 0), 0)
     + (albumsByArtist.get(seedId) ?? 0);
   chanceSum += albums / ITEMS.length; chanceN++;
-  reach.push(`  ${seed.name.padEnd(20)} ${String(present.length).padStart(3)}/100 similar artists held, ${String(albums).padStart(4)} albums (chance ${(100*albums/ITEMS.length).toFixed(1)}%)`);
+  reach.push(`  ${seed.name.padEnd(20)} ${String(present.length).padStart(4)} similar artists held, ${String(albums).padStart(4)} albums (chance ${(100*albums/ITEMS.length).toFixed(1)}%)`);
 }
 const chance = chanceSum / Math.max(1, chanceN);
 console.log('ground-truth reachability:');
@@ -75,7 +114,9 @@ for (const dial of DIALS) {
       for (const b of bs) {
         offers++;
         const ok = Boolean(b.item.artistId) &&
-          (accepted.has(b.item.artistId!) || b.item.artistId === seedId);
+          (accepted.has(b.item.artistId!) ||
+            b.item.artistId === seedId ||
+            knows(seedId, b.item.artistId!));
         if (ok) hits++;
         if (dial === 0) {
           const p = perSeed.get(seed.name) ?? { hits: 0, offers: 0 };
@@ -86,7 +127,9 @@ for (const dial of DIALS) {
       if (showPaths && dial === 0) {
         console.log(`  ${seed.name} — ${start.title}`);
         for (const b of bs) {
-          const ok = b.item.artistId && (accepted.has(b.item.artistId) || b.item.artistId === seedId);
+          const ok = b.item.artistId &&
+            (accepted.has(b.item.artistId) || b.item.artistId === seedId ||
+              knows(seedId, b.item.artistId));
           console.log(`    ${ok ? '✓' : '·'} ${b.role.padEnd(6)} ${b.item.subtitle.slice(0,26).padEnd(26)} ${b.item.title.slice(0,28)}`);
         }
       }

@@ -20,13 +20,34 @@ LOG=data/jobs.log
 
 log() { echo "[$(date '+%H:%M:%S')] $*" | tee -a "$LOG"; }
 
+#
+# Restart on exit, tracked by PID.
+#
+# This used to ask `pgrep -f "bin/python -u <script>"` whether the job was
+# already up. It never matched: a venv python is a shim, and macOS reports
+# argv[0] as the resolved framework path (.../MacOS/Python), so the string
+# "bin/python" is absent from the command line the supervisor was searching.
+# The guard therefore read "not running" every time and started another worker
+# each minute. Eighteen were live against a 1 req/sec API before it was caught.
+#
+# Holding the PID removes the guesswork: `kill -0` asks the kernel about this
+# exact child instead of asking a text search about a process that resembles
+# it. It also cannot match the supervisor, the monitor, or a shell whose
+# command line happens to contain the script name.
 supervise() {
   local name="$1"; shift
+  # Empty, not 0: `kill -0 0` signals the caller's own process group and
+  # therefore SUCCEEDS, which would make the guard read "already running" on
+  # the first tick and never start the job at all.
+  local pid=""
   while true; do
-    # Match on the script path so this loop cannot mistake itself for the job.
-    if ! pgrep -f "bin/python -u $1" >/dev/null 2>&1; then
-      log "starting $name"
+    if [ -z "$pid" ] || ! kill -0 "$pid" 2>/dev/null; then
+      # Reap a finished child before replacing it, so exits do not accumulate
+      # as zombies for the life of the supervisor.
+      [ -n "$pid" ] && wait "$pid" 2>/dev/null
       $PY -u "$@" >> "$LOG" 2>&1 &
+      pid=$!
+      log "started $name (pid $pid)"
     fi
     sleep 60
   done
