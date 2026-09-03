@@ -33,7 +33,7 @@ git add src/data/catalog.json
 git commit -q -m "Publish catalog snapshot: ${ALBUMS} of ${TOTAL} albums
 
 Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
-Claude-Session: https://claude.ai/code/session_011LxfVt6m24HUxSJpzbfTyk" || { log "commit failed"; exit 1; }
+Claude-Session: https://claude.ai/code/session_01LwNoBivL7KZjNZ7H5NwKdN" || { log "commit failed"; exit 1; }
 
 git push origin main || { log "push failed"; exit 1; }
 log "published ${ALBUMS} of ${TOTAL} albums; Pages workflow triggered"
