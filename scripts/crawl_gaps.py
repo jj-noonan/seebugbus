@@ -45,13 +45,27 @@ def log(*a):
 
 
 def wanted_artists() -> dict[str, str]:
-    """Every artist the fixture names as similar to a seed, mbid -> name."""
+    """
+    Artists the fixture names as similar to a seed, mbid -> name.
+
+    Held-out seeds are skipped. Their whole purpose is to measure the engine
+    against a catalog assembled without reference to them; crawling what they
+    name would stock the catalog with their own answers and turn their score
+    into a measurement of this script.
+    """
     fx = json.loads(FIXTURE.read_text())
     out: dict[str, str] = {}
+    skipped = 0
     for seed in fx["seeds"].values():
+        if seed.get("heldOut"):
+            skipped += 1
+            continue
         for s in seed["similar"]:
-            if s.get("artist_mbid") or s.get("mbid"):
-                out[s.get("mbid") or s["artist_mbid"]] = s.get("name") or ""
+            mbid = s.get("mbid") or s.get("artist_mbid")
+            if mbid:
+                out[mbid] = s.get("name") or ""
+    if skipped:
+        log(f"ignoring {skipped} held-out seeds as a crawl source")
     return out
 
 

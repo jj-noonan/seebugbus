@@ -68,12 +68,34 @@ SEEDS = [
     "Sigur Rós", "Massive Attack",
 ]
 
+# Held out from catalog building, on purpose.
+#
+# crawl_gaps.py fetches artists that this fixture names as similar to a seed,
+# which is the right thing for the product — a listener wants Adele to exist —
+# but it means the catalog gets stocked with the very answers the metric looks
+# for. Agreement on those seeds is then partly self-fulfilling, and a tuning
+# loop that rewards its own catalog decisions will happily walk in a circle.
+#
+# These seeds are never used as a crawl source. Nothing is fetched because
+# they name it, so their agreement measures what the engine can do with a
+# catalog assembled independently of them. That is the number to trust when
+# the two disagree.
+#
+# If a future change needs more coverage, extend SEEDS and leave these alone.
+HELDOUT = [
+    "Neil Young", "Patti Smith", "Curtis Mayfield", "Nick Drake",
+    "The Velvet Underground", "Cocteau Twins", "My Bloody Valentine",
+    "Erykah Badu", "D'Angelo", "Charles Mingus", "Sun Ra",
+    "Neutral Milk Hotel", "Vampire Weekend", "The Replacements",
+    "Randy Newman", "Tom Waits", "Steely Dan", "Big Star",
+]
+
 
 def main() -> int:
     conn = db.connect()
     out: dict[str, dict] = {}
 
-    for name in SEEDS:
+    for name in SEEDS + HELDOUT:
         row = conn.execute(
             """SELECT a.id, a.name, COUNT(i.id) n FROM artists a
                JOIN items i ON i.artist_id = a.id
@@ -111,6 +133,9 @@ def main() -> int:
         out[row["id"]] = {
             "name": row["name"],
             "albumsInCatalog": row["n"],
+            # Tagged so crawl_gaps can refuse to read from these, and so the
+            # suite can report them as their own number.
+            "heldOut": name in HELDOUT,
             "similar": similar,
         }
         print(f"  {name}: {len(similar)} similar artists, {row['n']} albums held")
@@ -123,7 +148,9 @@ def main() -> int:
         "fetchedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "seeds": out,
     }, indent=1))
-    print(f"\nwrote {len(out)} seeds -> {OUT}")
+    held = sum(1 for v in out.values() if v.get("heldOut"))
+    print(f"\nwrote {len(out)} seeds ({len(out) - held} for tuning, "
+          f"{held} held out of catalog building) -> {OUT}")
     return 0
 
 

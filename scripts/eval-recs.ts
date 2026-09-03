@@ -29,7 +29,11 @@ import { pickBranches } from '../src/engine/recommend';
 interface Fixture {
   source: string;
   fetchedAt: string;
-  seeds: Record<string, { name: string; similar: { mbid: string; name: string }[] }>;
+  seeds: Record<string, {
+    name: string;
+    heldOut?: boolean;
+    similar: { mbid: string; name: string }[];
+  }>;
 }
 
 const fx: Fixture = JSON.parse(
@@ -108,6 +112,16 @@ reach.forEach((r) => console.log(r));
 console.log(`\nchance rate (mean): ${(100 * chance).toFixed(2)}%\n`);
 
 const rows: { dial: number; hits: number; offers: number }[] = [];
+/*
+ * Two numbers, because they measure different things.
+ *
+ * crawl_gaps.py fetches artists this fixture names as similar to a tuning
+ * seed. That is right for the product and wrong for the metric: the catalog
+ * ends up stocked with the answers, so agreement on those seeds is partly a
+ * measurement of the crawler. Held-out seeds are never used as a crawl
+ * source, so their score is the one to trust when the two disagree.
+ */
+const group = { tuning: { hits: 0, offers: 0 }, held: { hits: 0, offers: 0 } };
 const perSeed = new Map<string, { hits: number; offers: number }>();
 
 for (const dial of DIALS) {
@@ -125,6 +139,9 @@ for (const dial of DIALS) {
             knows(seedId, b.item.artistId!));
         if (ok) hits++;
         if (dial === 0) {
+          const g = seed.heldOut ? group.held : group.tuning;
+          g.offers++;
+          if (ok) g.hits++;
           const p = perSeed.get(seed.name) ?? { hits: 0, offers: 0 };
           p.offers++; if (ok) p.hits++;
           perSeed.set(seed.name, p);
@@ -153,6 +170,24 @@ for (const r of rows) {
 
 const near = rows[0].hits / Math.max(1, rows[0].offers);
 const far = rows[rows.length - 1].hits / Math.max(1, rows[rows.length - 1].offers);
+const rate = (g: { hits: number; offers: number }) =>
+  g.offers ? (100 * g.hits) / g.offers : 0;
+if (group.held.offers) {
+  console.log('\nnear-end agreement by seed group:');
+  console.log(`  tuning seeds   ${rate(group.tuning).toFixed(1)}%  ` +
+    `(${group.tuning.hits}/${group.tuning.offers}) — catalog was crawled from these`);
+  console.log(`  HELD OUT       ${rate(group.held).toFixed(1)}%  ` +
+    `(${group.held.hits}/${group.held.offers}) — never used as a crawl source`);
+  const gap = rate(group.tuning) - rate(group.held);
+  console.log(`  gap            ${gap >= 0 ? '+' : ''}${gap.toFixed(1)} points` +
+    (Math.abs(gap) > 15
+      ? '  <- large; the tuning number is flattering itself'
+      : '  <- small, so the tuning number is not badly inflated'));
+} else {
+  console.log('\nnote: no held-out seeds in the fixture — every number here is');
+  console.log('      measured on seeds the catalog was crawled from.');
+}
+
 console.log(`\nnear-end agreement   ${(100*near).toFixed(1)}%`);
 console.log(`chance               ${(100*chance).toFixed(2)}%`);
 console.log(`LIFT AT NEAR END     ${(near/Math.max(1e-9,chance)).toFixed(1)}x`);
@@ -163,7 +198,25 @@ console.log('\nper-seed at the near end:');
   .forEach(([n,v]) => console.log(`  ${n.padEnd(20)} ${v.hits}/${v.offers}  ${(100*v.hits/v.offers).toFixed(0)}%`));
 
 const problems: string[] = [];
-if (near < chance * 2) problems.push(`near-end agreement ${(100*near).toFixed(1)}% is under 2x chance`);
+
+/*
+ * Gated on the held-out seeds when there are any. The overall figure includes
+ * seeds whose similar-artist lists were used to decide what to crawl, so it
+ * can be propped up by catalog stocking rather than by better ranking. If the
+ * suite is going to pass or fail a change, it should do it on the number that
+ * cannot be gamed that way.
+ */
+const gateRate = group.held.offers ? group.held.hits / group.held.offers : near;
+const gateName = group.held.offers ? 'held-out agreement' : 'near-end agreement';
+if (gateRate < chance * 2) {
+  problems.push(`${gateName} ${(100 * gateRate).toFixed(1)}% is under 2x chance`);
+}
+if (group.held.offers && rate(group.tuning) - rate(group.held) > 20) {
+  problems.push(
+    `tuning seeds beat held-out by ${(rate(group.tuning) - rate(group.held)).toFixed(1)} points` +
+    ' — the catalog is being built toward the metric',
+  );
+}
 if (near <= far) problems.push('agreement does not decline as the dial opens');
 console.log(problems.length ? `\nFAIL: ${problems.join('; ')}` : '\nPASS');
 process.exit(problems.length ? 1 : 0);
