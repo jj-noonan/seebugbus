@@ -78,9 +78,14 @@ def us_artists(tag: str, offset: int, pages: int) -> tuple[list[dict], int, bool
 
 def discography(artist_id: str) -> list[dict]:
     """Every album-type release group for one artist, in a single request."""
+    # inc=tags is not optional: browse omits tags entirely without it, and tags
+    # are the whole recommendation signal — every axis in the vector is derived
+    # from them. Albums fetched without it sit at the dead centre of the space
+    # and are then dropped by the client's lexicon-coverage filter, so they
+    # consume an export slot and deliver nothing.
     data = crawl.mb_get(
         "/release-group",
-        {"artist": artist_id, "type": "album", "limit": 100},
+        {"artist": artist_id, "type": "album", "inc": "tags", "limit": 100},
     )
     if not data:
         return []

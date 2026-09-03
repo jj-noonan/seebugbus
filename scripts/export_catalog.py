@@ -230,6 +230,9 @@ def export(conn: sqlite3.Connection, out: Path, limit: int | None = None) -> dic
                a.name AS artist_name, a.country AS artist_country
         FROM items i LEFT JOIN artists a ON a.id = i.artist_id
         WHERE i.art_url IS NOT NULL
+          -- No tags means no vector: the client derives every axis from them
+          -- and drops such albums anyway, so including one only wastes a slot.
+          AND EXISTS (SELECT 1 FROM item_tags t WHERE t.item_id = i.id)
     """).fetchall()
 
     # Score against the whole catalog, so percentiles mean the same thing
