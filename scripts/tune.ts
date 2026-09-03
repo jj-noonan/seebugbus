@@ -76,7 +76,15 @@ function farQuality(): { far: number; catalog: number } {
   return { far: med(qs), catalog: med(ITEMS.map((i) => i.quality)) };
 }
 
-/** How much of the catalog a long random walk ever puts in front of anyone. */
+/*
+ * How much of the catalog a long random walk ever puts in front of anyone.
+ *
+ * Indicative, not authoritative. This walks 80 starts for 20 steps where
+ * reach-check makes 6,400 offers, and the smaller sample understates
+ * differences: sweeping qualityWeightFar it showed 0.8 costing 0.1 points of
+ * reach where reach-check measured 1.3. Use this column to rank candidates,
+ * then confirm the winner with `npm run reach` before keeping it.
+ */
 function reach(): { share: number; repeats: number } {
   const seen = new Map<string, number>();
   let offers = 0;
