@@ -21,7 +21,12 @@ export function coverUrl(path: string | null, px: 250 | 500): string | null {
   return `${CAA_PREFIX}${path}-${px}.jpg`;
 }
 
-function searchUrls(artist: string, title: string, releaseGroupId: string) {
+function searchUrls(
+  artist: string,
+  title: string,
+  releaseGroupId: string,
+  spotifyId?: string | null,
+) {
   const q = `${artist} ${title}`;
   return {
     /*
@@ -33,9 +38,17 @@ function searchUrls(artist: string, title: string, releaseGroupId: string) {
      * usually land on "no results found".
      */
     infoUrl: `https://musicbrainz.org/release-group/${releaseGroupId}`,
-    // Exact album IDs would be better, but they need a Spotify app + secret.
-    // Search URLs open the right record in both apps with no credentials.
-    spotifyUrl: `https://open.spotify.com/search/${encodeURIComponent(q)}`,
+    /*
+     * The exact album where we resolved one, a search otherwise.
+     *
+     * Resolution is verified on both title and artist (see
+     * scripts/resolve_spotify.py) because a confident link to the wrong record
+     * is worse than an honest search page — a bare search readily returns a
+     * different album by the same artist.
+     */
+    spotifyUrl: spotifyId
+      ? `https://open.spotify.com/album/${spotifyId}`
+      : `https://open.spotify.com/search/${encodeURIComponent(q)}`,
     appleMusicUrl: `https://music.apple.com/search?term=${encodeURIComponent(q)}`,
   };
 }
@@ -92,9 +105,10 @@ export function itemFromRaw(a: RawAlbum, obscurity: number): Item {
     listenerCount: a.listenerCount ?? null,
     rating: a.rating ?? null,
     country: a.country ?? null,
+    spotifyId: a.spotifyId ?? null,
     tags: a.tags,
     vector: deriveVector(a.tags, a.year),
-    ...searchUrls(a.artistName, a.title, a.id),
+    ...searchUrls(a.artistName, a.title, a.id, a.spotifyId),
     sourceIds: {
       musicbrainzReleaseGroup: a.id,
       musicbrainzArtist: a.artistId,

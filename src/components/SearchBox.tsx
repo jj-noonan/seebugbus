@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Item } from '../data/schema';
-import { ingest, validate, enqueue, type Candidate } from '../engine/ingest';
+import { ingest, validate, enqueue, noteSearchHit, type Candidate } from '../engine/ingest';
 import { useToast } from './Toast';
 import './SearchBox.css';
 
@@ -173,6 +173,9 @@ export function SearchBox({ pool, onPick, onIngest, onOpenChange }: Props) {
   };
 
   const pick = (item: Item) => {
+    // A person searching their way to a record is a stronger signal than
+    // anything the crawler infers. Recorded now, weighted later.
+    noteSearchHit(item, query.trim());
     onPick(item);
     setQuery('');
     setOpen(false);

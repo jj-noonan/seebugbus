@@ -107,6 +107,8 @@ export interface Item {
   rating: number | null;
   /** Artist origin, ISO country code; null when MusicBrainz doesn't record it. */
   country: string | null;
+  /** Exact Spotify album id when verified; null means the link is a search. */
+  spotifyId: string | null;
 
   /** Deep links. Search URLs today; exact IDs once we have them. */
   spotifyUrl: string;
@@ -182,6 +184,8 @@ export interface RawAlbum {
   listenerCount?: number | null;
   rating?: number | null;
   country?: string | null;
+  /** Exact Spotify album id, where one was verified. */
+  spotifyId?: string | null;
   /** Precomputed 0..10 scores from the exporter. */
   popularity?: number;
   quality?: number;

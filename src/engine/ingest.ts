@@ -23,6 +23,7 @@ import type { Item, ItemTag, RawAlbum } from '../data/schema';
 
 const MB = 'https://musicbrainz.org/ws/2';
 const CAA = 'https://coverartarchive.org';
+const LB = 'https://api.listenbrainz.org/1';
 const QUEUE_KEY = 'segue.ingest.v1';
 
 export interface Candidate {
@@ -39,8 +40,17 @@ export interface QueueEntry {
   query: string;
   mbid: string | null;
   title: string;
+  artist?: string;
   state: 'validated' | 'ingested' | 'failed';
   at: string;
+  /**
+   * How many times a person searched their way to this record.
+   *
+   * Tracked but not yet weighted. A human typing an artist's name is a much
+   * stronger signal of interest than anything the crawler infers, and it is
+   * worth having the history before deciding what it should be worth.
+   */
+  searchCount?: number;
 }
 
 /* ── rate limiting ───────────────────────────────────────────────────────
@@ -124,6 +134,53 @@ export async function validate(query: string, signal?: AbortSignal): Promise<Can
   return out;
 }
 
+/**
+ * Real listening figures for an ingested album.
+ *
+ * Without these an ingest was given a flat quality of 5 and no popularity,
+ * which parks it in the middle of the space where it is a plausible neighbour
+ * of far too much. One bulk call is cheap and makes a searched album score on
+ * the same evidence as a crawled one.
+ */
+async function popularity(
+  mbid: string,
+  signal?: AbortSignal,
+): Promise<{ listens: number; listeners: number } | null> {
+  try {
+    const res = await fetch(`${LB}/popularity/release-group`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ release_group_mbids: [mbid] }),
+      signal,
+    });
+    if (!res.ok) return null;
+    const row = (await res.json())?.[0];
+    if (!row) return null;
+    return {
+      listens: Number(row.total_listen_count ?? 0),
+      listeners: Number(row.total_user_count ?? 0),
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Quality on the same footing the exporter uses: devotion, capped so a handful
+ * of obsessive plays can't read as acclaim, and shrunk toward the catalog
+ * median until enough people have actually listened.
+ */
+function qualityFrom(listens: number, listeners: number): number {
+  if (!listeners) return 4.5;
+  const DEVOTION_CAP = 30;
+  const PRIOR = 7.6;
+  const K = 80;
+  const capped = Math.min(listens, DEVOTION_CAP * listeners);
+  const devotion = (capped + PRIOR * K) / (listeners + K);
+  // Map onto the 0..10 scale the rest of the engine expects.
+  return Math.max(0, Math.min(10, (devotion / DEVOTION_CAP) * 10));
+}
+
 /** Front-cover path, or null when the Archive has no art for this release. */
 async function fetchArt(mbid: string, signal?: AbortSignal): Promise<string | null> {
   const res = await fetch(`${CAA}/release-group/${mbid}`, { signal });
@@ -155,6 +212,8 @@ export async function ingest(c: Candidate, signal?: AbortSignal): Promise<Item> 
   const art = await fetchArt(c.id, signal);
   if (!art) throw new Error('no cover art in the Archive');
 
+  const pop = await popularity(c.id, signal);
+
   const raw: RawAlbum = {
     id: c.id,
     title: c.title,
@@ -164,11 +223,27 @@ export async function ingest(c: Candidate, signal?: AbortSignal): Promise<Item> 
     art,
     tags: c.tags,
     corridorIds: inferCorridors(c.tags),
-    listenCount: null,
+    listenCount: pop?.listens ?? null,
+    listenerCount: pop?.listeners ?? null,
+    quality: pop ? qualityFrom(pop.listens, pop.listeners) : 4.5,
   };
-  // Mid-scale obscurity: we have no listen count for a one-off ingest, and
-  // guessing either extreme would skew the novelty bias on the next branch.
-  return itemFromRaw(raw, 5);
+
+  /*
+   * Obscurity from real listener counts where we have them. The thresholds
+   * mirror the catalog's own distribution — its 90th percentile sits near
+   * 1,437 listeners — so an ingested album lands in roughly the decile it
+   * would have occupied had the crawler found it.
+   */
+  const listeners = pop?.listeners ?? 0;
+  const obscurity = !pop
+    ? 5
+    : listeners > 5000 ? 1
+    : listeners > 1400 ? 3
+    : listeners > 300 ? 5
+    : listeners > 50 ? 7
+    : 9;
+
+  return itemFromRaw(raw, obscurity);
 }
 
 /* ── durable queue ─────────────────────────────────────────────────────── */
@@ -183,12 +258,26 @@ function readQueue(): QueueEntry[] {
 
 export function enqueue(entry: QueueEntry): void {
   try {
-    const q = readQueue().filter((e) => e.mbid !== entry.mbid || e.mbid === null);
-    q.push(entry);
-    localStorage.setItem(QUEUE_KEY, JSON.stringify(q.slice(-200)));
+    const q = readQueue();
+    const prior = entry.mbid ? q.find((e) => e.mbid === entry.mbid) : undefined;
+    const rest = q.filter((e) => !entry.mbid || e.mbid !== entry.mbid);
+    rest.push({ ...entry, searchCount: (prior?.searchCount ?? 0) + 1 });
+    localStorage.setItem(QUEUE_KEY, JSON.stringify(rest.slice(-400)));
   } catch {
     // Storage unavailable — the in-session ingest still worked.
   }
+}
+
+/** Records that a person reached this album by searching, however they got there. */
+export function noteSearchHit(item: { id: string; title: string; subtitle: string }, query: string): void {
+  enqueue({
+    query,
+    mbid: item.id,
+    title: item.title,
+    artist: item.subtitle,
+    state: 'ingested',
+    at: new Date().toISOString(),
+  });
 }
 
 export function getQueue(): QueueEntry[] {

@@ -8,3 +8,7 @@ scripts/.crawl-state.json
 data/*.sqlite
 data/*.sqlite-wal
 data/*.sqlite-shm
+
+# Secrets — never commit
+.env
+.env.*

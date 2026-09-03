@@ -272,7 +272,7 @@ def _by_decile(members, take: int, score) -> list:
 def export(conn: sqlite3.Connection, out: Path, limit: int | None = None) -> dict:
     all_rows = conn.execute("""
         SELECT i.id, i.title, i.artist_id, i.year_start, i.art_url, i.art_thumb_url,
-               i.listen_count, i.listener_count, i.rating, i.rating_votes,
+               i.listen_count, i.listener_count, i.rating, i.rating_votes, i.spotify_id,
                a.name AS artist_name, a.country AS artist_country
         FROM items i LEFT JOIN artists a ON a.id = i.artist_id
         WHERE i.art_url IS NOT NULL
@@ -310,6 +310,7 @@ def export(conn: sqlite3.Connection, out: Path, limit: int | None = None) -> dic
         "listenerCount": r["listener_count"],
         "country": r["artist_country"],
         "rating": r["rating"],
+        "spotifyId": r["spotify_id"],
         "popularity": score[r["id"]][0],
         "quality": score[r["id"]][1],
     } for r in rows]

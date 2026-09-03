@@ -177,6 +177,8 @@ def init(conn: sqlite3.Connection) -> None:
         ("rating_votes", "INTEGER"),
         # Set by the exporter: is this album in the snapshot the site serves?
         ("exported", "INTEGER"),
+        ("spotify_id", "TEXT"),
+        ("spotify_checked_at", "TEXT"),
     ):
         if col not in have:
             conn.execute(f"ALTER TABLE items ADD COLUMN {col} {decl}")
@@ -493,3 +495,28 @@ def us_progress(conn: sqlite3.Connection) -> dict:
         "artistsSeen": one("SELECT COUNT(*) FROM artist_done"),
         "reachable": one("SELECT COALESCE(SUM(total),0) FROM us_tags"),
     }
+
+
+# ── Spotify album resolution ───────────────────────────────────────────────
+
+
+def missing_spotify(conn: sqlite3.Connection, limit: int) -> list[sqlite3.Row]:
+    """
+    Albums with no Spotify lookup yet, deployed first then most-listened.
+
+    Same priority as ratings, for the same reason: coverage will always be
+    partial, so it should cover what people can actually see.
+    """
+    return list(conn.execute(
+        """SELECT i.id, i.title, a.name AS artist FROM items i
+           JOIN artists a ON a.id = i.artist_id
+           WHERE i.spotify_checked_at IS NULL
+           ORDER BY i.exported DESC, i.listener_count DESC
+           LIMIT ?""", (limit,)))
+
+
+def set_spotify(conn: sqlite3.Connection, item_id: str, album_id: str | None) -> None:
+    """Records the lookup either way, so a genuine miss is never retried forever."""
+    conn.execute(
+        """UPDATE items SET spotify_id=?, spotify_checked_at=datetime('now')
+           WHERE id=?""", (album_id, item_id))
