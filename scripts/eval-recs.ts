@@ -67,7 +67,7 @@ try {
 const knows = (a: string, b: string): boolean =>
   Boolean(graph?.edges[a]?.includes(b)) || Boolean(graph?.edges[b]?.includes(a));
 const DIALS = [0, 0.25, 0.5, 0.75, 1];
-const STARTS = 6;
+const STARTS = 20;
 
 const albumsByArtist = new Map<string, number>();
 for (const i of ITEMS) if (i.artistId) albumsByArtist.set(i.artistId, (albumsByArtist.get(i.artistId) ?? 0) + 1);

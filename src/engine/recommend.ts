@@ -1,4 +1,4 @@
-import { AXIS_SD, TAG_SETS } from '../data/catalog';
+import { AXIS_SD, TAG_SETS, TAG_IDF, MEAN_IDF } from '../data/catalog';
 import { CORRIDOR_BY_ID } from '../data/corridors';
 import { AXES, AXIS_POLES, type Axis, type Item, type Vector } from '../data/schema';
 
@@ -163,12 +163,35 @@ export function idiomOverlap(a: Item, b: Item): number {
   const sa = TAG_SETS.get(a.id);
   const sb = TAG_SETS.get(b.id);
   if (!sa || !sb || !sa.size || !sb.size) return 0.5; // unknown, not disjoint
-  let shared = 0;
   const [small, large] = sa.size <= sb.size ? [sa, sb] : [sb, sa];
-  for (const t of small) if (large.has(t)) shared++;
-  // Overlap coefficient rather than Jaccard: a record with 21 tags and one
-  // with 2 can still be the same idiom, and Jaccard would punish that.
-  const raw = shared / small.size;
+
+  /*
+   * Weighted by how much each tag actually says. A shared "rock" (idf 0.89,
+   * held by a large share of the catalog) is close to no evidence; a shared
+   * "grunge" (idf 4.90) is a great deal of it. Counting them alike is what let
+   * Zebrahead — tagged only rock/alternative rock/punk/punk rock — beat
+   * Soundgarden as a neighbour of Nevermind: all four of its tags were nearly
+   * free, and dividing by the smaller set turned that thinness into a 0.91.
+   *
+   * Overlap coefficient rather than Jaccard still: a record with 21 tags and
+   * one with 2 can be the same idiom, and Jaccard would punish that.
+   */
+  let sharedMass = 0;
+  let smallMass = 0;
+  for (const t of small) {
+    const w = TAG_IDF.get(t) ?? MEAN_IDF;
+    smallMass += w;
+    if (large.has(t)) sharedMass += w;
+  }
+  if (smallMass <= 0) return NEUTRAL_OVERLAP;
+  let totalMass = 0;
+  for (const t of large) totalMass += TAG_IDF.get(t) ?? MEAN_IDF;
+  totalMass += smallMass;
+
+  const raw =
+    OVERLAP_MODE === 'coefficient' ? sharedMass / smallMass
+    : OVERLAP_MODE === 'dice' ? (2 * sharedMass) / totalMass
+    : Math.min(1, sharedMass / SATURATION_MASS);
 
   /*
    * Shrunk by how much evidence there is for it.
@@ -179,15 +202,34 @@ export function idiomOverlap(a: Item, b: Item): number {
    * involved a single-tag album, 83% one or two. Those thin records became
    * false neighbours of everything.
    *
-   * So the score is pulled toward the catalog's baseline overlap until enough
-   * tags support it — the same shrink the quality signal needed, for the same
-   * reason.
+   * Evidence is now measured in idf mass rather than tag count, for the same
+   * reason the overlap is: four generic tags are less to go on than two
+   * specific ones, and counting them gave the thin record the benefit twice.
+   * EVIDENCE_FULL is roughly the mass of three averagely-informative tags.
    */
-  const evidence = Math.min(1, Math.sqrt(small.size / 5));
+  const evidence = Math.min(1, Math.sqrt(smallMass / EVIDENCE_FULL));
   return raw * evidence + NEUTRAL_OVERLAP * (1 - evidence);
 }
 
 /** Roughly the overlap of two unrelated albums; the prior thin pairs shrink to. */
+/** Idf mass at which an overlap is trusted outright — about three average tags. */
+const EVIDENCE_FULL = 11;
+
+/**
+ * How shared tag mass becomes a 0..1 overlap.
+ *
+ * 'coefficient' divides by the smaller set, which rewards thinness: a record
+ * whose few tags are a subset of yours scores 1.0 by construction, and no
+ * amount of idf weighting can rescue a denominator that small.
+ * 'dice' compares shared mass against both records' mass together.
+ * 'saturating' asks only how much distinctive vocabulary is shared outright,
+ * on the view that sharing "grunge, 90s, stoner rock" means the same thing
+ * however much else either record is tagged with.
+ */
+const OVERLAP_MODE = 'coefficient' as 'coefficient' | 'dice' | 'saturating';
+/** Shared idf mass treated as a complete match under 'saturating'. */
+const SATURATION_MASS = 16;
+
 const NEUTRAL_OVERLAP = 0.12;
 
 /** Deterministic hash -> [0,1). Keeps branch offers stable across backtracking. */

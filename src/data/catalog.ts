@@ -161,6 +161,42 @@ export const AXIS_SD: Record<Axis, number> = (() => {
 export const TAG_SETS: Map<string, Set<string>> = new Map(
   ITEMS.map((i) => [i.id, new Set(i.tags.map((t) => t.tag))]),
 );
+/*
+ * How much each tag actually tells you, as inverse document frequency.
+ *
+ * Overlap divides by the smaller tag set, which makes a thinly tagged record a
+ * false neighbour of everything it shares a generic word with. Nirvana's
+ * Nevermind was offering Zebrahead at 0.91 overlap on the strength of "rock,
+ * alternative rock, punk, punk rock" — four tags, all of them nearly free —
+ * while Soundgarden's Superunknown, which carries "grunge" and a dozen other
+ * specifics, scored 0.44 and lost.
+ *
+ * Counting a shared "rock" as heavily as a shared "grunge" is the error.
+ * Weighting by rarity fixes the comparison at its root rather than by tuning
+ * around it: a term held by half the catalog earns almost nothing, and the
+ * terms that actually name an idiom carry the score.
+ */
+export const TAG_IDF: Map<string, number> = (() => {
+  const df = new Map<string, number>();
+  for (const set of TAG_SETS.values()) {
+    for (const t of set) df.set(t, (df.get(t) ?? 0) + 1);
+  }
+  const n = Math.max(1, ITEMS.length);
+  const out = new Map<string, number>();
+  // Smoothed, so a tag on every record lands near 0 rather than exactly 0 and
+  // a hapax does not dwarf everything else.
+  for (const [tag, count] of df) out.set(tag, Math.log((n + 1) / (count + 1)));
+  return out;
+})();
+
+/** Mean IDF, used as the weight for a tag the catalog has never seen. */
+export const MEAN_IDF: number = (() => {
+  if (!TAG_IDF.size) return 1;
+  let sum = 0;
+  for (const v of TAG_IDF.values()) sum += v;
+  return sum / TAG_IDF.size;
+})();
+
 export const ITEM_BY_ID = new Map(ITEMS.map((i) => [i.id, i]));
 export const ARTISTS = built.artists;
 export const CATALOG_STATS = raw.stats;
