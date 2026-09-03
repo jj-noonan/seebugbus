@@ -1,0 +1,47 @@
+/*
+ * Sits under the focused case. Quiet until hovered: a judgement is worth
+ * inviting, but not worth competing with the record itself for attention.
+ */
+.fb {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  opacity: 0.32;
+  transition: opacity 180ms ease;
+}
+
+.flow:hover .fb,
+.fb:focus-within,
+.fb:hover {
+  opacity: 1;
+}
+
+.fb__btn {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.28);
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.fb__btn:hover {
+  transform: translateY(-1px);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.fb__btn.is-on { border-color: currentColor; }
+.fb__btn--good.is-on { color: #f2879b; }
+.fb__btn--meh.is-on  { color: #d8c48a; }
+.fb__btn--bad.is-on  { color: #9fb4c8; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fb, .fb__btn { transition: none; }
+  .fb__btn:hover { transform: none; }
+}

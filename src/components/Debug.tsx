@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { AXES, type Item } from '../data/schema';
 import { CORRIDOR_BY_ID } from '../data/corridors';
 import { AXIS_SD } from '../data/catalog';
 import { STOPS } from './DistanceDial';
 import { idiomOverlap, TUNING, type Branch } from '../engine/recommend';
+import { all as allFeedback, summary as feedbackSummary, exportText, clear as clearFeedback } from '../engine/feedback';
+import { ITEM_BY_ID } from '../data/catalog';
 import './Debug.css';
 
 interface Props {
@@ -13,6 +16,8 @@ interface Props {
   dial: number;
   poolSize: number;
   onClose: () => void;
+  /** Re-read weights after the log is cleared here. */
+  onFeedbackChange: () => void;
 }
 
 const n = (v: number | null | undefined, d = 2) =>
@@ -26,8 +31,25 @@ const n = (v: number | null | undefined, d = 2) =>
  * to tell "the metric disagrees with me" from "the metric is broken".
  */
 export function Debug({
-  current, branches, wildcard, trail, dial, poolSize, onClose,
+  current, branches, wildcard, trail, dial, poolSize, onClose, onFeedbackChange,
 }: Props) {
+  const [copied, setCopied] = useState(false);
+  const entries = allFeedback();
+  const fb = feedbackSummary();
+  // Newest first, and capped — the panel is for spotting a pattern, not for
+  // reading the whole log. `copy` hands over everything.
+  const recent = [...entries].reverse().slice(0, 12);
+
+  const copy = () => {
+    navigator.clipboard.writeText(exportText(ITEM_BY_ID)).then(
+      () => {
+        setCopied(true);
+        window.setTimeout(() => setCopied(false), 1500);
+      },
+      () => setCopied(false),
+    );
+  };
+
   const stop = STOPS[Math.round(dial * (STOPS.length - 1))];
 
   return (
@@ -108,6 +130,9 @@ export function Debug({
                 <span>score <b>{b.debug.score.toExponential(2)}</b></span>
                 <span>= band {n(b.debug.band, 3)}</span>
                 <span>× fame {n(b.debug.fame, 3)}</span>
+                {b.debug.voted !== 1 && (
+                  <span className="debug__voted">× feedback <b>{n(b.debug.voted, 2)}</b></span>
+                )}
                 <span>× merit {n(b.debug.merit)}</span>
                 <span>× idiom {n(b.debug.idiom)}</span>
                 <span>× artist {n(b.debug.sameArtist)}</span>
@@ -141,6 +166,48 @@ export function Debug({
             </li>
           ))}
         </ol>
+      </section>
+
+      <section>
+        <h4>feedback ({fb.total})</h4>
+        {fb.total === 0 ? (
+          <p className="debug__empty">
+            Nothing judged yet. The marks under the case feed straight back into
+            scoring — a rejected step is suppressed the next time it comes up.
+          </p>
+        ) : (
+          <>
+            <div className="debug__factors">
+              <span>♥ good <b>{fb.good}</b></span>
+              <span>~ meh <b>{fb.meh}</b></span>
+              <span>✕ bad <b>{fb.bad}</b></span>
+            </div>
+            <ol className="debug__path">
+              {recent.map((e, i) => (
+                <li key={`${e.id}-${i}`}>
+                  <b>{e.verdict}</b>{' '}
+                  {ITEM_BY_ID.get(e.id)?.subtitle ?? e.artist} —{' '}
+                  {ITEM_BY_ID.get(e.id)?.title ?? e.title}
+                  <span>
+                    {e.role ?? 'seed'} · dial {n(e.dial)}
+                    {e.fromTitle ? ` · after ${e.fromTitle}` : ''}
+                  </span>
+                </li>
+              ))}
+            </ol>
+            <div className="debug__fbactions">
+              <button onClick={copy}>{copied ? 'copied' : 'copy all as text'}</button>
+              <button
+                onClick={() => {
+                  clearFeedback();
+                  onFeedbackChange();
+                }}
+              >
+                clear
+              </button>
+            </div>
+          </>
+        )}
       </section>
 
       <footer>

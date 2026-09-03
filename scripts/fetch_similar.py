@@ -27,6 +27,7 @@ sys.path.insert(0, str(HERE))
 import db  # noqa: E402
 
 OUT = HERE.parent / "data" / "similar-artists.json"
+GRAPH = HERE.parent / "data" / "similarity-graph.json"
 LABS = "https://labs.api.listenbrainz.org/similar-artists/json"
 ALGO = ("session_based_days_7500_session_300_contribution_5_"
         "threshold_10_limit_100_filter_True_skip_30")
@@ -100,5 +101,57 @@ def main() -> int:
     return 0
 
 
+
+
+def build_graph(limit: int = 1500) -> int:
+    """
+    Fetch similar-artist lists for the catalog's most-listened artists.
+
+    The per-seed fixture above truncates at 100, and similarity is not
+    symmetric: Calexico does not appear in Wilco's top 100, but Wilco appears in
+    Calexico's. Measured, 15% of the engine's apparent failures were exactly
+    this — real similarity hidden by a one-directional cut, which made the
+    evaluation understate agreement by roughly half.
+
+    A graph over many artists lets the suite accept a pair when EITHER direction
+    knows the other, which is both more accurate and more stable.
+
+    Note for later: this graph is evaluation ground truth. If it is ever fed
+    into the engine as a recommendation signal, it stops being independent and
+    the suite has to find a different source.
+    """
+    conn = db.connect()
+    rows = conn.execute(
+        """SELECT a.id, a.name, SUM(i.listener_count) tot FROM artists a
+           JOIN items i ON i.artist_id = a.id
+           WHERE i.listener_count IS NOT NULL
+           GROUP BY a.id ORDER BY tot DESC LIMIT ?""", (limit,)).fetchall()
+    print(f"building similarity graph over {len(rows):,} artists "
+          f"(~{len(rows) * 0.55 / 60:.0f} min)", flush=True)
+
+    graph: dict[str, list[str]] = {}
+    for n, r in enumerate(rows, 1):
+        try:
+            resp = requests.get(
+                LABS, params={"artist_mbids": r["id"], "algorithm": ALGO},
+                headers={"User-Agent": UA}, timeout=40)
+            data = resp.json() if resp.status_code == 200 else []
+        except (requests.RequestException, ValueError):
+            data = []
+        if isinstance(data, list) and data:
+            graph[r["id"]] = [x["artist_mbid"] for x in data if x.get("artist_mbid")]
+        time.sleep(0.45)
+        if n % 200 == 0:
+            print(f"  {n:,}/{len(rows):,} — {len(graph):,} with data", flush=True)
+            GRAPH.write_text(json.dumps({"algorithm": ALGO, "edges": graph}))
+
+    GRAPH.write_text(json.dumps({"algorithm": ALGO, "edges": graph}))
+    total = sum(len(v) for v in graph.values())
+    print(f"wrote {len(graph):,} artists, {total:,} edges -> {GRAPH}")
+    return 0
+
+
 if __name__ == "__main__":
+    if "--graph" in sys.argv:
+        sys.exit(build_graph())
     sys.exit(main())

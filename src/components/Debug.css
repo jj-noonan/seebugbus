@@ -90,3 +90,29 @@
   font: inherit; padding: 1px 4px; border-radius: 3px;
   border: 1px solid var(--hairline); background: rgba(242,227,198,.05);
 }
+
+.debug__empty {
+  margin: 4px 0 0;
+  opacity: 0.55;
+  line-height: 1.45;
+}
+
+.debug__voted { color: #f2879b; }
+
+.debug__fbactions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.debug__fbactions button {
+  padding: 3px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.debug__fbactions button:hover { background: rgba(255, 255, 255, 0.12); }

@@ -13,6 +13,8 @@ import { Flow, type FlowCard } from './components/Flow';
 import { SearchBox } from './components/SearchBox';
 import { Die, ROLL_MS } from './components/Die';
 import { About } from './components/About';
+import { Feedback } from './components/Feedback';
+import { weights as feedbackWeights } from './engine/feedback';
 import { Debug } from './components/Debug';
 import { useAmbient } from './hooks/useAmbient';
 import { DistanceDial } from './components/DistanceDial';
@@ -136,10 +138,20 @@ export default function App() {
   const current = trail.length ? byId.get(trail[focusIndex]) ?? null : null;
   const previous = focusIndex > 0 ? byId.get(trail[focusIndex - 1]) ?? null : null;
 
+  /*
+   * Bumped on every verdict. Feedback lives in localStorage rather than React
+   * state, so nothing re-renders on its own; this is the signal that makes a
+   * thumbs-down take effect on the offers immediately instead of at the next
+   * reload.
+   */
+  const [fbVersion, setFbVersion] = useState(0);
+  const fbWeights = useMemo(() => feedbackWeights(), [fbVersion]);
+  const noteFeedback = useCallback(() => setFbVersion((v) => v + 1), []);
+
   const branches = useMemo<Branch[]>(() => {
     if (!current) return [];
     const exclude = new Set(trail.slice(0, focusIndex + 1));
-    const picked = pickBranches(current, pool, dial, exclude);
+    const picked = pickBranches(current, pool, dial, exclude, fbWeights);
 
     // If you've walked past this card before, the branch you actually took has
     // to stay on offer — otherwise stepping back and then forward again would
@@ -165,7 +177,7 @@ export default function App() {
     const out = [...picked];
     out[idx === -1 ? 1 : idx] = replacement;
     return out;
-  }, [current, trail, focusIndex, dial, pool, byId]);
+  }, [current, trail, focusIndex, dial, pool, byId, fbWeights]);
 
   const wildcard = useMemo(() => {
     if (!current) return null;
@@ -179,10 +191,19 @@ export default function App() {
   const deeper = branches.find((b) => b.role === 'deeper');
   const wider = branches.find((b) => b.role === 'wider');
 
+  /*
+   * How each card was arrived at, so feedback can say whether the *step* was
+   * wrong rather than only the record. Not derivable after the fact: the roles
+   * are assigned relative to the candidates a pick actually had, and those are
+   * gone by the time you judge the result.
+   */
+  const [roleById, setRoleById] = useState<Record<string, 'deeper' | 'wider' | 'shuffle'>>({});
+
   const choose = useCallback(
-    (item: Item) => {
+    (item: Item, role?: 'deeper' | 'wider' | 'shuffle') => {
       setTrail((t) => [...t.slice(0, focusIndex + 1), item.id]);
       setFocusIndex((i) => i + 1);
+      if (role) setRoleById((m) => ({ ...m, [item.id]: role }));
     },
     [focusIndex],
   );
@@ -198,7 +219,7 @@ export default function App() {
     setRolling(true);
     // The card starts travelling immediately; the die tumbles alongside it, so
     // the animation never costs the user latency.
-    choose(wildcard);
+    choose(wildcard, 'shuffle');
     window.setTimeout(() => setRolling(false), ROLL_MS);
   }, [wildcard, choose]);
 
@@ -232,10 +253,10 @@ export default function App() {
         rollShuffle();
       } else if (e.key === 'ArrowRight' && wider) {
         e.preventDefault();
-        choose(wider.item);
+        choose(wider.item, 'wider');
       } else if (e.key === 'ArrowDown' && deeper) {
         e.preventDefault();
-        choose(deeper.item);
+        choose(deeper.item, 'deeper');
       } else if (e.key === 'ArrowLeft') {
         e.preventDefault();
         back();
@@ -284,7 +305,7 @@ export default function App() {
         badge: b.role,
         badgeKey: b.role === 'wider' ? '→' : '↓',
         taken: takenId === b.item.id,
-        onClick: () => choose(b.item),
+        onClick: () => choose(b.item, b.role),
         why: (
           <>
             {b.reason}
@@ -384,6 +405,14 @@ export default function App() {
               Apple Music
             </a>
           </div>
+
+          <Feedback
+            item={current}
+            from={previous}
+            dial={dial}
+            role={roleById[current.id]}
+            onChange={noteFeedback}
+          />
         </div>
 
 
@@ -409,6 +438,7 @@ export default function App() {
           dial={dial}
           poolSize={pool.length}
           onClose={() => setShowDebug(false)}
+          onFeedbackChange={noteFeedback}
         />
       )}
 

@@ -16,6 +16,7 @@
     "db": "sqlite3 data/catalog.sqlite",
     "ingest-check": "vite-node scripts/ingest-check.ts --",
     "click-check": "vite-node scripts/click-check.tsx",
+    "feedback-check": "vite-node scripts/feedback-check.tsx",
     "ratings": ".venv/bin/python -u scripts/backfill_ratings.py",
     "backfill": ".venv/bin/python -u scripts/backfill_popularity.py",
     "eval": "vite-node scripts/eval-recs.ts --",

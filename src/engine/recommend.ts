@@ -24,6 +24,12 @@ const AXIS_WEIGHT: Record<Axis, number> = {
  * gets revisited. `npm run walk -- --dial N` prints the effect of any change
  * in a couple of seconds.
  */
+/** Score multipliers derived from listener feedback; see engine/feedback.ts. */
+export interface FeedbackWeights {
+  byItem: ReadonlyMap<string, number>;
+  byPair: ReadonlyMap<string, number>;
+}
+
 export const TUNING = {
   /** Target distance at dial 0 and dial 1. */
   radiusNear: 0.14,
@@ -202,6 +208,8 @@ export interface BranchDebug {
   merit: number;
   idiom: number;
   sameArtist: number;
+  /** Combined listener-feedback multiplier; 1 when nothing has been said. */
+  voted: number;
   jitter: number;
   targetR: number;
   targetPop: number;
@@ -287,6 +295,7 @@ export function pickBranches(
   pool: Item[],
   dial: number,
   excludeIds: ReadonlySet<string>,
+  fb?: FeedbackWeights,
 ): Branch[] {
   const targetR = lerp(TUNING.radiusNear, TUNING.radiusFar, dial);
   const sigma = lerp(TUNING.sigmaNear, TUNING.sigmaFar, dial);
@@ -349,13 +358,27 @@ export function pickBranches(
       combined = band * idiom;
     }
 
-    const score = combined * fame * merit * sameArtist * jitter;
+    /*
+     * What the listener has told us. A judgement of this exact step outranks a
+     * judgement of the record on its own: "not after this" is a narrower and
+     * better-evidenced claim than "not ever", and collapsing the two would
+     * throw away the more useful half of the signal.
+     *
+     * This multiplies rather than filters, so a thumbs-down suppresses a record
+     * without banishing it. A single misclick should not permanently remove
+     * something from a catalogue this large.
+     */
+    const voted =
+      (fb?.byPair.get(`${current.id}>${item.id}`) ?? 1) *
+      (fb?.byItem.get(item.id) ?? 1);
+
+    const score = combined * fame * merit * sameArtist * jitter * voted;
     scored.push({
       item,
       d,
       score,
       parts: {
-        score, band, fame, merit, idiom, sameArtist, jitter,
+        score, band, fame, merit, idiom, sameArtist, jitter, voted,
         targetR, targetPop, qWeight,
       },
     });
