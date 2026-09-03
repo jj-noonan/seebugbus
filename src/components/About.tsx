@@ -120,6 +120,22 @@ export function About({ onClose, onRestart }: Props) {
           </p>
         </section>
 
+        <section>
+          <h3>Telling it when it's wrong</h3>
+          <p>
+            The three marks under the case rate what you're looking at:{' '}
+            <kbd>g</kbd> good call, <kbd>m</kbd> fine but not for you,{' '}
+            <kbd>x</kbd> wrong turn. They take effect immediately — a rejected
+            record is pushed down the next time it comes up, and hardest of all
+            in the same position it was wrong in, since a record can be right
+            after one thing and wrong after another.
+          </p>
+          <p>
+            Verdicts stay in this browser. Nothing is uploaded, so they shape
+            your own paths and nobody else's.
+          </p>
+        </section>
+
         <button
           className="about__restart"
           onClick={() => { onRestart(); onClose(); }}
