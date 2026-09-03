@@ -244,10 +244,6 @@ export function pickBranches(
   const targetPop = lerp(TUNING.popularityNear, TUNING.popularityFar, dial);
   const qWeight = lerp(TUNING.qualityWeightNear, TUNING.qualityWeightFar, dial);
 
-  const currentCorridors = new Set(current.corridorIds);
-  const bridgeCorridors = new Set(
-    current.corridorIds.flatMap((id) => CORRIDOR_BY_ID.get(id)?.bridges ?? []),
-  );
 
   const scored: Scored[] = [];
   for (const item of pool) {
@@ -301,19 +297,38 @@ export function pickBranches(
 
   if (scored.length < 2) return [];
 
-  const shares = (i: Item) => i.corridorIds.some((c) => currentCorridors.has(c));
-  const bridges = (i: Item) =>
-    !shares(i) && i.corridorIds.some((c) => bridgeCorridors.has(c));
+  /*
+   * Roles are split on idiom overlap, measured against the candidates this
+   * pick actually has — not on precomputed corridor membership.
+   *
+   * Corridors did this job before, and did it badly: assignments came from the
+   * tag the crawler searched rather than the tags an album carries, so Born in
+   * the U.S.A. sat in folk-ambient (a lineage running to drone), folk-ambient
+   * borders minimalism, and Ornette Coleman became a *legal* "wider" crossing.
+   * 17% of assignments had no exact tag support, and 23% of shipped albums —
+   * disproportionately mainstream hip-hop and pop — had no corridor at all and
+   * so could never be a crossing.
+   *
+   * The threshold has to be relative. Among candidates that clear the distance
+   * band, 34% share half their tags at Sidewalk but only 3% do at Bushwhack,
+   * where 87% share none. Any fixed cutoff leaves one role starved at one end
+   * of the dial. Splitting at the median of the candidates in hand adapts by
+   * construction: "deeper" is always the more idiomatically related half of
+   * what is genuinely nearby, "wider" the less related half.
+   */
+  const overlaps = scored.map((s) => idiomOverlap(current, s.item));
+  const sortedOv = [...overlaps].sort((x, y) => x - y);
+  const medianOv = sortedOv[Math.floor(sortedOv.length / 2)] ?? 0;
 
   const byScore = (a: Scored, b: Scored) => b.score - a.score;
-  const deeperPool = scored.filter((s) => shares(s.item)).sort(byScore).slice(0, TUNING.poolSize);
-  let widerPool = scored.filter((s) => bridges(s.item)).sort(byScore).slice(0, TUNING.poolSize);
+  const closer: Scored[] = [];
+  const further: Scored[] = [];
+  scored.forEach((s, i) => {
+    (overlaps[i] > medianOv ? closer : further).push(s);
+  });
 
-  // Early in the crawl a corridor may have no neighbours loaded yet; fall back
-  // to anything outside the current lineage before giving up on contrast.
-  if (widerPool.length === 0) {
-    widerPool = scored.filter((s) => !shares(s.item)).sort(byScore).slice(0, TUNING.poolSize);
-  }
+  const deeperPool = closer.sort(byScore).slice(0, TUNING.poolSize);
+  const widerPool = further.sort(byScore).slice(0, TUNING.poolSize);
 
   const a = deeperPool.length ? deeperPool : scored.sort(byScore).slice(0, TUNING.poolSize);
   const b = widerPool.length ? widerPool : scored.sort(byScore).slice(0, TUNING.poolSize);
@@ -330,7 +345,10 @@ export function pickBranches(
   if (!best) return [];
 
   const toBranch = (s: Scored, role: Branch['role']): Branch => {
-    const crossed = s.item.corridorIds.find((c) => !currentCorridors.has(c));
+    // Corridors are no longer part of the decision, but where both records
+    // have one and they differ, naming it is still the clearest way to say
+    // where you are being handed off to.
+    const crossed = s.item.corridorIds.find((c) => !current.corridorIds.includes(c));
     return {
       item: s.item,
       reason: describeMove(current, s.item),

@@ -1,6 +1,21 @@
 import type { Corridor } from './schema';
 
 /**
+ * Walkable lineages — retained for two narrow jobs, no longer part of the
+ * recommendation decision.
+ *
+ * These still seed the crawl (the tag lists are how it knows what to harvest,
+ * and harvesting by lineage is what gives the catalog enough local density for
+ * short steps to exist), and they still label a crossing where one applies.
+ *
+ * They used to decide "deeper" versus "wider", and were poor at it: membership
+ * came from the tag the crawler *searched* rather than the tags an album
+ * carries, 17% of assignments had no exact tag support, and 23% of shipped
+ * albums had no corridor at all. That job now belongs to idiom overlap, which
+ * is derived from tags at load time and needs no precomputation. Kept whole
+ * rather than deleted — the lineages encode real musical knowledge that may
+ * earn another use.
+ *
  * The catalog's skeleton. Each corridor is a lineage you can actually walk —
  * consecutive waypoints share personnel, labels, studios or direct influence,
  * so a short step inside a corridor lands somewhere plausible while a long

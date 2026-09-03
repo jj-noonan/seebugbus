@@ -1,0 +1,5067 @@
+{
+ "source": "ListenBrainz Labs similar-artists",
+ "algorithm": "session_based_days_7500_session_300_contribution_5_threshold_10_limit_100_filter_True_skip_30",
+ "fetchedAt": "2026-09-03T16:00:26Z",
+ "seeds": {
+  "20244d07-534f-4eff-b4d4-930878889970": {
+   "name": "Taylor Swift",
+   "albumsInCatalog": 19,
+   "similar": [
+    {
+     "mbid": "b8a7c51f-362c-4dcb-a259-bc6e0095f0a6",
+     "name": "Ed Sheeran",
+     "score": 7392
+    },
+    {
+     "mbid": "122d63fc-8671-43e4-9752-34e846d62a9c",
+     "name": "Katy Perry",
+     "score": 6441
+    },
+    {
+     "mbid": "f4fdbb4c-e4b7-47a0-b83b-d91bbfcfa387",
+     "name": "Ariana Grande",
+     "score": 5491
+    },
+    {
+     "mbid": "73e5e69d-3554-40d8-8516-00cb38737a1c",
+     "name": "Rihanna",
+     "score": 5288
+    },
+    {
+     "mbid": "650e7db6-b795-4eb5-a702-5ea2fc46c848",
+     "name": "Lady Gaga",
+     "score": 5120
+    },
+    {
+     "mbid": "0ab49580-c84f-44d4-875f-d83760ea2cfe",
+     "name": "Maroon 5",
+     "score": 5079
+    },
+    {
+     "mbid": "6f1a58bf-9b1b-49cf-a44a-6cefad7ae04f",
+     "name": "Dua Lipa",
+     "score": 4706
+    },
+    {
+     "mbid": "2f548675-008d-4332-876c-108b0c7ab9c5",
+     "name": "Sia",
+     "score": 4677
+    },
+    {
+     "mbid": "cc197bad-dc9c-440d-a5b5-d52ba2e14234",
+     "name": "Coldplay",
+     "score": 4554
+    },
+    {
+     "mbid": "e4bc69e2-a064-4f93-ada1-f7f209cc1cc3",
+     "name": "Selena Gomez",
+     "score": 4422
+    },
+    {
+     "mbid": "b7539c32-53e7-4908-bda3-81449c367da6",
+     "name": "Lana Del Rey",
+     "score": 4378
+    },
+    {
+     "mbid": "7e9bd05a-117f-4cce-87bc-e011527a8b18",
+     "name": "Miley Cyrus",
+     "score": 4266
+    },
+    {
+     "mbid": "cc2c9c3c-b7bc-4b8b-84d8-4fbd8779e493",
+     "name": "Adele",
+     "score": 4237
+    },
+    {
+     "mbid": "8e494408-8620-4c6a-82c2-c2ca4a1e4f12",
+     "name": "Lorde",
+     "score": 4225
+    },
+    {
+     "mbid": "09887aa7-226e-4ecc-9a0c-02d2ae5777e1",
+     "name": "Carly Rae Jepsen",
+     "score": 4199
+    },
+    {
+     "mbid": "c8b03190-306c-4120-bb0b-6f2ebfc06ea9",
+     "name": "The Weeknd",
+     "score": 4196
+    },
+    {
+     "mbid": "e0140a67-e4d1-4f13-8a01-364355bee46e",
+     "name": "Justin Bieber",
+     "score": 4160
+    },
+    {
+     "mbid": "012151a8-0f9a-44c9-997f-ebd68b5389f9",
+     "name": "Imagine Dragons",
+     "score": 4141
+    },
+    {
+     "mbid": "afb680f2-b6eb-4cd7-a70b-a63b25c763d5",
+     "name": "Bruno Mars",
+     "score": 4136
+    },
+    {
+     "mbid": "33ca19f4-18c8-4411-98df-ac23890ce9f5",
+     "name": "Ellie Goulding",
+     "score": 4109
+    },
+    {
+     "mbid": "faf4cefb-036c-4c88-b93a-5b03dd0a0e6b",
+     "name": "Demi Lovato",
+     "score": 3990
+    },
+    {
+     "mbid": "859d0860-d480-4efd-970c-c05d5f1776b8",
+     "name": "Beyonc\u00e9",
+     "score": 3901
+    },
+    {
+     "mbid": "1036b808-f58c-4a3e-b461-a2c4492ecf1b",
+     "name": "Nicki Minaj",
+     "score": 3870
+    },
+    {
+     "mbid": "437a0e49-c6ae-42f6-a6c1-84f25ed366bc",
+     "name": "Bon Iver",
+     "score": 3782
+    },
+    {
+     "mbid": "45a663b5-b1cb-4a91-bff6-2bef7bbfdd76",
+     "name": "Britney Spears",
+     "score": 3780
+    },
+    {
+     "mbid": "3377f3bb-60fc-4403-aea9-7e800612e060",
+     "name": "Halsey",
+     "score": 3723
+    },
+    {
+     "mbid": "c33c2065-b1c3-4406-b066-d33a9e2ea71a",
+     "name": "OneRepublic",
+     "score": 3721
+    },
+    {
+     "mbid": "f4d5cc07-3bc9-4836-9b15-88a08359bc63",
+     "name": "P!nk",
+     "score": 3719
+    },
+    {
+     "mbid": "260b6184-8828-48eb-945c-bc4cb6fc34ca",
+     "name": "Charli xcx",
+     "score": 3645
+    },
+    {
+     "mbid": "d339efbb-77b9-4147-ba9e-59f2f24550b2",
+     "name": "Kelly Clarkson",
+     "score": 3603
+    },
+    {
+     "mbid": "0103c1cc-4a09-4a5d-a344-56ad99a77193",
+     "name": "Avril Lavigne",
+     "score": 3572
+    },
+    {
+     "mbid": "fab34286-b8e1-4879-bce3-194e1358fbd2",
+     "name": "Kesha",
+     "score": 3570
+    },
+    {
+     "mbid": "f4abc0b5-3f7a-4eff-8f78-ac078dbce533",
+     "name": "Billie Eilish",
+     "score": 3521
+    },
+    {
+     "mbid": "056e4f3e-d505-4dad-8ec1-d04f521cbb56",
+     "name": "Daft Punk",
+     "score": 3368
+    },
+    {
+     "mbid": "5a85c140-dcf9-4dd2-b2c8-aff0471549f3",
+     "name": "Sam Smith",
+     "score": 3341
+    },
+    {
+     "mbid": "01b8b5bf-06cb-45da-85fb-61ada72fcd69",
+     "name": "Camila Cabello",
+     "score": 3291
+    },
+    {
+     "mbid": "48262e82-db9f-4a92-b650-dfef979b73ec",
+     "name": "Future",
+     "score": 3289
+    },
+    {
+     "mbid": "b7d92248-97e3-4450-8057-6fe06738f735",
+     "name": "Shawn Mendes",
+     "score": 3234
+    },
+    {
+     "mbid": "9fff2f8a-21e6-47de-a2b8-7f449929d43f",
+     "name": "Drake",
+     "score": 3072
+    },
+    {
+     "mbid": "aef06569-098f-4218-a577-b413944d9493",
+     "name": "HAIM",
+     "score": 3050
+    },
+    {
+     "mbid": "1a425bbd-cca4-4b2c-aeb7-71cb176c828a",
+     "name": "One Direction",
+     "score": 3047
+    },
+    {
+     "mbid": "44cf61b8-5197-448a-b82b-cef6ee89fac5",
+     "name": "Paramore",
+     "score": 2990
+    },
+    {
+     "mbid": "164f0d73-1234-4e2c-8743-d77bf2191051",
+     "name": "Ye",
+     "score": 2937
+    },
+    {
+     "mbid": "f59c5520-5f46-4d2c-b2c4-822eabf53419",
+     "name": "Linkin Park",
+     "score": 2921
+    },
+    {
+     "mbid": "7eb1ce54-a355-41f9-8d68-e018b096d427",
+     "name": "Harry Styles",
+     "score": 2907
+    },
+    {
+     "mbid": "b2029169-2574-4305-820f-252a5fde3697",
+     "name": "Meghan Trainor",
+     "score": 2898
+    },
+    {
+     "mbid": "56756959-1e78-429c-b897-e1d056cb0225",
+     "name": "Tove Lo",
+     "score": 2837
+    },
+    {
+     "mbid": "28737730-ec70-4da5-89c5-77ac13c5c34d",
+     "name": "Khalid",
+     "score": 2821
+    },
+    {
+     "mbid": "381086ea-f511-4aba-bdf9-71c753dc5077",
+     "name": "Kendrick Lamar",
+     "score": 2790
+    },
+    {
+     "mbid": "56c4b861-0922-4c3a-a9b9-3bfcb00f8274",
+     "name": "Zedd",
+     "score": 2691
+    },
+    {
+     "mbid": "516cef4d-0718-4007-9939-f9b38af3f784",
+     "name": "Fall Out Boy",
+     "score": 2629
+    },
+    {
+     "mbid": "95e1ead9-4d31-4808-a7ac-32c3614c116b",
+     "name": "The Killers",
+     "score": 2591
+    },
+    {
+     "mbid": "b202beb7-99bd-47e7-8b72-195c8d72ebdd",
+     "name": "Christina Aguilera",
+     "score": 2585
+    },
+    {
+     "mbid": "b10bbbfc-cf9e-42e0-be17-e2c3e1d2600d",
+     "name": "The Beatles",
+     "score": 2583
+    },
+    {
+     "mbid": "6de0f914-3e60-4418-be3b-42e0feb6eb4d",
+     "name": "Jason Derulo",
+     "score": 2573
+    },
+    {
+     "mbid": "525f1f1c-03f0-4bc8-8dfd-e7521f87631b",
+     "name": "Charlie Puth",
+     "score": 2542
+    },
+    {
+     "mbid": "a6c6897a-7415-4f8d-b5a5-3a5e05f3be67",
+     "name": "twenty one pilots",
+     "score": 2528
+    },
+    {
+     "mbid": "596ffa74-3d08-44ef-b113-765d43d12738",
+     "name": "Justin Timberlake",
+     "score": 2525
+    },
+    {
+     "mbid": "272989c8-5535-492d-a25c-9f58803e027f",
+     "name": "SZA",
+     "score": 2517
+    },
+    {
+     "mbid": "144ef525-85e9-40c3-8335-02c32d0861f3",
+     "name": "John Mayer",
+     "score": 2501
+    },
+    {
+     "mbid": "b9472588-93f3-4922-a1a2-74082cdf9ce8",
+     "name": "Panic! at the Disco",
+     "score": 2482
+    },
+    {
+     "mbid": "4593d49a-7f67-46ba-9ec0-126bd676286f",
+     "name": "Flo Rida",
+     "score": 2431
+    },
+    {
+     "mbid": "b95ce3ff-3d05-4e87-9e01-c97b66af13d4",
+     "name": "Eminem",
+     "score": 2404
+    },
+    {
+     "mbid": "c9dd033c-0270-463c-b3ec-f4b7712486fe",
+     "name": "Rita Ora",
+     "score": 2403
+    },
+    {
+     "mbid": "5fee3020-513b-48c2-b1f7-4681b01db0c6",
+     "name": "Florence + the Machine",
+     "score": 2389
+    },
+    {
+     "mbid": "efc8a006-d0c6-4a9b-8cb1-91ca770fa2b9",
+     "name": "Colbie Caillat",
+     "score": 2385
+    },
+    {
+     "mbid": "79239441-bfd5-4981-a70c-55c3f15c1287",
+     "name": "Madonna",
+     "score": 2383
+    },
+    {
+     "mbid": "c85cfd6b-b1e9-4a50-bd55-eb725f04f7d5",
+     "name": "Avicii",
+     "score": 2342
+    },
+    {
+     "mbid": "ada7a83c-e3e1-40f1-93f9-3e73dbc9298a",
+     "name": "Arctic Monkeys",
+     "score": 2334
+    },
+    {
+     "mbid": "494e8d09-f85b-4543-892f-a5096aed1cd4",
+     "name": "Mariah Carey",
+     "score": 2307
+    },
+    {
+     "mbid": "db8fad3a-e131-47a1-8782-c2ee93708cdd",
+     "name": "Bebe Rexha",
+     "score": 2290
+    },
+    {
+     "mbid": "e5712ceb-c37a-4c49-a11c-ccf4e21852d4",
+     "name": "Troye Sivan",
+     "score": 2285
+    },
+    {
+     "mbid": "f27ec8db-af05-4f36-916e-3d57f91ecf5e",
+     "name": "Michael Jackson",
+     "score": 2279
+    },
+    {
+     "mbid": "134e6410-6954-45d1-bd4a-0f2d2ad5471d",
+     "name": "Zara Larsson",
+     "score": 2259
+    },
+    {
+     "mbid": "38f59974-2f4d-4bfa-b2e3-d2696de1b675",
+     "name": "Little Mix",
+     "score": 2241
+    },
+    {
+     "mbid": "4365b045-388b-42a5-91b5-b860dbcbf9f7",
+     "name": "Gary Lightbody",
+     "score": 2231
+    },
+    {
+     "mbid": "a74b1b7f-71a5-4011-9441-d0b5e4122711",
+     "name": "Radiohead",
+     "score": 2226
+    },
+    {
+     "mbid": "97e69730-3791-423b-9770-287261588854",
+     "name": "Alessia Cara",
+     "score": 2220
+    },
+    {
+     "mbid": "664c3e0e-42d8-48c1-b209-1efca19c0325",
+     "name": "The National",
+     "score": 2214
+    },
+    {
+     "mbid": "b1e26560-60e5-4236-bbdb-9aa5a8d5ee19",
+     "name": "Post Malone",
+     "score": 2210
+    },
+    {
+     "mbid": "d24fb461-dee8-41fc-bb15-2f13bb2644a6",
+     "name": "Jessie J",
+     "score": 2192
+    },
+    {
+     "mbid": "8dd98bdc-80ec-4e93-8509-2f46bafc09a7",
+     "name": "Calvin Harris",
+     "score": 2174
+    },
+    {
+     "mbid": "bf24ca37-25f4-4e34-9aec-460b94364cfc",
+     "name": "Shakira",
+     "score": 2164
+    },
+    {
+     "mbid": "3a052c99-8c18-484a-8beb-9873b4fb3106",
+     "name": "Iggy Azalea",
+     "score": 2152
+    },
+    {
+     "mbid": "bfd5aec5-62a2-4560-a316-7c46c17babda",
+     "name": "Train",
+     "score": 2140
+    },
+    {
+     "mbid": "3248ed2d-bada-41b5-a7b6-ac88faa1f1ac",
+     "name": "The Chicks",
+     "score": 2133
+    },
+    {
+     "mbid": "7808accb-6395-4b25-858c-678bbb73896b",
+     "name": "Bastille",
+     "score": 2133
+    },
+    {
+     "mbid": "d5be5333-4171-427e-8e12-732087c6b78e",
+     "name": "Black Eyed Peas",
+     "score": 2127
+    },
+    {
+     "mbid": "ad279295-653f-42e1-9aaa-b731df2e78ba",
+     "name": "Owl City",
+     "score": 2077
+    },
+    {
+     "mbid": "5df62a88-cac9-490a-b62c-c7c88f4020f4",
+     "name": "Doja Cat",
+     "score": 2009
+    },
+    {
+     "mbid": "b83bc61f-8451-4a5d-8b8e-7e9ed295e822",
+     "name": "Elton John",
+     "score": 2004
+    },
+    {
+     "mbid": "add5f522-25df-41c4-815e-0ca9f60b83e4",
+     "name": "Ava Max",
+     "score": 1991
+    },
+    {
+     "mbid": "e565610b-9a8f-451d-b594-ea658d76f725",
+     "name": "Fifth Harmony",
+     "score": 1988
+    },
+    {
+     "mbid": "ac9a487a-d9d2-4f27-bb23-0f4686488345",
+     "name": "Lil Wayne",
+     "score": 1984
+    },
+    {
+     "mbid": "8bfac288-ccc5-448d-9573-c33ea2aa5c30",
+     "name": "Red Hot Chili Peppers",
+     "score": 1977
+    },
+    {
+     "mbid": "4c98aa1b-34eb-4336-987f-5e50aa059c00",
+     "name": "The Script",
+     "score": 1974
+    },
+    {
+     "mbid": "4757df70-6c3e-46b8-99c0-a68644595c9a",
+     "name": "Julia Michaels",
+     "score": 1963
+    },
+    {
+     "mbid": "e3d5b5ec-101a-4529-9f2d-01dca64cf44e",
+     "name": "Anne\u2010Marie",
+     "score": 1961
+    },
+    {
+     "mbid": "830e5c4e-6b7d-431d-86ab-00c751281dc5",
+     "name": "5 Seconds of Summer",
+     "score": 1957
+    },
+    {
+     "mbid": "9c9f1380-2516-4fc9-a3e6-f9f61941d090",
+     "name": "Muse",
+     "score": 1944
+    }
+   ]
+  },
+  "70248960-cb53-4ea4-943a-edb18f7d336f": {
+   "name": "Bruce Springsteen",
+   "albumsInCatalog": 21,
+   "similar": [
+    {
+     "mbid": "b071f9fa-14b0-4217-8e97-eb41da73f598",
+     "name": "The Rolling Stones",
+     "score": 5412
+    },
+    {
+     "mbid": "b10bbbfc-cf9e-42e0-be17-e2c3e1d2600d",
+     "name": "The Beatles",
+     "score": 5090
+    },
+    {
+     "mbid": "5441c29d-3602-4898-b1a1-b77fa23b8e50",
+     "name": "David Bowie",
+     "score": 5086
+    },
+    {
+     "mbid": "0383dadf-2a4e-4d10-a46a-e9e041da8eb3",
+     "name": "Queen",
+     "score": 5077
+    },
+    {
+     "mbid": "72c536dc-7137-4477-a521-567eeb840fa8",
+     "name": "Bob Dylan",
+     "score": 4857
+    },
+    {
+     "mbid": "bd13909f-1c29-4c27-a874-d4aaf27c5b1a",
+     "name": "Fleetwood Mac",
+     "score": 4528
+    },
+    {
+     "mbid": "a3cb23fc-acd3-4ce0-8f36-1e5aa6a18432",
+     "name": "U2",
+     "score": 4512
+    },
+    {
+     "mbid": "678d88b2-87b0-403b-b63d-5da7465aecc3",
+     "name": "Led Zeppelin",
+     "score": 4117
+    },
+    {
+     "mbid": "109958eb-a335-4c5e-907e-597ff4c6af46",
+     "name": "Creedence Clearwater Revival",
+     "score": 4022
+    },
+    {
+     "mbid": "b83bc61f-8451-4a5d-8b8e-7e9ed295e822",
+     "name": "Elton John",
+     "score": 3919
+    },
+    {
+     "mbid": "83d91898-7763-47d7-b03b-b92132375c47",
+     "name": "Pink Floyd",
+     "score": 3884
+    },
+    {
+     "mbid": "9fdaa16b-a6c4-4831-b87c-bc9ca8ce7eaa",
+     "name": "The Who",
+     "score": 3795
+    },
+    {
+     "mbid": "ea4dfa26-f633-4da6-a52a-f49ea4897b58",
+     "name": "R.E.M.",
+     "score": 3776
+    },
+    {
+     "mbid": "614e3804-7d34-41ba-857f-811bad7c2b7a",
+     "name": "Dire Straits",
+     "score": 3707
+    },
+    {
+     "mbid": "9e0e2b01-41db-4008-bd8b-988977d6019a",
+     "name": "The Police",
+     "score": 3707
+    },
+    {
+     "mbid": "8f92558c-2baa-4758-8c38-615519e9deda",
+     "name": "The Clash",
+     "score": 3633
+    },
+    {
+     "mbid": "64b94289-9474-4d43-8c93-918ccc1920d1",
+     "name": "Billy Joel",
+     "score": 3512
+    },
+    {
+     "mbid": "3d2b98e5-556f-4451-a3ff-c50ea18d57cb",
+     "name": "Aerosmith",
+     "score": 3470
+    },
+    {
+     "mbid": "66c662b6-6e2f-4930-8610-912e24c63ed1",
+     "name": "AC/DC",
+     "score": 3436
+    },
+    {
+     "mbid": "75167b8b-44e4-407b-9d35-effe87b223cf",
+     "name": "Neil Young",
+     "score": 3425
+    },
+    {
+     "mbid": "eeb1195b-f213-4ce1-b28c-8565211f8e43",
+     "name": "Guns N\u2019 Roses",
+     "score": 3374
+    },
+    {
+     "mbid": "5d02f264-e225-41ff-83f7-d9b1f0b1874a",
+     "name": "Simon & Garfunkel",
+     "score": 3367
+    },
+    {
+     "mbid": "a74b1b7f-71a5-4011-9441-d0b5e4122711",
+     "name": "Radiohead",
+     "score": 3358
+    },
+    {
+     "mbid": "9efff43b-3b29-4082-824e-bc82f646f93d",
+     "name": "The Doors",
+     "score": 3276
+    },
+    {
+     "mbid": "5b11f4ce-a62d-471e-81fc-a69a8278c7da",
+     "name": "Nirvana",
+     "score": 3248
+    },
+    {
+     "mbid": "8bfac288-ccc5-448d-9573-c33ea2aa5c30",
+     "name": "Red Hot Chili Peppers",
+     "score": 3217
+    },
+    {
+     "mbid": "69ee3720-a7cb-4402-b48d-a02c366f2bcf",
+     "name": "The Cure",
+     "score": 3196
+    },
+    {
+     "mbid": "d43d12a1-2dc9-4257-a2fd-0a3bb1081b86",
+     "name": "Johnny Cash",
+     "score": 3157
+    },
+    {
+     "mbid": "618b6900-0618-4f1e-b835-bccb17f84294",
+     "name": "Eric Clapton",
+     "score": 3153
+    },
+    {
+     "mbid": "f46bd570-5768-462e-b84c-c7c993bbf47e",
+     "name": "Eagles",
+     "score": 3152
+    },
+    {
+     "mbid": "f27ec8db-af05-4f36-916e-3d57f91ecf5e",
+     "name": "Michael Jackson",
+     "score": 3116
+    },
+    {
+     "mbid": "ebfc1398-8d96-47e3-82c3-f782abcdb13d",
+     "name": "The Beach Boys",
+     "score": 3110
+    },
+    {
+     "mbid": "5dcdb5eb-cb72-4e6e-9e63-b7bace604965",
+     "name": "Bon Jovi",
+     "score": 3075
+    },
+    {
+     "mbid": "b665b768-0d83-4363-950c-31ed39317c15",
+     "name": "Van Halen",
+     "score": 3055
+    },
+    {
+     "mbid": "cc197bad-dc9c-440d-a5b5-d52ba2e14234",
+     "name": "Coldplay",
+     "score": 3011
+    },
+    {
+     "mbid": "a41ac10f-0a56-4672-9161-b83f9b223559",
+     "name": "Van Morrison",
+     "score": 2937
+    },
+    {
+     "mbid": "abd506e1-6f2b-4d6f-b937-92c267f6f88b",
+     "name": "Journey",
+     "score": 2814
+    },
+    {
+     "mbid": "67f66c07-6e61-4026-ade5-7e782fad3a5d",
+     "name": "Foo Fighters",
+     "score": 2792
+    },
+    {
+     "mbid": "17b53d9f-5c63-4a09-a593-dde4608e0db9",
+     "name": "The Kinks",
+     "score": 2780
+    },
+    {
+     "mbid": "05517043-ff78-4988-9c22-88c68588ebb9",
+     "name": "Paul Simon",
+     "score": 2748
+    },
+    {
+     "mbid": "f93dbc64-6f08-4033-bcc7-8a0bb4689849",
+     "name": "Tom Petty and the Heartbreakers",
+     "score": 2706
+    },
+    {
+     "mbid": "070d193a-845c-479f-980e-bef15710653e",
+     "name": "Prince",
+     "score": 2660
+    },
+    {
+     "mbid": "83b9cbe7-9857-49e2-ab8e-b57b01038103",
+     "name": "Pearl Jam",
+     "score": 2643
+    },
+    {
+     "mbid": "8538e728-ca0b-4321-b7e5-cff6565dd4c0",
+     "name": "Depeche Mode",
+     "score": 2606
+    },
+    {
+     "mbid": "4dbf5678-7a31-406a-abbe-232f8ac2cd63",
+     "name": "Bryan Adams",
+     "score": 2602
+    },
+    {
+     "mbid": "c544ed4d-2390-4442-a83e-1ea2883b09c8",
+     "name": "Lynyrd Skynyrd",
+     "score": 2539
+    },
+    {
+     "mbid": "5ca3f318-d028-4151-ac73-78e2b2d6cdcc",
+     "name": "Tom Petty",
+     "score": 2522
+    },
+    {
+     "mbid": "01809552-4f87-45b0-afff-2c6f0730a3be",
+     "name": "Elvis Presley",
+     "score": 2521
+    },
+    {
+     "mbid": "401c3991-b76b-499d-8082-9f2df958ef78",
+     "name": "Phil Collins",
+     "score": 2467
+    },
+    {
+     "mbid": "65f4f0c5-ef9e-490c-aee3-909e7ae6b2ab",
+     "name": "Metallica",
+     "score": 2458
+    },
+    {
+     "mbid": "0c502791-4ee9-4c5f-9696-0602b721ff3b",
+     "name": "Electric Light Orchestra",
+     "score": 2415
+    },
+    {
+     "mbid": "a81259a0-a2f5-464b-866e-71220f2739f1",
+     "name": "ZZ Top",
+     "score": 2405
+    },
+    {
+     "mbid": "aab5c954-cabe-432e-899e-1c4f99757327",
+     "name": "Toto",
+     "score": 2369
+    },
+    {
+     "mbid": "a94a7155-c79d-4409-9fcf-220cb0e4dc3a",
+     "name": "Talking Heads",
+     "score": 2351
+    },
+    {
+     "mbid": "4d5447d7-c61c-4120-ba1b-d7f471d385b9",
+     "name": "John Lennon",
+     "score": 2331
+    },
+    {
+     "mbid": "95e1ead9-4d31-4808-a7ac-32c3614c116b",
+     "name": "The Killers",
+     "score": 2325
+    },
+    {
+     "mbid": "8e3fcd7d-bda1-4ca0-b987-b8528d2ee74e",
+     "name": "Genesis",
+     "score": 2318
+    },
+    {
+     "mbid": "0d8b0d50-e4cf-4da4-965d-f24c58ec3268",
+     "name": "Boston",
+     "score": 2280
+    },
+    {
+     "mbid": "79239441-bfd5-4981-a70c-55c3f15c1287",
+     "name": "Madonna",
+     "score": 2278
+    },
+    {
+     "mbid": "06fb1c8b-566e-4cb2-985b-b467c90781d4",
+     "name": "Jimi Hendrix",
+     "score": 2234
+    },
+    {
+     "mbid": "39ab1aed-75e0-4140-bd47-540276886b60",
+     "name": "Oasis",
+     "score": 2230
+    },
+    {
+     "mbid": "ba0d6274-db14-4ef5-b28d-657ebde1a396",
+     "name": "The Smashing Pumpkins",
+     "score": 2220
+    },
+    {
+     "mbid": "1ee18fb3-18a6-4c7f-8ba0-bc41cdd0462e",
+     "name": "Stevie Wonder",
+     "score": 2218
+    },
+    {
+     "mbid": "481bf5f9-2e7c-4c44-b08a-05b32bc7c00d",
+     "name": "INXS",
+     "score": 2198
+    },
+    {
+     "mbid": "5182c1d9-c7d2-4dad-afa0-ccfeada921a8",
+     "name": "Black Sabbath",
+     "score": 2188
+    },
+    {
+     "mbid": "d2ff6b6b-fc30-48dc-8952-06f9d8fc64f8",
+     "name": "Supertramp",
+     "score": 2180
+    },
+    {
+     "mbid": "092b603f-eb4c-4958-b10e-02420de5885b",
+     "name": "The Cars",
+     "score": 2149
+    },
+    {
+     "mbid": "9c9f1380-2516-4fc9-a3e6-f9f61941d090",
+     "name": "Muse",
+     "score": 2145
+    },
+    {
+     "mbid": "9d1ebcfe-4c15-4d18-95d3-d919898638a1",
+     "name": "Lou Reed",
+     "score": 2107
+    },
+    {
+     "mbid": "79491354-3d83-40e3-9d8e-7592d58d790a",
+     "name": "Deep Purple",
+     "score": 2105
+    },
+    {
+     "mbid": "debabff3-2559-46e5-862d-ef2a906d7010",
+     "name": "Daryl Hall & John Oates",
+     "score": 2086
+    },
+    {
+     "mbid": "6fe07aa5-fec0-4eca-a456-f29bff451b04",
+     "name": "Weezer",
+     "score": 2046
+    },
+    {
+     "mbid": "04cd0cfd-bfd1-4c36-bc38-95c35e2c045f",
+     "name": "Cream",
+     "score": 2039
+    },
+    {
+     "mbid": "7944ed53-2a58-4035-9b93-140a71e41c34",
+     "name": "Sting",
+     "score": 2029
+    },
+    {
+     "mbid": "a35237a0-4f47-40a6-b6f3-1e786db23402",
+     "name": "Rod Stewart",
+     "score": 2022
+    },
+    {
+     "mbid": "160629ab-ec18-4931-8c95-02cb92d06186",
+     "name": "Foreigner",
+     "score": 2017
+    },
+    {
+     "mbid": "6ffb8ea9-2370-44d8-b678-e9237bbd347b",
+     "name": "Kings of Leon",
+     "score": 2000
+    },
+    {
+     "mbid": "1a1cd7f3-e5df-4eca-bae2-2757c9e656b5",
+     "name": "Duran Duran",
+     "score": 1979
+    },
+    {
+     "mbid": "ba550d0e-adac-4864-b88b-407cab5e76af",
+     "name": "Paul McCartney",
+     "score": 1967
+    },
+    {
+     "mbid": "40f5d9e4-2de7-4f2d-ad41-e31a9a9fea27",
+     "name": "The Smiths",
+     "score": 1957
+    },
+    {
+     "mbid": "b6b2bb8d-54a9-491f-9607-7b546023b433",
+     "name": "Pixies",
+     "score": 1956
+    },
+    {
+     "mbid": "7c7f9c94-dee8-4903-892b-6cf44652e2de",
+     "name": "Tears for Fears",
+     "score": 1943
+    },
+    {
+     "mbid": "7bd9e20e-74b9-446a-a2ed-a223f82a36e7",
+     "name": "Cyndi Lauper",
+     "score": 1931
+    },
+    {
+     "mbid": "0aad6b52-fd93-4ea4-9c5d-1f66e1bc9f0a",
+     "name": "John Mellencamp",
+     "score": 1923
+    },
+    {
+     "mbid": "ada7a83c-e3e1-40f1-93f9-3e73dbc9298a",
+     "name": "Arctic Monkeys",
+     "score": 1875
+    },
+    {
+     "mbid": "b4d32cff-f19e-455f-86c4-f347d824ca61",
+     "name": "Eurythmics",
+     "score": 1869
+    },
+    {
+     "mbid": "bdbd48f5-abf3-4a4f-9a21-4551dbc3fde9",
+     "name": "Heart",
+     "score": 1867
+    },
+    {
+     "mbid": "8e66ea2b-b57b-47d9-8df0-df4630aeb8e5",
+     "name": "Peter Gabriel",
+     "score": 1865
+    },
+    {
+     "mbid": "ba853904-ae25-4ebb-89d6-c44cfbd71bd2",
+     "name": "Blur",
+     "score": 1863
+    },
+    {
+     "mbid": "47c8f88b-987a-4b64-9175-2b1b57809727",
+     "name": "Billy Idol",
+     "score": 1853
+    },
+    {
+     "mbid": "65314b12-0e08-43fa-ba33-baaa7b874c15",
+     "name": "Leonard Cohen",
+     "score": 1846
+    },
+    {
+     "mbid": "42a8f507-8412-4611-854f-926571049fa0",
+     "name": "George Harrison",
+     "score": 1845
+    },
+    {
+     "mbid": "c3aeb863-7b26-4388-94e8-5a240f2be21b",
+     "name": "Tom Waits",
+     "score": 1815
+    },
+    {
+     "mbid": "d6ed7887-a401-47a8-893c-34b967444d26",
+     "name": "Ramones",
+     "score": 1812
+    },
+    {
+     "mbid": "8c90ad8c-9150-4c51-a1eb-342232e99d06",
+     "name": "The Band",
+     "score": 1812
+    },
+    {
+     "mbid": "e1f1e33e-2e4c-4d43-b91b-7064068d3283",
+     "name": "KISS",
+     "score": 1811
+    },
+    {
+     "mbid": "e01c3376-15fa-40d7-b747-5f219bdefdd7",
+     "name": "Steely Dan",
+     "score": 1800
+    },
+    {
+     "mbid": "d87e52c5-bb8d-4da8-b941-9f4928627dc8",
+     "name": "ABBA",
+     "score": 1800
+    },
+    {
+     "mbid": "9a3bf45c-347d-4630-894d-7cf3e8e0b632",
+     "name": "Santana",
+     "score": 1787
+    },
+    {
+     "mbid": "e57f0cac-4f56-473c-8d7e-d93f753fd586",
+     "name": "Steve Miller Band",
+     "score": 1783
+    }
+   ]
+  },
+  "6faa7ca7-0d99-4a5e-bfa6-1fd5037520c6": {
+   "name": "Grateful Dead",
+   "albumsInCatalog": 13,
+   "similar": [
+    {
+     "mbid": "b071f9fa-14b0-4217-8e97-eb41da73f598",
+     "name": "The Rolling Stones",
+     "score": 2676
+    },
+    {
+     "mbid": "b10bbbfc-cf9e-42e0-be17-e2c3e1d2600d",
+     "name": "The Beatles",
+     "score": 2658
+    },
+    {
+     "mbid": "678d88b2-87b0-403b-b63d-5da7465aecc3",
+     "name": "Led Zeppelin",
+     "score": 2465
+    },
+    {
+     "mbid": "83d91898-7763-47d7-b03b-b92132375c47",
+     "name": "Pink Floyd",
+     "score": 2363
+    },
+    {
+     "mbid": "72c536dc-7137-4477-a521-567eeb840fa8",
+     "name": "Bob Dylan",
+     "score": 2334
+    },
+    {
+     "mbid": "9efff43b-3b29-4082-824e-bc82f646f93d",
+     "name": "The Doors",
+     "score": 2328
+    },
+    {
+     "mbid": "9fdaa16b-a6c4-4831-b87c-bc9ca8ce7eaa",
+     "name": "The Who",
+     "score": 2000
+    },
+    {
+     "mbid": "75167b8b-44e4-407b-9d35-effe87b223cf",
+     "name": "Neil Young",
+     "score": 1866
+    },
+    {
+     "mbid": "bd13909f-1c29-4c27-a874-d4aaf27c5b1a",
+     "name": "Fleetwood Mac",
+     "score": 1850
+    },
+    {
+     "mbid": "06fb1c8b-566e-4cb2-985b-b467c90781d4",
+     "name": "Jimi Hendrix",
+     "score": 1772
+    },
+    {
+     "mbid": "39c2a93d-9afa-4a22-9bba-c087ab056e1c",
+     "name": "Jefferson Airplane",
+     "score": 1706
+    },
+    {
+     "mbid": "04cd0cfd-bfd1-4c36-bc38-95c35e2c045f",
+     "name": "Cream",
+     "score": 1652
+    },
+    {
+     "mbid": "2819834e-4e08-47b0-a2c4-b7672318e8f0",
+     "name": "The Byrds",
+     "score": 1403
+    },
+    {
+     "mbid": "72359492-22be-4ed9-aaa0-efa434fb2b01",
+     "name": "The Allman Brothers Band",
+     "score": 1383
+    },
+    {
+     "mbid": "a41ac10f-0a56-4672-9161-b83f9b223559",
+     "name": "Van Morrison",
+     "score": 1375
+    },
+    {
+     "mbid": "a74b1b7f-71a5-4011-9441-d0b5e4122711",
+     "name": "Radiohead",
+     "score": 1340
+    },
+    {
+     "mbid": "70248960-cb53-4ea4-943a-edb18f7d336f",
+     "name": "Bruce Springsteen",
+     "score": 1339
+    },
+    {
+     "mbid": "8c90ad8c-9150-4c51-a1eb-342232e99d06",
+     "name": "The Band",
+     "score": 1323
+    },
+    {
+     "mbid": "618b6900-0618-4f1e-b835-bccb17f84294",
+     "name": "Eric Clapton",
+     "score": 1312
+    },
+    {
+     "mbid": "f46bd570-5768-462e-b84c-c7c993bbf47e",
+     "name": "Eagles",
+     "score": 1266
+    },
+    {
+     "mbid": "e01c3376-15fa-40d7-b747-5f219bdefdd7",
+     "name": "Steely Dan",
+     "score": 1235
+    },
+    {
+     "mbid": "b83bc61f-8451-4a5d-8b8e-7e9ed295e822",
+     "name": "Elton John",
+     "score": 1234
+    },
+    {
+     "mbid": "ebfc1398-8d96-47e3-82c3-f782abcdb13d",
+     "name": "The Beach Boys",
+     "score": 1227
+    },
+    {
+     "mbid": "c544ed4d-2390-4442-a83e-1ea2883b09c8",
+     "name": "Lynyrd Skynyrd",
+     "score": 1209
+    },
+    {
+     "mbid": "46a782ea-4308-476b-abd1-a91b197f3037",
+     "name": "Crosby, Stills, Nash & Young",
+     "score": 1194
+    },
+    {
+     "mbid": "8f92558c-2baa-4758-8c38-615519e9deda",
+     "name": "The Clash",
+     "score": 1179
+    },
+    {
+     "mbid": "d43d12a1-2dc9-4257-a2fd-0a3bb1081b86",
+     "name": "Johnny Cash",
+     "score": 1167
+    },
+    {
+     "mbid": "f93dbc64-6f08-4033-bcc7-8a0bb4689849",
+     "name": "Tom Petty and the Heartbreakers",
+     "score": 1126
+    },
+    {
+     "mbid": "94b0fb9d-a066-4823-b2ec-af1d324bcfcf",
+     "name": "The Velvet Underground",
+     "score": 1117
+    },
+    {
+     "mbid": "8bfac288-ccc5-448d-9573-c33ea2aa5c30",
+     "name": "Red Hot Chili Peppers",
+     "score": 1092
+    },
+    {
+     "mbid": "33b3c323-77c2-417c-a5b4-af7e6a111cc9",
+     "name": "The Jimi Hendrix Experience",
+     "score": 1080
+    },
+    {
+     "mbid": "79491354-3d83-40e3-9d8e-7592d58d790a",
+     "name": "Deep Purple",
+     "score": 1063
+    },
+    {
+     "mbid": "42a8f507-8412-4611-854f-926571049fa0",
+     "name": "George Harrison",
+     "score": 1040
+    },
+    {
+     "mbid": "a94a7155-c79d-4409-9fcf-220cb0e4dc3a",
+     "name": "Talking Heads",
+     "score": 1023
+    },
+    {
+     "mbid": "ece57992-dc2e-4f67-a269-fa43626c1a3d",
+     "name": "Jethro Tull",
+     "score": 1004
+    },
+    {
+     "mbid": "a3cb23fc-acd3-4ce0-8f36-1e5aa6a18432",
+     "name": "U2",
+     "score": 995
+    },
+    {
+     "mbid": "22dc19af-d085-4c9b-adfb-22ec256251f1",
+     "name": "Buffalo Springfield",
+     "score": 992
+    },
+    {
+     "mbid": "ea4dfa26-f633-4da6-a52a-f49ea4897b58",
+     "name": "R.E.M.",
+     "score": 978
+    },
+    {
+     "mbid": "83b9cbe7-9857-49e2-ab8e-b57b01038103",
+     "name": "Pearl Jam",
+     "score": 977
+    },
+    {
+     "mbid": "e57f0cac-4f56-473c-8d7e-d93f753fd586",
+     "name": "Steve Miller Band",
+     "score": 955
+    },
+    {
+     "mbid": "e20747e7-55a4-452e-8766-7b985585082d",
+     "name": "Frank Zappa",
+     "score": 946
+    },
+    {
+     "mbid": "cfafad90-b736-4c74-8ded-f3f4d7b2c792",
+     "name": "Crosby, Stills & Nash",
+     "score": 943
+    },
+    {
+     "mbid": "76c9a186-75bd-436a-85c0-823e3efddb7f",
+     "name": "Janis Joplin",
+     "score": 933
+    },
+    {
+     "mbid": "eeb1195b-f213-4ce1-b28c-8565211f8e43",
+     "name": "Guns N\u2019 Roses",
+     "score": 932
+    },
+    {
+     "mbid": "12ff8858-bfcb-4812-a8dd-7e9debf0cbee",
+     "name": "Steppenwolf",
+     "score": 925
+    },
+    {
+     "mbid": "9a3bf45c-347d-4630-894d-7cf3e8e0b632",
+     "name": "Santana",
+     "score": 923
+    },
+    {
+     "mbid": "5ca3f318-d028-4151-ac73-78e2b2d6cdcc",
+     "name": "Tom Petty",
+     "score": 908
+    },
+    {
+     "mbid": "9e0e2b01-41db-4008-bd8b-988977d6019a",
+     "name": "The Police",
+     "score": 899
+    },
+    {
+     "mbid": "b665b768-0d83-4363-950c-31ed39317c15",
+     "name": "Van Halen",
+     "score": 892
+    },
+    {
+     "mbid": "ba0d6274-db14-4ef5-b28d-657ebde1a396",
+     "name": "The Smashing Pumpkins",
+     "score": 891
+    },
+    {
+     "mbid": "9d1ebcfe-4c15-4d18-95d3-d919898638a1",
+     "name": "Lou Reed",
+     "score": 884
+    },
+    {
+     "mbid": "a81259a0-a2f5-464b-866e-71220f2739f1",
+     "name": "ZZ Top",
+     "score": 877
+    },
+    {
+     "mbid": "a6de8ef9-b1a1-4756-97aa-481bbb8a4069",
+     "name": "Joni Mitchell",
+     "score": 837
+    },
+    {
+     "mbid": "c1d4f2ba-cf39-460c-9528-6b827d3417a1",
+     "name": "Yes",
+     "score": 828
+    },
+    {
+     "mbid": "588dea29-eea3-456b-a815-3ee04f75c8e7",
+     "name": "The Doobie Brothers",
+     "score": 822
+    },
+    {
+     "mbid": "c7423e0c-ab3e-4ab4-be10-cdff5a9d3062",
+     "name": "Blue \u00d6yster Cult",
+     "score": 818
+    },
+    {
+     "mbid": "191de76f-a224-445d-b041-54df16d65bf7",
+     "name": "The Yardbirds",
+     "score": 797
+    },
+    {
+     "mbid": "774666d2-2064-4d6c-856c-f8cda0aaf9f0",
+     "name": "The Moody Blues",
+     "score": 770
+    },
+    {
+     "mbid": "c296e10c-110a-4103-9e77-47bfebb7fb2e",
+     "name": "Bob Marley & The Wailers",
+     "score": 748
+    },
+    {
+     "mbid": "e01646f2-2a04-450d-8bf2-0d993082e058",
+     "name": "Phish",
+     "score": 744
+    },
+    {
+     "mbid": "c3aeb863-7b26-4388-94e8-5a240f2be21b",
+     "name": "Tom Waits",
+     "score": 736
+    },
+    {
+     "mbid": "d2ff6b6b-fc30-48dc-8952-06f9d8fc64f8",
+     "name": "Supertramp",
+     "score": 733
+    },
+    {
+     "mbid": "2155a81a-f0c6-417a-9b16-2f86f98bb8bc",
+     "name": "Derek and the Dominos",
+     "score": 730
+    },
+    {
+     "mbid": "e2345fdf-2be7-47c5-a6dd-be64353ad134",
+     "name": "Cat Stevens",
+     "score": 730
+    },
+    {
+     "mbid": "6fe07aa5-fec0-4eca-a456-f29bff451b04",
+     "name": "Weezer",
+     "score": 724
+    },
+    {
+     "mbid": "230ca093-1d00-4c57-9235-147942f66930",
+     "name": "The Zombies",
+     "score": 716
+    },
+    {
+     "mbid": "9e53f84d-ef44-4c16-9677-5fd4d78cbd7d",
+     "name": "Wilco",
+     "score": 712
+    },
+    {
+     "mbid": "8e3fcd7d-bda1-4ca0-b987-b8528d2ee74e",
+     "name": "Genesis",
+     "score": 710
+    },
+    {
+     "mbid": "72d7d717-0837-4f2a-9641-d0f9fdd3acf7",
+     "name": "Donovan",
+     "score": 693
+    },
+    {
+     "mbid": "cc197bad-dc9c-440d-a5b5-d52ba2e14234",
+     "name": "Coldplay",
+     "score": 692
+    },
+    {
+     "mbid": "d6ed7887-a401-47a8-893c-34b967444d26",
+     "name": "Ramones",
+     "score": 691
+    },
+    {
+     "mbid": "b6b2bb8d-54a9-491f-9607-7b546023b433",
+     "name": "Pixies",
+     "score": 689
+    },
+    {
+     "mbid": "e21857d5-3256-4547-afb3-4b6ded592596",
+     "name": "Gorillaz",
+     "score": 686
+    },
+    {
+     "mbid": "88527d26-7496-47c5-8358-ebdb1868a90f",
+     "name": "Jackson Browne",
+     "score": 666
+    },
+    {
+     "mbid": "ba550d0e-adac-4864-b88b-407cab5e76af",
+     "name": "Paul McCartney",
+     "score": 659
+    },
+    {
+     "mbid": "d15721d8-56b4-453d-b506-fc915b14cba2",
+     "name": "The Black Keys",
+     "score": 658
+    },
+    {
+     "mbid": "9fadfba9-ecae-4383-a4d8-47b043cea19a",
+     "name": "Traffic",
+     "score": 650
+    },
+    {
+     "mbid": "a35237a0-4f47-40a6-b6f3-1e786db23402",
+     "name": "Rod Stewart",
+     "score": 650
+    },
+    {
+     "mbid": "99ea432a-e3d8-42cb-9d5e-db316a6a8458",
+     "name": "Nick Drake",
+     "score": 648
+    },
+    {
+     "mbid": "107d0c22-d051-4d98-8206-4e14de02132a",
+     "name": "James Taylor",
+     "score": 644
+    },
+    {
+     "mbid": "34ec9a8d-c65b-48fd-bcdd-aad2f72fdb47",
+     "name": "Love",
+     "score": 639
+    },
+    {
+     "mbid": "9beb62b2-88db-4cea-801e-162cd344ee53",
+     "name": "Beastie Boys",
+     "score": 634
+    },
+    {
+     "mbid": "bdbd48f5-abf3-4a4f-9a21-4551dbc3fde9",
+     "name": "Heart",
+     "score": 633
+    },
+    {
+     "mbid": "b7ffd2af-418f-4be2-bdd1-22f8b48613da",
+     "name": "Nine Inch Nails",
+     "score": 631
+    },
+    {
+     "mbid": "815a0279-558c-4522-ac3b-6a1e259e95b5",
+     "name": "Canned Heat",
+     "score": 624
+    },
+    {
+     "mbid": "abd506e1-6f2b-4d6f-b937-92c267f6f88b",
+     "name": "Journey",
+     "score": 623
+    },
+    {
+     "mbid": "8538e728-ca0b-4321-b7e5-cff6565dd4c0",
+     "name": "Depeche Mode",
+     "score": 617
+    },
+    {
+     "mbid": "32f2d6bd-c22b-42cf-a7bc-0c4b48cd2bcb",
+     "name": "Joe Cocker",
+     "score": 612
+    },
+    {
+     "mbid": "8c7a8406-f15a-408d-b0f6-23be813bdddc",
+     "name": "Faces",
+     "score": 610
+    },
+    {
+     "mbid": "f37b3f31-b1f8-4b88-8cb5-b34f709b17d7",
+     "name": "Iggy Pop",
+     "score": 602
+    },
+    {
+     "mbid": "f27ec8db-af05-4f36-916e-3d57f91ecf5e",
+     "name": "Michael Jackson",
+     "score": 599
+    },
+    {
+     "mbid": "ff294730-0315-440d-a543-54005779c15b",
+     "name": "The Mamas & the Papas",
+     "score": 594
+    },
+    {
+     "mbid": "afdb7919-059d-43c1-b668-ba1d265e7e42",
+     "name": "Marvin Gaye",
+     "score": 590
+    },
+    {
+     "mbid": "7dc8f5bd-9d0b-4087-9f73-dc164950bbd8",
+     "name": "Queens of the Stone Age",
+     "score": 588
+    },
+    {
+     "mbid": "c842d29f-a297-48cd-bb71-4f77fd672b16",
+     "name": "T. Rex",
+     "score": 569
+    },
+    {
+     "mbid": "73faa89a-ee00-4e40-b68e-80e4891dbc45",
+     "name": "Ten Years After",
+     "score": 568
+    },
+    {
+     "mbid": "f181961b-20f7-459e-89de-920ef03c7ed0",
+     "name": "The Strokes",
+     "score": 567
+    },
+    {
+     "mbid": "8e66ea2b-b57b-47d9-8df0-df4630aeb8e5",
+     "name": "Peter Gabriel",
+     "score": 551
+    },
+    {
+     "mbid": "970fb29f-e288-403e-a388-d2a7889bfa47",
+     "name": "Warren Zevon",
+     "score": 546
+    },
+    {
+     "mbid": "95f5b748-d370-47fe-85bd-0af2dc450bc0",
+     "name": "Sublime",
+     "score": 540
+    }
+   ]
+  },
+  "40419b33-18e9-4d5a-a674-30b4bb14bac2": {
+   "name": "Alabama Shakes",
+   "albumsInCatalog": 1,
+   "similar": [
+    {
+     "mbid": "d15721d8-56b4-453d-b506-fc915b14cba2",
+     "name": "The Black Keys",
+     "score": 2066
+    },
+    {
+     "mbid": "63aa26c3-d59b-4da4-84ac-716b54f1ef4d",
+     "name": "Tame Impala",
+     "score": 1470
+    },
+    {
+     "mbid": "ada7a83c-e3e1-40f1-93f9-3e73dbc9298a",
+     "name": "Arctic Monkeys",
+     "score": 1421
+    },
+    {
+     "mbid": "fc7bbf00-fbaa-4736-986b-b3ac0266ca9b",
+     "name": "alt\u2010J",
+     "score": 1357
+    },
+    {
+     "mbid": "5fee3020-513b-48c2-b1f7-4681b01db0c6",
+     "name": "Florence + the Machine",
+     "score": 1286
+    },
+    {
+     "mbid": "a74b1b7f-71a5-4011-9441-d0b5e4122711",
+     "name": "Radiohead",
+     "score": 1225
+    },
+    {
+     "mbid": "c44e9c22-ef82-4a77-9bcd-af6c958446d6",
+     "name": "Mumford & Sons",
+     "score": 1212
+    },
+    {
+     "mbid": "52074ba6-e495-4ef3-9bb4-0703888a9f68",
+     "name": "Arcade Fire",
+     "score": 1211
+    },
+    {
+     "mbid": "af37c51c-0790-4a29-b995-456f98a6b8c9",
+     "name": "Vampire Weekend",
+     "score": 1201
+    },
+    {
+     "mbid": "f181961b-20f7-459e-89de-920ef03c7ed0",
+     "name": "The Strokes",
+     "score": 1166
+    },
+    {
+     "mbid": "9e103f85-7af7-41d7-b83b-49ba8f0c5abf",
+     "name": "Of Monsters and Men",
+     "score": 1142
+    },
+    {
+     "mbid": "3ae2fb37-8a23-429d-9920-bac811c4fc22",
+     "name": "Jack White",
+     "score": 1139
+    },
+    {
+     "mbid": "bfcb6630-9b31-4e63-b11f-7b0363be72b5",
+     "name": "The Lumineers",
+     "score": 1094
+    },
+    {
+     "mbid": "b41b38d4-ef3e-4f37-8c75-cfe9af999696",
+     "name": "Cage the Elephant",
+     "score": 1058
+    },
+    {
+     "mbid": "6ffb8ea9-2370-44d8-b678-e9237bbd347b",
+     "name": "Kings of Leon",
+     "score": 1003
+    },
+    {
+     "mbid": "6c8b9855-ba8b-48f9-ac1d-42167f7f7b18",
+     "name": "The Shins",
+     "score": 981
+    },
+    {
+     "mbid": "c5c2ea1c-4bde-4f4d-bd0b-47b200bf99d6",
+     "name": "The xx",
+     "score": 979
+    },
+    {
+     "mbid": "437a0e49-c6ae-42f6-a6c1-84f25ed366bc",
+     "name": "Bon Iver",
+     "score": 896
+    },
+    {
+     "mbid": "9c9f1380-2516-4fc9-a3e6-f9f61941d090",
+     "name": "Muse",
+     "score": 890
+    },
+    {
+     "mbid": "a96ac800-bfcb-412a-8a63-0a98df600700",
+     "name": "Modest Mouse",
+     "score": 875
+    },
+    {
+     "mbid": "e0e1a584-dd0a-4bd1-88d1-c4c62895039d",
+     "name": "Foster the People",
+     "score": 867
+    },
+    {
+     "mbid": "cc197bad-dc9c-440d-a5b5-d52ba2e14234",
+     "name": "Coldplay",
+     "score": 850
+    },
+    {
+     "mbid": "8bfac288-ccc5-448d-9573-c33ea2aa5c30",
+     "name": "Red Hot Chili Peppers",
+     "score": 832
+    },
+    {
+     "mbid": "c485632c-b784-4ee9-8ea1-c5fb365681fc",
+     "name": "MGMT",
+     "score": 831
+    },
+    {
+     "mbid": "95e1ead9-4d31-4808-a7ac-32c3614c116b",
+     "name": "The Killers",
+     "score": 822
+    },
+    {
+     "mbid": "b10bbbfc-cf9e-42e0-be17-e2c3e1d2600d",
+     "name": "The Beatles",
+     "score": 820
+    },
+    {
+     "mbid": "84eac621-1c5a-49a1-9500-555099c6e184",
+     "name": "Spoon",
+     "score": 815
+    },
+    {
+     "mbid": "4a069029-4f64-4946-b650-01aeb0b55d9d",
+     "name": "Edward Sharpe and the Magnetic Zeros",
+     "score": 803
+    },
+    {
+     "mbid": "7dc8f5bd-9d0b-4087-9f73-dc164950bbd8",
+     "name": "Queens of the Stone Age",
+     "score": 796
+    },
+    {
+     "mbid": "5441c29d-3602-4898-b1a1-b77fa23b8e50",
+     "name": "David Bowie",
+     "score": 796
+    },
+    {
+     "mbid": "8d455809-96b3-4bb6-8829-ea4beb580d35",
+     "name": "Phoenix",
+     "score": 777
+    },
+    {
+     "mbid": "67f66c07-6e61-4026-ade5-7e782fad3a5d",
+     "name": "Foo Fighters",
+     "score": 776
+    },
+    {
+     "mbid": "daeec599-bf5d-4428-994a-e76ba5f86e2f",
+     "name": "Passion Pit",
+     "score": 769
+    },
+    {
+     "mbid": "6a65d878-fcd0-42cf-aff9-ca1d636a8bcc",
+     "name": "Foals",
+     "score": 769
+    },
+    {
+     "mbid": "6f1de078-6684-4792-820d-2ffad64c15ed",
+     "name": "Two Door Cinema Club",
+     "score": 763
+    },
+    {
+     "mbid": "664c3e0e-42d8-48c1-b209-1efca19c0325",
+     "name": "The National",
+     "score": 756
+    },
+    {
+     "mbid": "69d9dfd7-19b7-4a75-8a53-9f733fb5d774",
+     "name": "Leon Bridges",
+     "score": 739
+    },
+    {
+     "mbid": "62d364d2-550b-420e-b918-b3bd1e4a2efc",
+     "name": "Broken Bells",
+     "score": 731
+    },
+    {
+     "mbid": "fa97dd36-1b82-43d7-a6e4-2adeafd59cef",
+     "name": "Fleet Foxes",
+     "score": 715
+    },
+    {
+     "mbid": "ba853904-ae25-4ebb-89d6-c44cfbd71bd2",
+     "name": "Blur",
+     "score": 703
+    },
+    {
+     "mbid": "b071f9fa-14b0-4217-8e97-eb41da73f598",
+     "name": "The Rolling Stones",
+     "score": 702
+    },
+    {
+     "mbid": "6fe07aa5-fec0-4eca-a456-f29bff451b04",
+     "name": "Weezer",
+     "score": 695
+    },
+    {
+     "mbid": "172053e5-a7fb-4548-a64d-c53858b5e775",
+     "name": "Father John Misty",
+     "score": 694
+    },
+    {
+     "mbid": "aa7a2827-f74b-473c-bd79-03d065835cf7",
+     "name": "Franz Ferdinand",
+     "score": 668
+    },
+    {
+     "mbid": "e21857d5-3256-4547-afb3-4b6ded592596",
+     "name": "Gorillaz",
+     "score": 656
+    },
+    {
+     "mbid": "6d7b7cd4-254b-4c25-83f6-dd20f98ceacd",
+     "name": "M83",
+     "score": 656
+    },
+    {
+     "mbid": "f82f3a3e-29c2-42ca-b589-bc5dc210fa9e",
+     "name": "The Kooks",
+     "score": 653
+    },
+    {
+     "mbid": "d8e41375-bd8d-4e39-9da7-f0c171e97086",
+     "name": "Grouplove",
+     "score": 645
+    },
+    {
+     "mbid": "be407b02-f3e6-4ed5-9489-f8e5f0ab36dc",
+     "name": "The Raconteurs",
+     "score": 642
+    },
+    {
+     "mbid": "678d88b2-87b0-403b-b63d-5da7465aecc3",
+     "name": "Led Zeppelin",
+     "score": 630
+    },
+    {
+     "mbid": "b4691384-50c3-4afd-9988-51d3ec5db65d",
+     "name": "Hozier",
+     "score": 629
+    },
+    {
+     "mbid": "55111838-f001-494a-a1b5-9d818db85810",
+     "name": "Courtney Barnett",
+     "score": 622
+    },
+    {
+     "mbid": "d5cc67b8-1cc4-453b-96e8-44487acdebea",
+     "name": "Beach House",
+     "score": 620
+    },
+    {
+     "mbid": "c733c4e6-22a2-499d-ace7-17b832356aff",
+     "name": "Gary Clark Jr.",
+     "score": 618
+    },
+    {
+     "mbid": "7fe96b15-5608-430e-ad25-77a01353c5d9",
+     "name": "Young the Giant",
+     "score": 617
+    },
+    {
+     "mbid": "59a7fbcb-ff74-494d-abd0-9c82359040c9",
+     "name": "Grizzly Bear",
+     "score": 606
+    },
+    {
+     "mbid": "ba0d6274-db14-4ef5-b28d-657ebde1a396",
+     "name": "The Smashing Pumpkins",
+     "score": 604
+    },
+    {
+     "mbid": "584c04d2-4acc-491b-8a0a-e63133f4bfc4",
+     "name": "Yeah Yeah Yeahs",
+     "score": 601
+    },
+    {
+     "mbid": "b7539c32-53e7-4908-bda3-81449c367da6",
+     "name": "Lana Del Rey",
+     "score": 594
+    },
+    {
+     "mbid": "72c536dc-7137-4477-a521-567eeb840fa8",
+     "name": "Bob Dylan",
+     "score": 585
+    },
+    {
+     "mbid": "11f570ff-44d9-4e9c-8812-e6d56103c5c1",
+     "name": "Michael Kiwanuka",
+     "score": 581
+    },
+    {
+     "mbid": "eb872766-98f6-453d-883f-2ae908a18315",
+     "name": "TV on the Radio",
+     "score": 577
+    },
+    {
+     "mbid": "fa4f4b89-3ddc-4e97-88fa-0e30121f986a",
+     "name": "Dan Auerbach",
+     "score": 577
+    },
+    {
+     "mbid": "bd13909f-1c29-4c27-a874-d4aaf27c5b1a",
+     "name": "Fleetwood Mac",
+     "score": 576
+    },
+    {
+     "mbid": "5b11f4ce-a62d-471e-81fc-a69a8278c7da",
+     "name": "Nirvana",
+     "score": 573
+    },
+    {
+     "mbid": "98cb416e-5271-484c-ab3b-6bed6b4aae12",
+     "name": "The Head and the Heart",
+     "score": 565
+    },
+    {
+     "mbid": "7e5a2a59-6d9f-4a17-b7c2-e1eedb7bd222",
+     "name": "Grimes",
+     "score": 562
+    },
+    {
+     "mbid": "b6b2bb8d-54a9-491f-9607-7b546023b433",
+     "name": "Pixies",
+     "score": 558
+    },
+    {
+     "mbid": "9e53f84d-ef44-4c16-9677-5fd4d78cbd7d",
+     "name": "Wilco",
+     "score": 552
+    },
+    {
+     "mbid": "df36f6db-5987-46ed-9d02-0cf36ed4e060",
+     "name": "Vance Joy",
+     "score": 552
+    },
+    {
+     "mbid": "1641141b-3c9c-4772-a5cc-7e23fdf17382",
+     "name": "Band of Skulls",
+     "score": 539
+    },
+    {
+     "mbid": "83d91898-7763-47d7-b03b-b92132375c47",
+     "name": "Pink Floyd",
+     "score": 539
+    },
+    {
+     "mbid": "83b9cbe7-9857-49e2-ab8e-b57b01038103",
+     "name": "Pearl Jam",
+     "score": 536
+    },
+    {
+     "mbid": "77b29df2-056e-409e-a1b2-5e2bbfe421c4",
+     "name": "AWOLNATION",
+     "score": 535
+    },
+    {
+     "mbid": "8e494408-8620-4c6a-82c2-c2ca4a1e4f12",
+     "name": "Lorde",
+     "score": 534
+    },
+    {
+     "mbid": "5334edc0-5faf-4ca5-b1df-000de3e1f752",
+     "name": "St. Vincent",
+     "score": 532
+    },
+    {
+     "mbid": "87b9b3b8-ab93-426c-a200-4012d667a626",
+     "name": "The War on Drugs",
+     "score": 531
+    },
+    {
+     "mbid": "6a93afbb-257f-4166-b389-9f2a1e5c5df8",
+     "name": "CHVRCHES",
+     "score": 529
+    },
+    {
+     "mbid": "ea4dfa26-f633-4da6-a52a-f49ea4897b58",
+     "name": "R.E.M.",
+     "score": 529
+    },
+    {
+     "mbid": "dfe9a7c4-8cf2-47f4-9dcb-d233c2b86ec3",
+     "name": "Amy Winehouse",
+     "score": 526
+    },
+    {
+     "mbid": "a3cb23fc-acd3-4ce0-8f36-1e5aa6a18432",
+     "name": "U2",
+     "score": 516
+    },
+    {
+     "mbid": "aa76ec08-45ab-4724-9411-d80b0e59ac59",
+     "name": "The Vaccines",
+     "score": 509
+    },
+    {
+     "mbid": "74963434-dcb6-4b14-98cc-99873b06db66",
+     "name": "Future Islands",
+     "score": 505
+    },
+    {
+     "mbid": "97b1142f-c71e-4971-8736-4a8ceaf6b4c3",
+     "name": "The Decemberists",
+     "score": 504
+    },
+    {
+     "mbid": "aa62b28e-b6d4-4086-91d4-e5fac1ed56f3",
+     "name": "Royal Blood",
+     "score": 503
+    },
+    {
+     "mbid": "e9aed5e5-ed35-4244-872e-194862290295",
+     "name": "Dr. Dog",
+     "score": 503
+    },
+    {
+     "mbid": "52a4de43-92f5-4995-9a71-07d67dd35b7d",
+     "name": "Nathaniel Rateliff & The Night Sweats",
+     "score": 502
+    },
+    {
+     "mbid": "70248960-cb53-4ea4-943a-edb18f7d336f",
+     "name": "Bruce Springsteen",
+     "score": 495
+    },
+    {
+     "mbid": "bb6eaced-69dd-4636-829f-9f987acc4fc3",
+     "name": "The Temper Trap",
+     "score": 494
+    },
+    {
+     "mbid": "ea5883b7-68ce-48b3-b115-61746ea53b8c",
+     "name": "My Morning Jacket",
+     "score": 485
+    },
+    {
+     "mbid": "51c76d97-0635-433c-b26d-66beb81657f8",
+     "name": "Lord Huron",
+     "score": 485
+    },
+    {
+     "mbid": "e2305342-0bde-4a2c-aed0-4b88694834de",
+     "name": "Unknown Mortal Orchestra",
+     "score": 484
+    },
+    {
+     "mbid": "b23e8a63-8f47-4882-b55b-df2c92ef400e",
+     "name": "Interpol",
+     "score": 481
+    },
+    {
+     "mbid": "534dda3c-b73f-408b-8889-bd68eae84df6",
+     "name": "Ben Howard",
+     "score": 480
+    },
+    {
+     "mbid": "ea99eec5-bd72-4b4f-86e4-54c5a34f7e10",
+     "name": "The Heavy",
+     "score": 479
+    },
+    {
+     "mbid": "cc2c9c3c-b7bc-4b8b-84d8-4fbd8779e493",
+     "name": "Adele",
+     "score": 478
+    },
+    {
+     "mbid": "aef06569-098f-4218-a577-b413944d9493",
+     "name": "HAIM",
+     "score": 477
+    },
+    {
+     "mbid": "334bd887-9044-4c38-aebd-4baab851efb4",
+     "name": "The Dead Weather",
+     "score": 471
+    },
+    {
+     "mbid": "d8915e13-d67a-4aa0-9c0b-1f126af951af",
+     "name": "Hot Chip",
+     "score": 471
+    },
+    {
+     "mbid": "4a18f60f-7aa9-4476-8d0f-84981d8ccb60",
+     "name": "Houndmouth",
+     "score": 471
+    }
+   ]
+  },
+  "9e53f84d-ef44-4c16-9677-5fd4d78cbd7d": {
+   "name": "Wilco",
+   "albumsInCatalog": 17,
+   "similar": [
+    {
+     "mbid": "a74b1b7f-71a5-4011-9441-d0b5e4122711",
+     "name": "Radiohead",
+     "score": 3989
+    },
+    {
+     "mbid": "6c8b9855-ba8b-48f9-ac1d-42167f7f7b18",
+     "name": "The Shins",
+     "score": 2902
+    },
+    {
+     "mbid": "309c62ba-7a22-4277-9f67-4a162526d18a",
+     "name": "Beck",
+     "score": 2883
+    },
+    {
+     "mbid": "52074ba6-e495-4ef3-9bb4-0703888a9f68",
+     "name": "Arcade Fire",
+     "score": 2880
+    },
+    {
+     "mbid": "b10bbbfc-cf9e-42e0-be17-e2c3e1d2600d",
+     "name": "The Beatles",
+     "score": 2788
+    },
+    {
+     "mbid": "a96ac800-bfcb-412a-8a63-0a98df600700",
+     "name": "Modest Mouse",
+     "score": 2649
+    },
+    {
+     "mbid": "1f43d76f-8edf-44f6-aaf1-b65f05ad9402",
+     "name": "The Flaming Lips",
+     "score": 2645
+    },
+    {
+     "mbid": "664c3e0e-42d8-48c1-b209-1efca19c0325",
+     "name": "The National",
+     "score": 2554
+    },
+    {
+     "mbid": "b6b2bb8d-54a9-491f-9607-7b546023b433",
+     "name": "Pixies",
+     "score": 2510
+    },
+    {
+     "mbid": "01d3c51b-9b98-418a-8d8e-37f6fab59d8c",
+     "name": "Sufjan Stevens",
+     "score": 2507
+    },
+    {
+     "mbid": "03ad1736-b7c9-412a-b442-82536d63a5c4",
+     "name": "Elliott Smith",
+     "score": 2407
+    },
+    {
+     "mbid": "84eac621-1c5a-49a1-9500-555099c6e184",
+     "name": "Spoon",
+     "score": 2362
+    },
+    {
+     "mbid": "0039c7ae-e1a7-4a7d-9b49-0cbc716821a6",
+     "name": "Death Cab for Cutie",
+     "score": 2334
+    },
+    {
+     "mbid": "3f542031-b054-454d-b57b-812fa2a81b11",
+     "name": "Yo La Tengo",
+     "score": 2255
+    },
+    {
+     "mbid": "e5c7b94f-e264-473c-bb0f-37c85d4d5c70",
+     "name": "Belle and Sebastian",
+     "score": 2248
+    },
+    {
+     "mbid": "72c536dc-7137-4477-a521-567eeb840fa8",
+     "name": "Bob Dylan",
+     "score": 2237
+    },
+    {
+     "mbid": "fa97dd36-1b82-43d7-a6e4-2adeafd59cef",
+     "name": "Fleet Foxes",
+     "score": 2236
+    },
+    {
+     "mbid": "f181961b-20f7-459e-89de-920ef03c7ed0",
+     "name": "The Strokes",
+     "score": 2156
+    },
+    {
+     "mbid": "6fe07aa5-fec0-4eca-a456-f29bff451b04",
+     "name": "Weezer",
+     "score": 2111
+    },
+    {
+     "mbid": "36bfa85f-737b-41db-a8fc-b8825850ffc3",
+     "name": "Pavement",
+     "score": 2100
+    },
+    {
+     "mbid": "c3f28da8-662d-4f09-bdc7-3084bf685930",
+     "name": "Iron & Wine",
+     "score": 2076
+    },
+    {
+     "mbid": "97b1142f-c71e-4971-8736-4a8ceaf6b4c3",
+     "name": "The Decemberists",
+     "score": 2055
+    },
+    {
+     "mbid": "ea4dfa26-f633-4da6-a52a-f49ea4897b58",
+     "name": "R.E.M.",
+     "score": 2035
+    },
+    {
+     "mbid": "437a0e49-c6ae-42f6-a6c1-84f25ed366bc",
+     "name": "Bon Iver",
+     "score": 1975
+    },
+    {
+     "mbid": "a506f761-2c22-4b2f-8a94-bd748c2c8f75",
+     "name": "Neutral Milk Hotel",
+     "score": 1915
+    },
+    {
+     "mbid": "b071f9fa-14b0-4217-8e97-eb41da73f598",
+     "name": "The Rolling Stones",
+     "score": 1861
+    },
+    {
+     "mbid": "af37c51c-0790-4a29-b995-456f98a6b8c9",
+     "name": "Vampire Weekend",
+     "score": 1859
+    },
+    {
+     "mbid": "59a7fbcb-ff74-494d-abd0-9c82359040c9",
+     "name": "Grizzly Bear",
+     "score": 1840
+    },
+    {
+     "mbid": "ba0d6274-db14-4ef5-b28d-657ebde1a396",
+     "name": "The Smashing Pumpkins",
+     "score": 1833
+    },
+    {
+     "mbid": "99ea432a-e3d8-42cb-9d5e-db316a6a8458",
+     "name": "Nick Drake",
+     "score": 1829
+    },
+    {
+     "mbid": "cc197bad-dc9c-440d-a5b5-d52ba2e14234",
+     "name": "Coldplay",
+     "score": 1826
+    },
+    {
+     "mbid": "75167b8b-44e4-407b-9d35-effe87b223cf",
+     "name": "Neil Young",
+     "score": 1793
+    },
+    {
+     "mbid": "b23e8a63-8f47-4882-b55b-df2c92ef400e",
+     "name": "Interpol",
+     "score": 1763
+    },
+    {
+     "mbid": "081b133e-ce74-42ba-92c1-c18234acb532",
+     "name": "Andrew Bird",
+     "score": 1748
+    },
+    {
+     "mbid": "ada7a83c-e3e1-40f1-93f9-3e73dbc9298a",
+     "name": "Arctic Monkeys",
+     "score": 1740
+    },
+    {
+     "mbid": "d15721d8-56b4-453d-b506-fc915b14cba2",
+     "name": "The Black Keys",
+     "score": 1738
+    },
+    {
+     "mbid": "78f797e3-4913-4026-aad0-1cd858bd735b",
+     "name": "Bright Eyes",
+     "score": 1736
+    },
+    {
+     "mbid": "ea5883b7-68ce-48b3-b115-61746ea53b8c",
+     "name": "My Morning Jacket",
+     "score": 1732
+    },
+    {
+     "mbid": "2eada8f8-056a-4093-bbc2-004909ce743b",
+     "name": "Broken Social Scene",
+     "score": 1725
+    },
+    {
+     "mbid": "40f5d9e4-2de7-4f2d-ad41-e31a9a9fea27",
+     "name": "The Smiths",
+     "score": 1697
+    },
+    {
+     "mbid": "5cbef01b-cc35-4f52-af7b-d0df0c4f61b9",
+     "name": "Sonic Youth",
+     "score": 1694
+    },
+    {
+     "mbid": "eb872766-98f6-453d-883f-2ae908a18315",
+     "name": "TV on the Radio",
+     "score": 1654
+    },
+    {
+     "mbid": "07b6020a-c539-4d68-aeef-f159f3befc76",
+     "name": "Band of Horses",
+     "score": 1639
+    },
+    {
+     "mbid": "a3cb23fc-acd3-4ce0-8f36-1e5aa6a18432",
+     "name": "U2",
+     "score": 1611
+    },
+    {
+     "mbid": "94b0fb9d-a066-4823-b2ec-af1d324bcfcf",
+     "name": "The Velvet Underground",
+     "score": 1607
+    },
+    {
+     "mbid": "ba853904-ae25-4ebb-89d6-c44cfbd71bd2",
+     "name": "Blur",
+     "score": 1575
+    },
+    {
+     "mbid": "584c04d2-4acc-491b-8a0a-e63133f4bfc4",
+     "name": "Yeah Yeah Yeahs",
+     "score": 1569
+    },
+    {
+     "mbid": "05755bf1-380c-487f-983f-d1a02401fa28",
+     "name": "Cat Power",
+     "score": 1559
+    },
+    {
+     "mbid": "c3aeb863-7b26-4388-94e8-5a240f2be21b",
+     "name": "Tom Waits",
+     "score": 1555
+    },
+    {
+     "mbid": "a670e05a-cea8-4b37-bce9-d82daf1a0fa4",
+     "name": "Feist",
+     "score": 1513
+    },
+    {
+     "mbid": "a94a7155-c79d-4409-9fcf-220cb0e4dc3a",
+     "name": "Talking Heads",
+     "score": 1488
+    },
+    {
+     "mbid": "14387b0f-765c-4852-852f-135335790466",
+     "name": "EELS",
+     "score": 1484
+    },
+    {
+     "mbid": "25b75a66-ce83-4db3-b136-395a3c3784c4",
+     "name": "The New Pornographers",
+     "score": 1481
+    },
+    {
+     "mbid": "c80f38a6-9980-485d-997c-5c1a9cbd0d64",
+     "name": "Ryan Adams",
+     "score": 1474
+    },
+    {
+     "mbid": "e21857d5-3256-4547-afb3-4b6ded592596",
+     "name": "Gorillaz",
+     "score": 1458
+    },
+    {
+     "mbid": "2aaf7396-6ab8-40f3-9776-a41c42c8e26b",
+     "name": "LCD Soundsystem",
+     "score": 1454
+    },
+    {
+     "mbid": "8f92558c-2baa-4758-8c38-615519e9deda",
+     "name": "The Clash",
+     "score": 1438
+    },
+    {
+     "mbid": "3ac482b8-1494-4071-a0e9-f192f9d2c2b0",
+     "name": "Built to Spill",
+     "score": 1424
+    },
+    {
+     "mbid": "0c751690-c784-4a4f-b1e4-c1de27d47581",
+     "name": "Animal Collective",
+     "score": 1416
+    },
+    {
+     "mbid": "d43d12a1-2dc9-4257-a2fd-0a3bb1081b86",
+     "name": "Johnny Cash",
+     "score": 1413
+    },
+    {
+     "mbid": "d5cc67b8-1cc4-453b-96e8-44487acdebea",
+     "name": "Beach House",
+     "score": 1412
+    },
+    {
+     "mbid": "0af78501-5647-4c18-9a0d-66ac8789e13b",
+     "name": "Beirut",
+     "score": 1400
+    },
+    {
+     "mbid": "c485632c-b784-4ee9-8ea1-c5fb365681fc",
+     "name": "MGMT",
+     "score": 1367
+    },
+    {
+     "mbid": "e795e03d-b5d5-4a5f-834d-162cfb308a2c",
+     "name": "PJ Harvey",
+     "score": 1367
+    },
+    {
+     "mbid": "aa7a2827-f74b-473c-bd79-03d065835cf7",
+     "name": "Franz Ferdinand",
+     "score": 1349
+    },
+    {
+     "mbid": "f6f2326f-6b25-4170-b89d-e235b25508e8",
+     "name": "Sigur R\u00f3s",
+     "score": 1337
+    },
+    {
+     "mbid": "7cec4a03-0a83-4308-856a-afb8aa5db0fc",
+     "name": "Billy Bragg",
+     "score": 1329
+    },
+    {
+     "mbid": "9fdaa16b-a6c4-4831-b87c-bc9ca8ce7eaa",
+     "name": "The Who",
+     "score": 1322
+    },
+    {
+     "mbid": "3ff72a59-f39d-411d-9f93-2d4a86413013",
+     "name": "The Magnetic Fields",
+     "score": 1319
+    },
+    {
+     "mbid": "ebfc1398-8d96-47e3-82c3-f782abcdb13d",
+     "name": "The Beach Boys",
+     "score": 1316
+    },
+    {
+     "mbid": "8475297d-fb78-4630-8d74-9b87b6bb7cc8",
+     "name": "of Montreal",
+     "score": 1313
+    },
+    {
+     "mbid": "8d455809-96b3-4bb6-8829-ea4beb580d35",
+     "name": "Phoenix",
+     "score": 1310
+    },
+    {
+     "mbid": "299278d3-25dd-4f30-bae4-5b571c28034d",
+     "name": "The Postal Service",
+     "score": 1294
+    },
+    {
+     "mbid": "655b3e5b-09e4-45dd-941c-6fa3fc12521b",
+     "name": "M. Ward",
+     "score": 1253
+    },
+    {
+     "mbid": "cb67438a-7f50-4f2b-a6f1-2bb2729fd538",
+     "name": "Air",
+     "score": 1247
+    },
+    {
+     "mbid": "bd13909f-1c29-4c27-a874-d4aaf27c5b1a",
+     "name": "Fleetwood Mac",
+     "score": 1243
+    },
+    {
+     "mbid": "4f416ed7-dda2-45de-a6f1-b986e861cf4b",
+     "name": "Deerhunter",
+     "score": 1239
+    },
+    {
+     "mbid": "9beb62b2-88db-4cea-801e-162cd344ee53",
+     "name": "Beastie Boys",
+     "score": 1234
+    },
+    {
+     "mbid": "87c5dedd-371d-4a53-9f7f-80522fb7f3cb",
+     "name": "Bj\u00f6rk",
+     "score": 1227
+    },
+    {
+     "mbid": "8c538f11-c141-4588-8ecb-931083524186",
+     "name": "Bloc Party",
+     "score": 1225
+    },
+    {
+     "mbid": "172e1f1a-504d-4488-b053-6344ba63e6d0",
+     "name": "Nick Cave & the Bad Seeds",
+     "score": 1217
+    },
+    {
+     "mbid": "9639cd52-c351-4a17-9797-58880e95a7ef",
+     "name": "The Mountain Goats",
+     "score": 1199
+    },
+    {
+     "mbid": "c5c2ea1c-4bde-4f4d-bd0b-47b200bf99d6",
+     "name": "The xx",
+     "score": 1197
+    },
+    {
+     "mbid": "172053e5-a7fb-4548-a64d-c53858b5e775",
+     "name": "Father John Misty",
+     "score": 1190
+    },
+    {
+     "mbid": "b7ffd2af-418f-4be2-bdd1-22f8b48613da",
+     "name": "Nine Inch Nails",
+     "score": 1189
+    },
+    {
+     "mbid": "a41ac10f-0a56-4672-9161-b83f9b223559",
+     "name": "Van Morrison",
+     "score": 1177
+    },
+    {
+     "mbid": "8f6bd1e4-fbe1-4f50-aa9b-94c450ec0f11",
+     "name": "Portishead",
+     "score": 1153
+    },
+    {
+     "mbid": "9a58fda3-f4ed-4080-a3a5-f457aac9fcdd",
+     "name": "Joy Division",
+     "score": 1152
+    },
+    {
+     "mbid": "9efff43b-3b29-4082-824e-bc82f646f93d",
+     "name": "The Doors",
+     "score": 1151
+    },
+    {
+     "mbid": "fa7b9055-3703-473a-8a09-adf2fe031a24",
+     "name": "CAKE",
+     "score": 1143
+    },
+    {
+     "mbid": "05517043-ff78-4988-9c22-88c68588ebb9",
+     "name": "Paul Simon",
+     "score": 1129
+    },
+    {
+     "mbid": "cd8c5019-5d75-4d5c-bc28-e1e26a7dd5c8",
+     "name": "Jos\u00e9 Gonz\u00e1lez",
+     "score": 1124
+    },
+    {
+     "mbid": "9d1ebcfe-4c15-4d18-95d3-d919898638a1",
+     "name": "Lou Reed",
+     "score": 1120
+    },
+    {
+     "mbid": "87b9b3b8-ab93-426c-a200-4012d667a626",
+     "name": "The War on Drugs",
+     "score": 1104
+    },
+    {
+     "mbid": "e6e879c0-3d56-4f12-b3c5-3ce459661a8e",
+     "name": "Jeff Buckley",
+     "score": 1091
+    },
+    {
+     "mbid": "b7834ebd-64ae-46c3-a930-2d3a52ee743a",
+     "name": "The Walkmen",
+     "score": 1087
+    },
+    {
+     "mbid": "e9aed5e5-ed35-4244-872e-194862290295",
+     "name": "Dr. Dog",
+     "score": 1078
+    },
+    {
+     "mbid": "77c167d2-4965-4421-830a-9815e4956475",
+     "name": "Dinosaur Jr.",
+     "score": 1075
+    },
+    {
+     "mbid": "f1106b17-dcbb-45f6-b938-199ccfab50cc",
+     "name": "New Order",
+     "score": 1064
+    },
+    {
+     "mbid": "4b2d6a23-034d-4a29-9bb9-d2462796da4e",
+     "name": "Clap Your Hands Say Yeah",
+     "score": 1062
+    }
+   ]
+  },
+  "381086ea-f511-4aba-bdf9-71c753dc5077": {
+   "name": "Kendrick Lamar",
+   "albumsInCatalog": 32,
+   "similar": [
+    {
+     "mbid": "73e5e69d-3554-40d8-8516-00cb38737a1c",
+     "name": "Rihanna",
+     "score": 9169
+    },
+    {
+     "mbid": "9fff2f8a-21e6-47de-a2b8-7f449929d43f",
+     "name": "Drake",
+     "score": 9044
+    },
+    {
+     "mbid": "164f0d73-1234-4e2c-8743-d77bf2191051",
+     "name": "Ye",
+     "score": 8289
+    },
+    {
+     "mbid": "044fd265-79dd-43eb-afc4-8b20becf7e17",
+     "name": "Thundercat",
+     "score": 7588
+    },
+    {
+     "mbid": "c8b03190-306c-4120-bb0b-6f2ebfc06ea9",
+     "name": "The Weeknd",
+     "score": 7361
+    },
+    {
+     "mbid": "f90e8b26-9e52-4669-a5c9-e28529c47894",
+     "name": "Snoop Dogg",
+     "score": 6967
+    },
+    {
+     "mbid": "260097c7-d628-4a3f-966f-956ea430c0d8",
+     "name": "Bilal",
+     "score": 6954
+    },
+    {
+     "mbid": "a3cb23fc-acd3-4ce0-8f36-1e5aa6a18432",
+     "name": "U2",
+     "score": 6048
+    },
+    {
+     "mbid": "272989c8-5535-492d-a25c-9f58803e027f",
+     "name": "SZA",
+     "score": 5879
+    },
+    {
+     "mbid": "e4a51f17-a57b-47b1-b37b-f552d0f8e9e6",
+     "name": "Travis Scott",
+     "score": 5855
+    },
+    {
+     "mbid": "d6302903-1f62-420a-8d8b-c54941ac754e",
+     "name": "Rapsody",
+     "score": 5740
+    },
+    {
+     "mbid": "ad8585b3-655e-4e6f-82a8-e10f89ec65f3",
+     "name": "Ronald Isley",
+     "score": 5665
+    },
+    {
+     "mbid": "056e4f3e-d505-4dad-8ec1-d04f521cbb56",
+     "name": "Daft Punk",
+     "score": 5605
+    },
+    {
+     "mbid": "e520459c-dff4-491d-a6e4-c97be35e0044",
+     "name": "Frank Ocean",
+     "score": 5522
+    },
+    {
+     "mbid": "b95ce3ff-3d05-4e87-9e01-c97b66af13d4",
+     "name": "Eminem",
+     "score": 5426
+    },
+    {
+     "mbid": "48262e82-db9f-4a92-b650-dfef979b73ec",
+     "name": "Future",
+     "score": 5420
+    },
+    {
+     "mbid": "7fb57fba-a6ef-44c2-abab-2fa3bdee607e",
+     "name": "Childish Gambino",
+     "score": 5350
+    },
+    {
+     "mbid": "25b7b584-d952-4662-a8b9-dd8cdfbfeb64",
+     "name": "A$AP Rocky",
+     "score": 5198
+    },
+    {
+     "mbid": "f6beac20-5dfe-4d1f-ae02-0b0a740aafd6",
+     "name": "Tyler, The Creator",
+     "score": 5121
+    },
+    {
+     "mbid": "103555b8-ae47-4e99-8fc3-e31bdfd7854e",
+     "name": "MC Eiht",
+     "score": 4997
+    },
+    {
+     "mbid": "875203e1-8e58-4b86-8dcb-7190faf411c5",
+     "name": "J. Cole",
+     "score": 4856
+    },
+    {
+     "mbid": "5f6ab597-f57a-40da-be9e-adad48708203",
+     "name": "Dr. Dre",
+     "score": 4759
+    },
+    {
+     "mbid": "ac9a487a-d9d2-4f27-bb23-0f4686488345",
+     "name": "Lil Wayne",
+     "score": 4739
+    },
+    {
+     "mbid": "f82bcf78-5b69-4622-a5ef-73800768d9ac",
+     "name": "JA\u0178-Z",
+     "score": 4708
+    },
+    {
+     "mbid": "bce6d667-cde8-485e-b078-c0a05adea36d",
+     "name": "ScHoolboy Q",
+     "score": 4661
+    },
+    {
+     "mbid": "9880800a-f6f8-4f8f-a00e-b4b664776c0c",
+     "name": "Jay Rock",
+     "score": 4383
+    },
+    {
+     "mbid": "78e854b8-9713-4ff2-9218-6b3784893bff",
+     "name": "Vince Staples",
+     "score": 4019
+    },
+    {
+     "mbid": "d02dd67e-f655-4600-bc47-f789f59e7367",
+     "name": "Anderson .Paak",
+     "score": 4007
+    },
+    {
+     "mbid": "e0e1db18-f7ba-4dee-95ff-7ae8cf545460",
+     "name": "Kid Cudi",
+     "score": 3949
+    },
+    {
+     "mbid": "942a9807-9c1a-4a0e-a285-1fde2c5be9d1",
+     "name": "Big Sean",
+     "score": 3921
+    },
+    {
+     "mbid": "373a4c98-a46b-48e4-86ec-f6ca65b4f438",
+     "name": "Chance the Rapper",
+     "score": 3876
+    },
+    {
+     "mbid": "7bd66c18-cb33-49aa-9279-140acedbdb49",
+     "name": "Ty Dolla $ign",
+     "score": 3803
+    },
+    {
+     "mbid": "a0e8a1b1-5f8f-475a-a253-17415c17d0ff",
+     "name": "Mac Miller",
+     "score": 3782
+    },
+    {
+     "mbid": "859d0860-d480-4efd-970c-c05d5f1776b8",
+     "name": "Beyonc\u00e9",
+     "score": 3748
+    },
+    {
+     "mbid": "8b22acd6-20e6-4463-a75c-c14b5cfdb666",
+     "name": "Earl Sweatshirt",
+     "score": 3728
+    },
+    {
+     "mbid": "14ecd19f-7121-4192-8549-e5056241a42f",
+     "name": "Pusha T",
+     "score": 3702
+    },
+    {
+     "mbid": "b7539c32-53e7-4908-bda3-81449c367da6",
+     "name": "Lana Del Rey",
+     "score": 3684
+    },
+    {
+     "mbid": "a74b1b7f-71a5-4011-9441-d0b5e4122711",
+     "name": "Radiohead",
+     "score": 3648
+    },
+    {
+     "mbid": "1036b808-f58c-4a3e-b461-a2c4492ecf1b",
+     "name": "Nicki Minaj",
+     "score": 3504
+    },
+    {
+     "mbid": "112beffb-1adc-488b-8d61-7b2ab3475d52",
+     "name": "BJ the Chicago Kid",
+     "score": 3491
+    },
+    {
+     "mbid": "149f91ef-1287-46da-9a8e-87fee02f1471",
+     "name": "Pharrell Williams",
+     "score": 3473
+    },
+    {
+     "mbid": "800760de-bdf8-43a2-8fe0-44a2401a5515",
+     "name": "Young Thug",
+     "score": 3454
+    },
+    {
+     "mbid": "2f548675-008d-4332-876c-108b0c7ab9c5",
+     "name": "Sia",
+     "score": 3368
+    },
+    {
+     "mbid": "63aa26c3-d59b-4da4-84ac-716b54f1ef4d",
+     "name": "Tame Impala",
+     "score": 3344
+    },
+    {
+     "mbid": "b1e26560-60e5-4236-bbdb-9aa5a8d5ee19",
+     "name": "Post Malone",
+     "score": 3340
+    },
+    {
+     "mbid": "8837b875-3689-4646-b3fd-d8b53815c7a8",
+     "name": "Lil Uzi Vert",
+     "score": 3321
+    },
+    {
+     "mbid": "8dc08b1f-e393-4f85-a5dd-300f7693a8b8",
+     "name": "James Blake",
+     "score": 3268
+    },
+    {
+     "mbid": "dff0d392-4cd5-4052-9fbb-f485df3891e5",
+     "name": "2 Chainz",
+     "score": 3268
+    },
+    {
+     "mbid": "9757ae7d-44b1-4d63-81ce-b463fe27b9ae",
+     "name": "Joey Bada$$",
+     "score": 3219
+    },
+    {
+     "mbid": "cfbc0924-0035-4d6c-8197-f024653af823",
+     "name": "Nas",
+     "score": 3158
+    },
+    {
+     "mbid": "f4fdbb4c-e4b7-47a0-b83b-d91bbfcfa387",
+     "name": "Ariana Grande",
+     "score": 3147
+    },
+    {
+     "mbid": "73fdb566-a9b1-494c-9f32-51768ec9fd27",
+     "name": "OutKast",
+     "score": 3131
+    },
+    {
+     "mbid": "ceb3f5b7-9f1a-430f-afbe-976fdcf30482",
+     "name": "Jhen\u00e9 Aiko",
+     "score": 3051
+    },
+    {
+     "mbid": "a80c5dc5-b12e-4667-9f5a-b568961f3839",
+     "name": "Run the Jewels",
+     "score": 3043
+    },
+    {
+     "mbid": "13bcb2bb-db37-4397-baf5-e0f085be2d64",
+     "name": "Rick Ross",
+     "score": 3034
+    },
+    {
+     "mbid": "b8a7c51f-362c-4dcb-a259-bc6e0095f0a6",
+     "name": "Ed Sheeran",
+     "score": 3032
+    },
+    {
+     "mbid": "960afc67-9c21-46dd-9c7f-ff2b509e3150",
+     "name": "Danny Brown",
+     "score": 2978
+    },
+    {
+     "mbid": "e21857d5-3256-4547-afb3-4b6ded592596",
+     "name": "Gorillaz",
+     "score": 2976
+    },
+    {
+     "mbid": "0221734a-35a8-40f7-b5c5-2f61a200bc7c",
+     "name": "Migos",
+     "score": 2896
+    },
+    {
+     "mbid": "28737730-ec70-4da5-89c5-77ac13c5c34d",
+     "name": "Khalid",
+     "score": 2868
+    },
+    {
+     "mbid": "3ac96b4c-4f42-48c8-b793-84dbf54d7ac6",
+     "name": "BROCKHAMPTON",
+     "score": 2850
+    },
+    {
+     "mbid": "9689aa5a-4471-4fb4-9721-07cecda0fa9f",
+     "name": "A Tribe Called Quest",
+     "score": 2832
+    },
+    {
+     "mbid": "f5dfa020-ad69-41cd-b3d4-fd7af0414e94",
+     "name": "Wiz Khalifa",
+     "score": 2831
+    },
+    {
+     "mbid": "8e494408-8620-4c6a-82c2-c2ca4a1e4f12",
+     "name": "Lorde",
+     "score": 2805
+    },
+    {
+     "mbid": "20244d07-534f-4eff-b4d4-930878889970",
+     "name": "Taylor Swift",
+     "score": 2790
+    },
+    {
+     "mbid": "37547347-ea75-45fa-9766-ff36b44d8147",
+     "name": "Isaiah Rashad",
+     "score": 2739
+    },
+    {
+     "mbid": "285e1285-aecc-478f-a8da-0c8cf69e1217",
+     "name": "Miguel",
+     "score": 2729
+    },
+    {
+     "mbid": "8ab5d936-49d1-415e-92c8-151e0e7dd912",
+     "name": "FERG",
+     "score": 2720
+    },
+    {
+     "mbid": "f9133036-ab3d-4e97-bd11-7a2c98ad148a",
+     "name": "Death Grips",
+     "score": 2691
+    },
+    {
+     "mbid": "5ec1ecc6-4535-4911-a27a-e26343f4a189",
+     "name": "Kodak Black",
+     "score": 2673
+    },
+    {
+     "mbid": "ada7a83c-e3e1-40f1-93f9-3e73dbc9298a",
+     "name": "Arctic Monkeys",
+     "score": 2645
+    },
+    {
+     "mbid": "b10bbbfc-cf9e-42e0-be17-e2c3e1d2600d",
+     "name": "The Beatles",
+     "score": 2637
+    },
+    {
+     "mbid": "012151a8-0f9a-44c9-997f-ebd68b5389f9",
+     "name": "Imagine Dragons",
+     "score": 2602
+    },
+    {
+     "mbid": "61af87f4-16ee-4431-8504-cc06187079fb",
+     "name": "XXXTENTACION",
+     "score": 2597
+    },
+    {
+     "mbid": "d5d97b2b-b83b-4976-814a-056d9076c8c3",
+     "name": "The Notorious B.I.G.",
+     "score": 2566
+    },
+    {
+     "mbid": "37b2cb82-ef79-4d46-a184-a549450aa231",
+     "name": "21 Savage",
+     "score": 2553
+    },
+    {
+     "mbid": "fc7376fe-1a6f-4414-b4a7-83f50ed59c92",
+     "name": "Flying Lotus",
+     "score": 2548
+    },
+    {
+     "mbid": "713e751f-3ddb-4b77-b3b1-9e6f2e953ad5",
+     "name": "Logic",
+     "score": 2545
+    },
+    {
+     "mbid": "d0c7656d-8169-4f77-9dbe-b8f24e40105d",
+     "name": "Kali Uchis",
+     "score": 2544
+    },
+    {
+     "mbid": "6143403a-df6c-429e-8ee6-ef869896b0da",
+     "name": "Quavo",
+     "score": 2519
+    },
+    {
+     "mbid": "cc197bad-dc9c-440d-a5b5-d52ba2e14234",
+     "name": "Coldplay",
+     "score": 2485
+    },
+    {
+     "mbid": "afb680f2-b6eb-4cd7-a70b-a63b25c763d5",
+     "name": "Bruno Mars",
+     "score": 2465
+    },
+    {
+     "mbid": "188711ed-c99b-439c-844a-ca831f63a727",
+     "name": "MF DOOM",
+     "score": 2448
+    },
+    {
+     "mbid": "130c2184-14f2-4180-a216-04b5a333be57",
+     "name": "Sampha",
+     "score": 2446
+    },
+    {
+     "mbid": "e0140a67-e4d1-4f13-8a01-364355bee46e",
+     "name": "Justin Bieber",
+     "score": 2399
+    },
+    {
+     "mbid": "5441c29d-3602-4898-b1a1-b77fa23b8e50",
+     "name": "David Bowie",
+     "score": 2396
+    },
+    {
+     "mbid": "5f95440d-7737-4a36-9bcf-c05337f7129b",
+     "name": "Denzel Curry",
+     "score": 2396
+    },
+    {
+     "mbid": "41ca19c2-935f-4647-9ef5-26f81291a9aa",
+     "name": "Blxst",
+     "score": 2357
+    },
+    {
+     "mbid": "4e024037-14b7-4aea-99ad-c6ace63b9620",
+     "name": "Madvillain",
+     "score": 2344
+    },
+    {
+     "mbid": "650e7db6-b795-4eb5-a702-5ea2fc46c848",
+     "name": "Lady Gaga",
+     "score": 2338
+    },
+    {
+     "mbid": "260b6184-8828-48eb-945c-bc4cb6fc34ca",
+     "name": "Charli xcx",
+     "score": 2338
+    },
+    {
+     "mbid": "db76c5ca-d555-4f09-b1db-baa1b713d875",
+     "name": "Mary J. Blige",
+     "score": 2336
+    },
+    {
+     "mbid": "6f1a58bf-9b1b-49cf-a44a-6cefad7ae04f",
+     "name": "Dua Lipa",
+     "score": 2334
+    },
+    {
+     "mbid": "f23ef341-33bd-47c1-b83c-846a78581f05",
+     "name": "PARTYNEXTDOOR",
+     "score": 2334
+    },
+    {
+     "mbid": "9167f739-da47-4495-9d63-9c13b40114ac",
+     "name": "Summer Walker",
+     "score": 2328
+    },
+    {
+     "mbid": "3b39abeb-0064-4eed-9ddd-ee47a45c54cb",
+     "name": "Ghostface Killah",
+     "score": 2305
+    },
+    {
+     "mbid": "2baf3276-ed6a-4349-8d2e-f4601e7b2167",
+     "name": "Playboi Carti",
+     "score": 2278
+    },
+    {
+     "mbid": "36494952-f434-45d8-a958-8b4acdbcf8a8",
+     "name": "Gucci Mane",
+     "score": 2266
+    },
+    {
+     "mbid": "10a9ff92-9637-4498-afea-7044b2ab0dc0",
+     "name": "Busta Rhymes",
+     "score": 2265
+    },
+    {
+     "mbid": "9d7a44f1-ec57-4d36-a9d3-a665c69d19f0",
+     "name": "Amanda Reifer",
+     "score": 2242
+    }
+   ]
+  },
+  "664c3e0e-42d8-48c1-b209-1efca19c0325": {
+   "name": "The National",
+   "albumsInCatalog": 10,
+   "similar": [
+    {
+     "mbid": "52074ba6-e495-4ef3-9bb4-0703888a9f68",
+     "name": "Arcade Fire",
+     "score": 5184
+    },
+    {
+     "mbid": "a74b1b7f-71a5-4011-9441-d0b5e4122711",
+     "name": "Radiohead",
+     "score": 5029
+    },
+    {
+     "mbid": "437a0e49-c6ae-42f6-a6c1-84f25ed366bc",
+     "name": "Bon Iver",
+     "score": 4784
+    },
+    {
+     "mbid": "01d3c51b-9b98-418a-8d8e-37f6fab59d8c",
+     "name": "Sufjan Stevens",
+     "score": 3869
+    },
+    {
+     "mbid": "6c8b9855-ba8b-48f9-ac1d-42167f7f7b18",
+     "name": "The Shins",
+     "score": 3766
+    },
+    {
+     "mbid": "af37c51c-0790-4a29-b995-456f98a6b8c9",
+     "name": "Vampire Weekend",
+     "score": 3751
+    },
+    {
+     "mbid": "fa97dd36-1b82-43d7-a6e4-2adeafd59cef",
+     "name": "Fleet Foxes",
+     "score": 3706
+    },
+    {
+     "mbid": "b23e8a63-8f47-4882-b55b-df2c92ef400e",
+     "name": "Interpol",
+     "score": 3487
+    },
+    {
+     "mbid": "c5c2ea1c-4bde-4f4d-bd0b-47b200bf99d6",
+     "name": "The xx",
+     "score": 3350
+    },
+    {
+     "mbid": "0039c7ae-e1a7-4a7d-9b49-0cbc716821a6",
+     "name": "Death Cab for Cutie",
+     "score": 3344
+    },
+    {
+     "mbid": "ada7a83c-e3e1-40f1-93f9-3e73dbc9298a",
+     "name": "Arctic Monkeys",
+     "score": 3289
+    },
+    {
+     "mbid": "59a7fbcb-ff74-494d-abd0-9c82359040c9",
+     "name": "Grizzly Bear",
+     "score": 3268
+    },
+    {
+     "mbid": "a96ac800-bfcb-412a-8a63-0a98df600700",
+     "name": "Modest Mouse",
+     "score": 3244
+    },
+    {
+     "mbid": "07b6020a-c539-4d68-aeef-f159f3befc76",
+     "name": "Band of Horses",
+     "score": 3209
+    },
+    {
+     "mbid": "309c62ba-7a22-4277-9f67-4a162526d18a",
+     "name": "Beck",
+     "score": 3113
+    },
+    {
+     "mbid": "84eac621-1c5a-49a1-9500-555099c6e184",
+     "name": "Spoon",
+     "score": 3098
+    },
+    {
+     "mbid": "f181961b-20f7-459e-89de-920ef03c7ed0",
+     "name": "The Strokes",
+     "score": 3091
+    },
+    {
+     "mbid": "d5cc67b8-1cc4-453b-96e8-44487acdebea",
+     "name": "Beach House",
+     "score": 2917
+    },
+    {
+     "mbid": "cc197bad-dc9c-440d-a5b5-d52ba2e14234",
+     "name": "Coldplay",
+     "score": 2873
+    },
+    {
+     "mbid": "c3f28da8-662d-4f09-bdc7-3084bf685930",
+     "name": "Iron & Wine",
+     "score": 2865
+    },
+    {
+     "mbid": "0af78501-5647-4c18-9a0d-66ac8789e13b",
+     "name": "Beirut",
+     "score": 2808
+    },
+    {
+     "mbid": "d15721d8-56b4-453d-b506-fc915b14cba2",
+     "name": "The Black Keys",
+     "score": 2801
+    },
+    {
+     "mbid": "95e1ead9-4d31-4808-a7ac-32c3614c116b",
+     "name": "The Killers",
+     "score": 2671
+    },
+    {
+     "mbid": "97b1142f-c71e-4971-8736-4a8ceaf6b4c3",
+     "name": "The Decemberists",
+     "score": 2662
+    },
+    {
+     "mbid": "2aaf7396-6ab8-40f3-9776-a41c42c8e26b",
+     "name": "LCD Soundsystem",
+     "score": 2613
+    },
+    {
+     "mbid": "eb872766-98f6-453d-883f-2ae908a18315",
+     "name": "TV on the Radio",
+     "score": 2587
+    },
+    {
+     "mbid": "c485632c-b784-4ee9-8ea1-c5fb365681fc",
+     "name": "MGMT",
+     "score": 2583
+    },
+    {
+     "mbid": "8d455809-96b3-4bb6-8829-ea4beb580d35",
+     "name": "Phoenix",
+     "score": 2571
+    },
+    {
+     "mbid": "b6b2bb8d-54a9-491f-9607-7b546023b433",
+     "name": "Pixies",
+     "score": 2558
+    },
+    {
+     "mbid": "9e53f84d-ef44-4c16-9677-5fd4d78cbd7d",
+     "name": "Wilco",
+     "score": 2554
+    },
+    {
+     "mbid": "fc7bbf00-fbaa-4736-986b-b3ac0266ca9b",
+     "name": "alt\u2010J",
+     "score": 2515
+    },
+    {
+     "mbid": "9c9f1380-2516-4fc9-a3e6-f9f61941d090",
+     "name": "Muse",
+     "score": 2489
+    },
+    {
+     "mbid": "584c04d2-4acc-491b-8a0a-e63133f4bfc4",
+     "name": "Yeah Yeah Yeahs",
+     "score": 2468
+    },
+    {
+     "mbid": "1bbf31dc-dbc0-4a7a-bf3f-48bc665878e1",
+     "name": "Local Natives",
+     "score": 2442
+    },
+    {
+     "mbid": "6a65d878-fcd0-42cf-aff9-ca1d636a8bcc",
+     "name": "Foals",
+     "score": 2440
+    },
+    {
+     "mbid": "2eada8f8-056a-4093-bbc2-004909ce743b",
+     "name": "Broken Social Scene",
+     "score": 2411
+    },
+    {
+     "mbid": "63aa26c3-d59b-4da4-84ac-716b54f1ef4d",
+     "name": "Tame Impala",
+     "score": 2397
+    },
+    {
+     "mbid": "03ad1736-b7c9-412a-b442-82536d63a5c4",
+     "name": "Elliott Smith",
+     "score": 2367
+    },
+    {
+     "mbid": "1f43d76f-8edf-44f6-aaf1-b65f05ad9402",
+     "name": "The Flaming Lips",
+     "score": 2354
+    },
+    {
+     "mbid": "b10bbbfc-cf9e-42e0-be17-e2c3e1d2600d",
+     "name": "The Beatles",
+     "score": 2286
+    },
+    {
+     "mbid": "e5c7b94f-e264-473c-bb0f-37c85d4d5c70",
+     "name": "Belle and Sebastian",
+     "score": 2272
+    },
+    {
+     "mbid": "f6f2326f-6b25-4170-b89d-e235b25508e8",
+     "name": "Sigur R\u00f3s",
+     "score": 2258
+    },
+    {
+     "mbid": "62d364d2-550b-420e-b918-b3bd1e4a2efc",
+     "name": "Broken Bells",
+     "score": 2248
+    },
+    {
+     "mbid": "6ffb8ea9-2370-44d8-b678-e9237bbd347b",
+     "name": "Kings of Leon",
+     "score": 2245
+    },
+    {
+     "mbid": "8c538f11-c141-4588-8ecb-931083524186",
+     "name": "Bloc Party",
+     "score": 2238
+    },
+    {
+     "mbid": "40f5d9e4-2de7-4f2d-ad41-e31a9a9fea27",
+     "name": "The Smiths",
+     "score": 2236
+    },
+    {
+     "mbid": "6d7b7cd4-254b-4c25-83f6-dd20f98ceacd",
+     "name": "M83",
+     "score": 2226
+    },
+    {
+     "mbid": "20244d07-534f-4eff-b4d4-930878889970",
+     "name": "Taylor Swift",
+     "score": 2214
+    },
+    {
+     "mbid": "5fee3020-513b-48c2-b1f7-4681b01db0c6",
+     "name": "Florence + the Machine",
+     "score": 2207
+    },
+    {
+     "mbid": "081b133e-ce74-42ba-92c1-c18234acb532",
+     "name": "Andrew Bird",
+     "score": 2206
+    },
+    {
+     "mbid": "aa7a2827-f74b-473c-bd79-03d065835cf7",
+     "name": "Franz Ferdinand",
+     "score": 2200
+    },
+    {
+     "mbid": "a670e05a-cea8-4b37-bce9-d82daf1a0fa4",
+     "name": "Feist",
+     "score": 2198
+    },
+    {
+     "mbid": "69ee3720-a7cb-4402-b48d-a02c366f2bcf",
+     "name": "The Cure",
+     "score": 2197
+    },
+    {
+     "mbid": "87b9b3b8-ab93-426c-a200-4012d667a626",
+     "name": "The War on Drugs",
+     "score": 2168
+    },
+    {
+     "mbid": "a506f761-2c22-4b2f-8a94-bd748c2c8f75",
+     "name": "Neutral Milk Hotel",
+     "score": 2128
+    },
+    {
+     "mbid": "3f542031-b054-454d-b57b-812fa2a81b11",
+     "name": "Yo La Tengo",
+     "score": 2091
+    },
+    {
+     "mbid": "5334edc0-5faf-4ca5-b1df-000de3e1f752",
+     "name": "St. Vincent",
+     "score": 2084
+    },
+    {
+     "mbid": "e21857d5-3256-4547-afb3-4b6ded592596",
+     "name": "Gorillaz",
+     "score": 2070
+    },
+    {
+     "mbid": "aef06569-098f-4218-a577-b413944d9493",
+     "name": "HAIM",
+     "score": 2063
+    },
+    {
+     "mbid": "ba0d6274-db14-4ef5-b28d-657ebde1a396",
+     "name": "The Smashing Pumpkins",
+     "score": 2054
+    },
+    {
+     "mbid": "7dc8f5bd-9d0b-4087-9f73-dc164950bbd8",
+     "name": "Queens of the Stone Age",
+     "score": 2052
+    },
+    {
+     "mbid": "cd8c5019-5d75-4d5c-bc28-e1e26a7dd5c8",
+     "name": "Jos\u00e9 Gonz\u00e1lez",
+     "score": 2045
+    },
+    {
+     "mbid": "6fe07aa5-fec0-4eca-a456-f29bff451b04",
+     "name": "Weezer",
+     "score": 1996
+    },
+    {
+     "mbid": "c44e9c22-ef82-4a77-9bcd-af6c958446d6",
+     "name": "Mumford & Sons",
+     "score": 1983
+    },
+    {
+     "mbid": "78f797e3-4913-4026-aad0-1cd858bd735b",
+     "name": "Bright Eyes",
+     "score": 1954
+    },
+    {
+     "mbid": "0741b30d-e15b-4a8c-b2e5-8834a03d6116",
+     "name": "Cold War Kids",
+     "score": 1941
+    },
+    {
+     "mbid": "05755bf1-380c-487f-983f-d1a02401fa28",
+     "name": "Cat Power",
+     "score": 1934
+    },
+    {
+     "mbid": "b7539c32-53e7-4908-bda3-81449c367da6",
+     "name": "Lana Del Rey",
+     "score": 1921
+    },
+    {
+     "mbid": "6f1de078-6684-4792-820d-2ffad64c15ed",
+     "name": "Two Door Cinema Club",
+     "score": 1909
+    },
+    {
+     "mbid": "ea4dfa26-f633-4da6-a52a-f49ea4897b58",
+     "name": "R.E.M.",
+     "score": 1906
+    },
+    {
+     "mbid": "ba853904-ae25-4ebb-89d6-c44cfbd71bd2",
+     "name": "Blur",
+     "score": 1903
+    },
+    {
+     "mbid": "4f416ed7-dda2-45de-a6f1-b986e861cf4b",
+     "name": "Deerhunter",
+     "score": 1881
+    },
+    {
+     "mbid": "0efe858c-89e5-4e47-906a-356fa953fd6e",
+     "name": "Editors",
+     "score": 1840
+    },
+    {
+     "mbid": "172053e5-a7fb-4548-a64d-c53858b5e775",
+     "name": "Father John Misty",
+     "score": 1827
+    },
+    {
+     "mbid": "0ae49abe-d6af-44fa-8ab0-b9ace5690e6f",
+     "name": "Bombay Bicycle Club",
+     "score": 1796
+    },
+    {
+     "mbid": "7e35659f-f3bb-4c28-bcf5-47bd5cfa2bca",
+     "name": "The Tallest Man on Earth",
+     "score": 1790
+    },
+    {
+     "mbid": "0c751690-c784-4a4f-b1e4-c1de27d47581",
+     "name": "Animal Collective",
+     "score": 1766
+    },
+    {
+     "mbid": "67f66c07-6e61-4026-ade5-7e782fad3a5d",
+     "name": "Foo Fighters",
+     "score": 1760
+    },
+    {
+     "mbid": "8bfac288-ccc5-448d-9573-c33ea2aa5c30",
+     "name": "Red Hot Chili Peppers",
+     "score": 1758
+    },
+    {
+     "mbid": "25b75a66-ce83-4db3-b136-395a3c3784c4",
+     "name": "The New Pornographers",
+     "score": 1746
+    },
+    {
+     "mbid": "9a58fda3-f4ed-4080-a3a5-f457aac9fcdd",
+     "name": "Joy Division",
+     "score": 1726
+    },
+    {
+     "mbid": "72c536dc-7137-4477-a521-567eeb840fa8",
+     "name": "Bob Dylan",
+     "score": 1723
+    },
+    {
+     "mbid": "ff0d20a7-a69e-4207-a18f-ca808759499d",
+     "name": "The Antlers",
+     "score": 1721
+    },
+    {
+     "mbid": "83d91898-7763-47d7-b03b-b92132375c47",
+     "name": "Pink Floyd",
+     "score": 1708
+    },
+    {
+     "mbid": "299278d3-25dd-4f30-bae4-5b571c28034d",
+     "name": "The Postal Service",
+     "score": 1693
+    },
+    {
+     "mbid": "e795e03d-b5d5-4a5f-834d-162cfb308a2c",
+     "name": "PJ Harvey",
+     "score": 1669
+    },
+    {
+     "mbid": "74963434-dcb6-4b14-98cc-99873b06db66",
+     "name": "Future Islands",
+     "score": 1668
+    },
+    {
+     "mbid": "daeec599-bf5d-4428-994a-e76ba5f86e2f",
+     "name": "Passion Pit",
+     "score": 1664
+    },
+    {
+     "mbid": "8e494408-8620-4c6a-82c2-c2ca4a1e4f12",
+     "name": "Lorde",
+     "score": 1662
+    },
+    {
+     "mbid": "5a2e9cd3-010a-4aae-9f83-629253284202",
+     "name": "Sharon Van Etten",
+     "score": 1654
+    },
+    {
+     "mbid": "9e103f85-7af7-41d7-b83b-49ba8f0c5abf",
+     "name": "Of Monsters and Men",
+     "score": 1651
+    },
+    {
+     "mbid": "e0e1a584-dd0a-4bd1-88d1-c4c62895039d",
+     "name": "Foster the People",
+     "score": 1649
+    },
+    {
+     "mbid": "4a069029-4f64-4946-b650-01aeb0b55d9d",
+     "name": "Edward Sharpe and the Magnetic Zeros",
+     "score": 1642
+    },
+    {
+     "mbid": "14387b0f-765c-4852-852f-135335790466",
+     "name": "EELS",
+     "score": 1638
+    },
+    {
+     "mbid": "a3cb23fc-acd3-4ce0-8f36-1e5aa6a18432",
+     "name": "U2",
+     "score": 1632
+    },
+    {
+     "mbid": "a1ced3e5-476c-4046-bd74-d428f419989b",
+     "name": "Daughter",
+     "score": 1619
+    },
+    {
+     "mbid": "b7834ebd-64ae-46c3-a930-2d3a52ee743a",
+     "name": "The Walkmen",
+     "score": 1613
+    },
+    {
+     "mbid": "b071f9fa-14b0-4217-8e97-eb41da73f598",
+     "name": "The Rolling Stones",
+     "score": 1601
+    },
+    {
+     "mbid": "4449ccf6-c948-4d33-aa97-b6ad98ce4b5b",
+     "name": "Metric",
+     "score": 1595
+    },
+    {
+     "mbid": "f82f3a3e-29c2-42ca-b589-bc5dc210fa9e",
+     "name": "The Kooks",
+     "score": 1589
+    }
+   ]
+  },
+  "1ee18fb3-18a6-4c7f-8ba0-bc41cdd0462e": {
+   "name": "Stevie Wonder",
+   "albumsInCatalog": 27,
+   "similar": [
+    {
+     "mbid": "afdb7919-059d-43c1-b668-ba1d265e7e42",
+     "name": "Marvin Gaye",
+     "score": 5606
+    },
+    {
+     "mbid": "b10bbbfc-cf9e-42e0-be17-e2c3e1d2600d",
+     "name": "The Beatles",
+     "score": 4896
+    },
+    {
+     "mbid": "f27ec8db-af05-4f36-916e-3d57f91ecf5e",
+     "name": "Michael Jackson",
+     "score": 4684
+    },
+    {
+     "mbid": "e5257dc5-1edd-4fca-b7e6-1158e00522c8",
+     "name": "The Jacksons",
+     "score": 4591
+    },
+    {
+     "mbid": "0383dadf-2a4e-4d10-a46a-e9e041da8eb3",
+     "name": "Queen",
+     "score": 4317
+    },
+    {
+     "mbid": "d8df96ae-8fcf-4997-b3e6-e5d1aaf0f69e",
+     "name": "The Temptations",
+     "score": 4277
+    },
+    {
+     "mbid": "2f9ecbed-27be-40e6-abca-6de49d50299e",
+     "name": "Aretha Franklin",
+     "score": 4259
+    },
+    {
+     "mbid": "b83bc61f-8451-4a5d-8b8e-7e9ed295e822",
+     "name": "Elton John",
+     "score": 4176
+    },
+    {
+     "mbid": "5441c29d-3602-4898-b1a1-b77fa23b8e50",
+     "name": "David Bowie",
+     "score": 4093
+    },
+    {
+     "mbid": "c1aa2ec9-53e7-4d90-8d36-bac75832e986",
+     "name": "The Supremes",
+     "score": 4019
+    },
+    {
+     "mbid": "82b1f5fd-cd31-41a9-b5d4-7e33f0eb9751",
+     "name": "Otis Redding",
+     "score": 3894
+    },
+    {
+     "mbid": "b071f9fa-14b0-4217-8e97-eb41da73f598",
+     "name": "The Rolling Stones",
+     "score": 3824
+    },
+    {
+     "mbid": "ebfc1398-8d96-47e3-82c3-f782abcdb13d",
+     "name": "The Beach Boys",
+     "score": 3788
+    },
+    {
+     "mbid": "01809552-4f87-45b0-afff-2c6f0730a3be",
+     "name": "Elvis Presley",
+     "score": 3480
+    },
+    {
+     "mbid": "535afeda-2538-435d-9dd1-5e10be586774",
+     "name": "Earth, Wind & Fire",
+     "score": 3465
+    },
+    {
+     "mbid": "20ff3303-4fe2-4a47-a1b6-291e26aa3438",
+     "name": "James Brown",
+     "score": 3395
+    },
+    {
+     "mbid": "fd1a2d9d-9bb6-44de-83a3-41560658aba9",
+     "name": "Bill Withers",
+     "score": 3293
+    },
+    {
+     "mbid": "bd13909f-1c29-4c27-a874-d4aaf27c5b1a",
+     "name": "Fleetwood Mac",
+     "score": 3155
+    },
+    {
+     "mbid": "0d21b01f-21f2-419b-8d98-4158ba0c0aa4",
+     "name": "Four Tops",
+     "score": 3084
+    },
+    {
+     "mbid": "070d193a-845c-479f-980e-bef15710653e",
+     "name": "Prince",
+     "score": 3073
+    },
+    {
+     "mbid": "72c536dc-7137-4477-a521-567eeb840fa8",
+     "name": "Bob Dylan",
+     "score": 3064
+    },
+    {
+     "mbid": "fb7272ba-f130-4f0a-934d-6eeea4c18c9a",
+     "name": "Al Green",
+     "score": 3038
+    },
+    {
+     "mbid": "b7ec4c54-1f93-4bf2-957f-7b9921ab84ea",
+     "name": "Sly & the Family Stone",
+     "score": 3016
+    },
+    {
+     "mbid": "4a76400d-283f-492e-9754-18ef41755f81",
+     "name": "The Isley Brothers",
+     "score": 2956
+    },
+    {
+     "mbid": "a74b1b7f-71a5-4011-9441-d0b5e4122711",
+     "name": "Radiohead",
+     "score": 2889
+    },
+    {
+     "mbid": "6a4c2d34-7f7f-4f87-b17f-b5540aa840db",
+     "name": "The Miracles",
+     "score": 2835
+    },
+    {
+     "mbid": "5d02f264-e225-41ff-83f7-d9b1f0b1874a",
+     "name": "Simon & Garfunkel",
+     "score": 2808
+    },
+    {
+     "mbid": "678d88b2-87b0-403b-b63d-5da7465aecc3",
+     "name": "Led Zeppelin",
+     "score": 2736
+    },
+    {
+     "mbid": "109958eb-a335-4c5e-907e-597ff4c6af46",
+     "name": "Creedence Clearwater Revival",
+     "score": 2719
+    },
+    {
+     "mbid": "197450cd-0124-4164-b723-3c22dd16494d",
+     "name": "Frank Sinatra",
+     "score": 2697
+    },
+    {
+     "mbid": "83d91898-7763-47d7-b03b-b92132375c47",
+     "name": "Pink Floyd",
+     "score": 2641
+    },
+    {
+     "mbid": "2ce02909-598b-44ef-a456-151ba0a3bd70",
+     "name": "Ray Charles",
+     "score": 2641
+    },
+    {
+     "mbid": "8bfac288-ccc5-448d-9573-c33ea2aa5c30",
+     "name": "Red Hot Chili Peppers",
+     "score": 2627
+    },
+    {
+     "mbid": "9e0e2b01-41db-4008-bd8b-988977d6019a",
+     "name": "The Police",
+     "score": 2614
+    },
+    {
+     "mbid": "bf0f7e29-dfe1-416c-b5c6-f9ebc19ea810",
+     "name": "Bee Gees",
+     "score": 2590
+    },
+    {
+     "mbid": "9fdaa16b-a6c4-4831-b87c-bc9ca8ce7eaa",
+     "name": "The Who",
+     "score": 2585
+    },
+    {
+     "mbid": "debabff3-2559-46e5-862d-ef2a906d7010",
+     "name": "Daryl Hall & John Oates",
+     "score": 2515
+    },
+    {
+     "mbid": "a3cb23fc-acd3-4ce0-8f36-1e5aa6a18432",
+     "name": "U2",
+     "score": 2459
+    },
+    {
+     "mbid": "cc197bad-dc9c-440d-a5b5-d52ba2e14234",
+     "name": "Coldplay",
+     "score": 2454
+    },
+    {
+     "mbid": "6c8fd0be-d961-454c-aee0-4366a6dbc993",
+     "name": "Sam Cooke",
+     "score": 2452
+    },
+    {
+     "mbid": "900ab237-327b-44e2-87e4-73250bbe025a",
+     "name": "Commodores",
+     "score": 2360
+    },
+    {
+     "mbid": "d43d12a1-2dc9-4257-a2fd-0a3bb1081b86",
+     "name": "Johnny Cash",
+     "score": 2316
+    },
+    {
+     "mbid": "64b94289-9474-4d43-8c93-918ccc1920d1",
+     "name": "Billy Joel",
+     "score": 2310
+    },
+    {
+     "mbid": "a41ac10f-0a56-4672-9161-b83f9b223559",
+     "name": "Van Morrison",
+     "score": 2300
+    },
+    {
+     "mbid": "5b11f4ce-a62d-471e-81fc-a69a8278c7da",
+     "name": "Nirvana",
+     "score": 2277
+    },
+    {
+     "mbid": "9d1bc10a-24fe-4b41-8338-ea92d8101a09",
+     "name": "Martha Reeves and the Vandellas",
+     "score": 2265
+    },
+    {
+     "mbid": "8f92558c-2baa-4758-8c38-615519e9deda",
+     "name": "The Clash",
+     "score": 2248
+    },
+    {
+     "mbid": "69ee3720-a7cb-4402-b48d-a02c366f2bcf",
+     "name": "The Cure",
+     "score": 2225
+    },
+    {
+     "mbid": "70248960-cb53-4ea4-943a-edb18f7d336f",
+     "name": "Bruce Springsteen",
+     "score": 2218
+    },
+    {
+     "mbid": "ea4dfa26-f633-4da6-a52a-f49ea4897b58",
+     "name": "R.E.M.",
+     "score": 2196
+    },
+    {
+     "mbid": "d87e52c5-bb8d-4da8-b941-9f4928627dc8",
+     "name": "ABBA",
+     "score": 2187
+    },
+    {
+     "mbid": "2469950a-f0ca-425a-bfbc-baf55ea3afde",
+     "name": "Kool & the Gang",
+     "score": 2162
+    },
+    {
+     "mbid": "4d5447d7-c61c-4120-ba1b-d7f471d385b9",
+     "name": "John Lennon",
+     "score": 2154
+    },
+    {
+     "mbid": "17b53d9f-5c63-4a09-a593-dde4608e0db9",
+     "name": "The Kinks",
+     "score": 2131
+    },
+    {
+     "mbid": "ba550d0e-adac-4864-b88b-407cab5e76af",
+     "name": "Paul McCartney",
+     "score": 2124
+    },
+    {
+     "mbid": "0c502791-4ee9-4c5f-9696-0602b721ff3b",
+     "name": "Electric Light Orchestra",
+     "score": 2111
+    },
+    {
+     "mbid": "c296e10c-110a-4103-9e77-47bfebb7fb2e",
+     "name": "Bob Marley & The Wailers",
+     "score": 2106
+    },
+    {
+     "mbid": "9fff2f8a-21e6-47de-a2b8-7f449929d43f",
+     "name": "Drake",
+     "score": 2079
+    },
+    {
+     "mbid": "f46bd570-5768-462e-b84c-c7c993bbf47e",
+     "name": "Eagles",
+     "score": 2067
+    },
+    {
+     "mbid": "a94a7155-c79d-4409-9fcf-220cb0e4dc3a",
+     "name": "Talking Heads",
+     "score": 2065
+    },
+    {
+     "mbid": "79239441-bfd5-4981-a70c-55c3f15c1287",
+     "name": "Madonna",
+     "score": 2061
+    },
+    {
+     "mbid": "9efff43b-3b29-4082-824e-bc82f646f93d",
+     "name": "The Doors",
+     "score": 2059
+    },
+    {
+     "mbid": "b896aa8c-2761-40ce-b485-0e1fffd26167",
+     "name": "Dusty Springfield",
+     "score": 2047
+    },
+    {
+     "mbid": "05517043-ff78-4988-9c22-88c68588ebb9",
+     "name": "Paul Simon",
+     "score": 2034
+    },
+    {
+     "mbid": "401c3991-b76b-499d-8082-9f2df958ef78",
+     "name": "Phil Collins",
+     "score": 2010
+    },
+    {
+     "mbid": "494e8d09-f85b-4543-892f-a5096aed1cd4",
+     "name": "Mariah Carey",
+     "score": 1992
+    },
+    {
+     "mbid": "60d41417-feda-4734-bbbf-7dcc30e08a83",
+     "name": "Diana Ross",
+     "score": 1978
+    },
+    {
+     "mbid": "618b6900-0618-4f1e-b835-bccb17f84294",
+     "name": "Eric Clapton",
+     "score": 1966
+    },
+    {
+     "mbid": "f1d7f1fd-8883-47e9-ad2b-e9ec9ff61aac",
+     "name": "Sam & Dave",
+     "score": 1928
+    },
+    {
+     "mbid": "592a3b6d-c42b-4567-99c9-ecf63bd66499",
+     "name": "Chuck Berry",
+     "score": 1901
+    },
+    {
+     "mbid": "2944824d-4c26-476f-a981-be849081942f",
+     "name": "Nina Simone",
+     "score": 1892
+    },
+    {
+     "mbid": "66c662b6-6e2f-4930-8610-912e24c63ed1",
+     "name": "AC/DC",
+     "score": 1878
+    },
+    {
+     "mbid": "fbe054ec-a143-4101-9e9e-64abc5ff5ac9",
+     "name": "Nat King Cole",
+     "score": 1876
+    },
+    {
+     "mbid": "dfe9a7c4-8cf2-47f4-9dcb-d233c2b86ec3",
+     "name": "Amy Winehouse",
+     "score": 1868
+    },
+    {
+     "mbid": "3d2b98e5-556f-4451-a3ff-c50ea18d57cb",
+     "name": "Aerosmith",
+     "score": 1840
+    },
+    {
+     "mbid": "4dca4bb2-23ba-4103-97e6-5810311db33a",
+     "name": "Curtis Mayfield",
+     "score": 1835
+    },
+    {
+     "mbid": "73e5e69d-3554-40d8-8516-00cb38737a1c",
+     "name": "Rihanna",
+     "score": 1818
+    },
+    {
+     "mbid": "614e3804-7d34-41ba-857f-811bad7c2b7a",
+     "name": "Dire Straits",
+     "score": 1804
+    },
+    {
+     "mbid": "75167b8b-44e4-407b-9d35-effe87b223cf",
+     "name": "Neil Young",
+     "score": 1780
+    },
+    {
+     "mbid": "e22d2f66-881e-41ca-9356-544697ee5f90",
+     "name": "Etta James",
+     "score": 1776
+    },
+    {
+     "mbid": "54799c0e-eb45-4eea-996d-c4d71a63c499",
+     "name": "Ella Fitzgerald",
+     "score": 1766
+    },
+    {
+     "mbid": "e01c3376-15fa-40d7-b747-5f219bdefdd7",
+     "name": "Steely Dan",
+     "score": 1738
+    },
+    {
+     "mbid": "73fdb566-a9b1-494c-9f32-51768ec9fd27",
+     "name": "OutKast",
+     "score": 1737
+    },
+    {
+     "mbid": "8153c6ef-026c-481f-b081-974f2c948d9f",
+     "name": "The O\u2019Jays",
+     "score": 1734
+    },
+    {
+     "mbid": "8538e728-ca0b-4321-b7e5-cff6565dd4c0",
+     "name": "Depeche Mode",
+     "score": 1732
+    },
+    {
+     "mbid": "393e5448-896f-43e9-b80b-4ee58e1e71a4",
+     "name": "The Ronettes",
+     "score": 1728
+    },
+    {
+     "mbid": "ca825016-f7fd-4ccf-a523-6ee36ea88828",
+     "name": "Gladys Knight & the Pips",
+     "score": 1719
+    },
+    {
+     "mbid": "aab5c954-cabe-432e-899e-1c4f99757327",
+     "name": "Toto",
+     "score": 1710
+    },
+    {
+     "mbid": "f0bf4fa0-028e-452f-82d3-7d4375e105dd",
+     "name": "Jackie Wilson",
+     "score": 1707
+    },
+    {
+     "mbid": "a35237a0-4f47-40a6-b6f3-1e786db23402",
+     "name": "Rod Stewart",
+     "score": 1702
+    },
+    {
+     "mbid": "9c9f1380-2516-4fc9-a3e6-f9f61941d090",
+     "name": "Muse",
+     "score": 1682
+    },
+    {
+     "mbid": "309c62ba-7a22-4277-9f67-4a162526d18a",
+     "name": "Beck",
+     "score": 1677
+    },
+    {
+     "mbid": "e21857d5-3256-4547-afb3-4b6ded592596",
+     "name": "Gorillaz",
+     "score": 1660
+    },
+    {
+     "mbid": "611700cf-27f0-4dc9-ae80-c513a767853e",
+     "name": "Michael Bubl\u00e9",
+     "score": 1658
+    },
+    {
+     "mbid": "5e6c760b-42e0-4df4-a221-0269355da00a",
+     "name": "Dean Martin",
+     "score": 1641
+    },
+    {
+     "mbid": "3cb25fb2-5547-4b05-adec-1a5e37830d46",
+     "name": "Lionel Richie",
+     "score": 1636
+    },
+    {
+     "mbid": "0307edfc-437c-4b48-8700-80680e66a228",
+     "name": "Whitney Houston",
+     "score": 1635
+    },
+    {
+     "mbid": "faca5707-ce1a-4276-a5bc-a4061bfb33d2",
+     "name": "The Marvelettes",
+     "score": 1633
+    },
+    {
+     "mbid": "ccb8f30e-4d71-40c4-8b1d-846dafe73e2c",
+     "name": "George Michael",
+     "score": 1614
+    },
+    {
+     "mbid": "7c7f9c94-dee8-4903-892b-6cf44652e2de",
+     "name": "Tears for Fears",
+     "score": 1603
+    }
+   ]
+  },
+  "bd13909f-1c29-4c27-a874-d4aaf27c5b1a": {
+   "name": "Fleetwood Mac",
+   "albumsInCatalog": 1,
+   "similar": [
+    {
+     "mbid": "5441c29d-3602-4898-b1a1-b77fa23b8e50",
+     "name": "David Bowie",
+     "score": 6996
+    },
+    {
+     "mbid": "b10bbbfc-cf9e-42e0-be17-e2c3e1d2600d",
+     "name": "The Beatles",
+     "score": 6839
+    },
+    {
+     "mbid": "b071f9fa-14b0-4217-8e97-eb41da73f598",
+     "name": "The Rolling Stones",
+     "score": 6665
+    },
+    {
+     "mbid": "0383dadf-2a4e-4d10-a46a-e9e041da8eb3",
+     "name": "Queen",
+     "score": 6510
+    },
+    {
+     "mbid": "678d88b2-87b0-403b-b63d-5da7465aecc3",
+     "name": "Led Zeppelin",
+     "score": 6152
+    },
+    {
+     "mbid": "b83bc61f-8451-4a5d-8b8e-7e9ed295e822",
+     "name": "Elton John",
+     "score": 5864
+    },
+    {
+     "mbid": "83d91898-7763-47d7-b03b-b92132375c47",
+     "name": "Pink Floyd",
+     "score": 5624
+    },
+    {
+     "mbid": "109958eb-a335-4c5e-907e-597ff4c6af46",
+     "name": "Creedence Clearwater Revival",
+     "score": 5360
+    },
+    {
+     "mbid": "9fdaa16b-a6c4-4831-b87c-bc9ca8ce7eaa",
+     "name": "The Who",
+     "score": 4934
+    },
+    {
+     "mbid": "72c536dc-7137-4477-a521-567eeb840fa8",
+     "name": "Bob Dylan",
+     "score": 4803
+    },
+    {
+     "mbid": "f46bd570-5768-462e-b84c-c7c993bbf47e",
+     "name": "Eagles",
+     "score": 4717
+    },
+    {
+     "mbid": "0c502791-4ee9-4c5f-9696-0602b721ff3b",
+     "name": "Electric Light Orchestra",
+     "score": 4686
+    },
+    {
+     "mbid": "5d02f264-e225-41ff-83f7-d9b1f0b1874a",
+     "name": "Simon & Garfunkel",
+     "score": 4671
+    },
+    {
+     "mbid": "70248960-cb53-4ea4-943a-edb18f7d336f",
+     "name": "Bruce Springsteen",
+     "score": 4528
+    },
+    {
+     "mbid": "9efff43b-3b29-4082-824e-bc82f646f93d",
+     "name": "The Doors",
+     "score": 4462
+    },
+    {
+     "mbid": "a74b1b7f-71a5-4011-9441-d0b5e4122711",
+     "name": "Radiohead",
+     "score": 4456
+    },
+    {
+     "mbid": "614e3804-7d34-41ba-857f-811bad7c2b7a",
+     "name": "Dire Straits",
+     "score": 4434
+    },
+    {
+     "mbid": "9e0e2b01-41db-4008-bd8b-988977d6019a",
+     "name": "The Police",
+     "score": 4338
+    },
+    {
+     "mbid": "64b94289-9474-4d43-8c93-918ccc1920d1",
+     "name": "Billy Joel",
+     "score": 4241
+    },
+    {
+     "mbid": "a3cb23fc-acd3-4ce0-8f36-1e5aa6a18432",
+     "name": "U2",
+     "score": 4194
+    },
+    {
+     "mbid": "618b6900-0618-4f1e-b835-bccb17f84294",
+     "name": "Eric Clapton",
+     "score": 4180
+    },
+    {
+     "mbid": "ea4dfa26-f633-4da6-a52a-f49ea4897b58",
+     "name": "R.E.M.",
+     "score": 3955
+    },
+    {
+     "mbid": "17b53d9f-5c63-4a09-a593-dde4608e0db9",
+     "name": "The Kinks",
+     "score": 3889
+    },
+    {
+     "mbid": "8bfac288-ccc5-448d-9573-c33ea2aa5c30",
+     "name": "Red Hot Chili Peppers",
+     "score": 3869
+    },
+    {
+     "mbid": "69ee3720-a7cb-4402-b48d-a02c366f2bcf",
+     "name": "The Cure",
+     "score": 3851
+    },
+    {
+     "mbid": "8f92558c-2baa-4758-8c38-615519e9deda",
+     "name": "The Clash",
+     "score": 3838
+    },
+    {
+     "mbid": "ebfc1398-8d96-47e3-82c3-f782abcdb13d",
+     "name": "The Beach Boys",
+     "score": 3834
+    },
+    {
+     "mbid": "3d2b98e5-556f-4451-a3ff-c50ea18d57cb",
+     "name": "Aerosmith",
+     "score": 3790
+    },
+    {
+     "mbid": "66c662b6-6e2f-4930-8610-912e24c63ed1",
+     "name": "AC/DC",
+     "score": 3767
+    },
+    {
+     "mbid": "a41ac10f-0a56-4672-9161-b83f9b223559",
+     "name": "Van Morrison",
+     "score": 3730
+    },
+    {
+     "mbid": "75167b8b-44e4-407b-9d35-effe87b223cf",
+     "name": "Neil Young",
+     "score": 3721
+    },
+    {
+     "mbid": "c544ed4d-2390-4442-a83e-1ea2883b09c8",
+     "name": "Lynyrd Skynyrd",
+     "score": 3645
+    },
+    {
+     "mbid": "5b11f4ce-a62d-471e-81fc-a69a8278c7da",
+     "name": "Nirvana",
+     "score": 3614
+    },
+    {
+     "mbid": "eeb1195b-f213-4ce1-b28c-8565211f8e43",
+     "name": "Guns N\u2019 Roses",
+     "score": 3613
+    },
+    {
+     "mbid": "05517043-ff78-4988-9c22-88c68588ebb9",
+     "name": "Paul Simon",
+     "score": 3591
+    },
+    {
+     "mbid": "cc197bad-dc9c-440d-a5b5-d52ba2e14234",
+     "name": "Coldplay",
+     "score": 3589
+    },
+    {
+     "mbid": "f27ec8db-af05-4f36-916e-3d57f91ecf5e",
+     "name": "Michael Jackson",
+     "score": 3586
+    },
+    {
+     "mbid": "d2ff6b6b-fc30-48dc-8952-06f9d8fc64f8",
+     "name": "Supertramp",
+     "score": 3569
+    },
+    {
+     "mbid": "a94a7155-c79d-4409-9fcf-220cb0e4dc3a",
+     "name": "Talking Heads",
+     "score": 3480
+    },
+    {
+     "mbid": "abd506e1-6f2b-4d6f-b937-92c267f6f88b",
+     "name": "Journey",
+     "score": 3430
+    },
+    {
+     "mbid": "42a8f507-8412-4611-854f-926571049fa0",
+     "name": "George Harrison",
+     "score": 3362
+    },
+    {
+     "mbid": "aab5c954-cabe-432e-899e-1c4f99757327",
+     "name": "Toto",
+     "score": 3348
+    },
+    {
+     "mbid": "e01c3376-15fa-40d7-b747-5f219bdefdd7",
+     "name": "Steely Dan",
+     "score": 3340
+    },
+    {
+     "mbid": "debabff3-2559-46e5-862d-ef2a906d7010",
+     "name": "Daryl Hall & John Oates",
+     "score": 3312
+    },
+    {
+     "mbid": "04cd0cfd-bfd1-4c36-bc38-95c35e2c045f",
+     "name": "Cream",
+     "score": 3309
+    },
+    {
+     "mbid": "06fb1c8b-566e-4cb2-985b-b467c90781d4",
+     "name": "Jimi Hendrix",
+     "score": 3298
+    },
+    {
+     "mbid": "67f66c07-6e61-4026-ade5-7e782fad3a5d",
+     "name": "Foo Fighters",
+     "score": 3237
+    },
+    {
+     "mbid": "0d8b0d50-e4cf-4da4-965d-f24c58ec3268",
+     "name": "Boston",
+     "score": 3232
+    },
+    {
+     "mbid": "588dea29-eea3-456b-a815-3ee04f75c8e7",
+     "name": "The Doobie Brothers",
+     "score": 3188
+    },
+    {
+     "mbid": "f93dbc64-6f08-4033-bcc7-8a0bb4689849",
+     "name": "Tom Petty and the Heartbreakers",
+     "score": 3173
+    },
+    {
+     "mbid": "1ee18fb3-18a6-4c7f-8ba0-bc41cdd0462e",
+     "name": "Stevie Wonder",
+     "score": 3155
+    },
+    {
+     "mbid": "401c3991-b76b-499d-8082-9f2df958ef78",
+     "name": "Phil Collins",
+     "score": 3148
+    },
+    {
+     "mbid": "b665b768-0d83-4363-950c-31ed39317c15",
+     "name": "Van Halen",
+     "score": 3097
+    },
+    {
+     "mbid": "34cf95c7-4be9-4efd-a48a-c2ea4a0bb114",
+     "name": "America",
+     "score": 3061
+    },
+    {
+     "mbid": "5182c1d9-c7d2-4dad-afa0-ccfeada921a8",
+     "name": "Black Sabbath",
+     "score": 3057
+    },
+    {
+     "mbid": "8e3fcd7d-bda1-4ca0-b987-b8528d2ee74e",
+     "name": "Genesis",
+     "score": 3051
+    },
+    {
+     "mbid": "bdbd48f5-abf3-4a4f-9a21-4551dbc3fde9",
+     "name": "Heart",
+     "score": 3039
+    },
+    {
+     "mbid": "7c7f9c94-dee8-4903-892b-6cf44652e2de",
+     "name": "Tears for Fears",
+     "score": 2996
+    },
+    {
+     "mbid": "a81259a0-a2f5-464b-866e-71220f2739f1",
+     "name": "ZZ Top",
+     "score": 2964
+    },
+    {
+     "mbid": "8538e728-ca0b-4321-b7e5-cff6565dd4c0",
+     "name": "Depeche Mode",
+     "score": 2959
+    },
+    {
+     "mbid": "160629ab-ec18-4931-8c95-02cb92d06186",
+     "name": "Foreigner",
+     "score": 2927
+    },
+    {
+     "mbid": "070d193a-845c-479f-980e-bef15710653e",
+     "name": "Prince",
+     "score": 2916
+    },
+    {
+     "mbid": "ba0d6274-db14-4ef5-b28d-657ebde1a396",
+     "name": "The Smashing Pumpkins",
+     "score": 2857
+    },
+    {
+     "mbid": "e57f0cac-4f56-473c-8d7e-d93f753fd586",
+     "name": "Steve Miller Band",
+     "score": 2854
+    },
+    {
+     "mbid": "092b603f-eb4c-4958-b10e-02420de5885b",
+     "name": "The Cars",
+     "score": 2833
+    },
+    {
+     "mbid": "5ca3f318-d028-4151-ac73-78e2b2d6cdcc",
+     "name": "Tom Petty",
+     "score": 2832
+    },
+    {
+     "mbid": "d43d12a1-2dc9-4257-a2fd-0a3bb1081b86",
+     "name": "Johnny Cash",
+     "score": 2798
+    },
+    {
+     "mbid": "d87e52c5-bb8d-4da8-b941-9f4928627dc8",
+     "name": "ABBA",
+     "score": 2789
+    },
+    {
+     "mbid": "4d5447d7-c61c-4120-ba1b-d7f471d385b9",
+     "name": "John Lennon",
+     "score": 2769
+    },
+    {
+     "mbid": "40f5d9e4-2de7-4f2d-ad41-e31a9a9fea27",
+     "name": "The Smiths",
+     "score": 2769
+    },
+    {
+     "mbid": "5dcdb5eb-cb72-4e6e-9e63-b7bace604965",
+     "name": "Bon Jovi",
+     "score": 2733
+    },
+    {
+     "mbid": "a35237a0-4f47-40a6-b6f3-1e786db23402",
+     "name": "Rod Stewart",
+     "score": 2679
+    },
+    {
+     "mbid": "79239441-bfd5-4981-a70c-55c3f15c1287",
+     "name": "Madonna",
+     "score": 2650
+    },
+    {
+     "mbid": "65f4f0c5-ef9e-490c-aee3-909e7ae6b2ab",
+     "name": "Metallica",
+     "score": 2645
+    },
+    {
+     "mbid": "bf0f7e29-dfe1-416c-b5c6-f9ebc19ea810",
+     "name": "Bee Gees",
+     "score": 2622
+    },
+    {
+     "mbid": "95e1ead9-4d31-4808-a7ac-32c3614c116b",
+     "name": "The Killers",
+     "score": 2616
+    },
+    {
+     "mbid": "69689acf-d9cd-4d20-a972-47db4ed51b1a",
+     "name": "Kansas",
+     "score": 2616
+    },
+    {
+     "mbid": "39c2a93d-9afa-4a22-9bba-c087ab056e1c",
+     "name": "Jefferson Airplane",
+     "score": 2593
+    },
+    {
+     "mbid": "ada7a83c-e3e1-40f1-93f9-3e73dbc9298a",
+     "name": "Arctic Monkeys",
+     "score": 2591
+    },
+    {
+     "mbid": "83b9cbe7-9857-49e2-ab8e-b57b01038103",
+     "name": "Pearl Jam",
+     "score": 2581
+    },
+    {
+     "mbid": "9c9f1380-2516-4fc9-a3e6-f9f61941d090",
+     "name": "Muse",
+     "score": 2580
+    },
+    {
+     "mbid": "01809552-4f87-45b0-afff-2c6f0730a3be",
+     "name": "Elvis Presley",
+     "score": 2571
+    },
+    {
+     "mbid": "c7423e0c-ab3e-4ab4-be10-cdff5a9d3062",
+     "name": "Blue \u00d6yster Cult",
+     "score": 2561
+    },
+    {
+     "mbid": "ba550d0e-adac-4864-b88b-407cab5e76af",
+     "name": "Paul McCartney",
+     "score": 2556
+    },
+    {
+     "mbid": "39ab1aed-75e0-4140-bd47-540276886b60",
+     "name": "Oasis",
+     "score": 2548
+    },
+    {
+     "mbid": "9a3bf45c-347d-4630-894d-7cf3e8e0b632",
+     "name": "Santana",
+     "score": 2521
+    },
+    {
+     "mbid": "b7f2cca2-72c6-41fb-ae33-53370fc62fe7",
+     "name": "Stevie Nicks",
+     "score": 2511
+    },
+    {
+     "mbid": "11ae9fbb-f3d7-4a47-936f-4c0a04d3b3b5",
+     "name": "The White Stripes",
+     "score": 2505
+    },
+    {
+     "mbid": "9d1ebcfe-4c15-4d18-95d3-d919898638a1",
+     "name": "Lou Reed",
+     "score": 2504
+    },
+    {
+     "mbid": "6fe07aa5-fec0-4eca-a456-f29bff451b04",
+     "name": "Weezer",
+     "score": 2492
+    },
+    {
+     "mbid": "1a1cd7f3-e5df-4eca-bae2-2757c9e656b5",
+     "name": "Duran Duran",
+     "score": 2482
+    },
+    {
+     "mbid": "afdb7919-059d-43c1-b668-ba1d265e7e42",
+     "name": "Marvin Gaye",
+     "score": 2451
+    },
+    {
+     "mbid": "4d2956d1-a3f7-44bb-9a41-67563e1a0c94",
+     "name": "Blondie",
+     "score": 2406
+    },
+    {
+     "mbid": "79491354-3d83-40e3-9d8e-7592d58d790a",
+     "name": "Deep Purple",
+     "score": 2405
+    },
+    {
+     "mbid": "3f5be744-e867-42fb-8913-5fd69e4099b5",
+     "name": "Chicago",
+     "score": 2384
+    },
+    {
+     "mbid": "534ee493-bfac-4575-a44a-0ae41e2c3fe4",
+     "name": "Rush",
+     "score": 2383
+    },
+    {
+     "mbid": "e21857d5-3256-4547-afb3-4b6ded592596",
+     "name": "Gorillaz",
+     "score": 2373
+    },
+    {
+     "mbid": "481bf5f9-2e7c-4c44-b08a-05b32bc7c00d",
+     "name": "INXS",
+     "score": 2360
+    },
+    {
+     "mbid": "4b585938-f271-45e2-b19a-91c634b5e396",
+     "name": "Kate Bush",
+     "score": 2359
+    },
+    {
+     "mbid": "c98d40fd-f6cf-4b26-883e-eaa515ee2851",
+     "name": "The Cranberries",
+     "score": 2321
+    }
+   ]
+  },
+  "5b11f4ce-a62d-471e-81fc-a69a8278c7da": {
+   "name": "Nirvana",
+   "albumsInCatalog": 3,
+   "similar": [
+    {
+     "mbid": "8bfac288-ccc5-448d-9573-c33ea2aa5c30",
+     "name": "Red Hot Chili Peppers",
+     "score": 11684
+    },
+    {
+     "mbid": "a74b1b7f-71a5-4011-9441-d0b5e4122711",
+     "name": "Radiohead",
+     "score": 11156
+    },
+    {
+     "mbid": "67f66c07-6e61-4026-ade5-7e782fad3a5d",
+     "name": "Foo Fighters",
+     "score": 10329
+    },
+    {
+     "mbid": "084308bd-1654-436f-ba03-df6697104e19",
+     "name": "Green Day",
+     "score": 9714
+    },
+    {
+     "mbid": "83b9cbe7-9857-49e2-ab8e-b57b01038103",
+     "name": "Pearl Jam",
+     "score": 9335
+    },
+    {
+     "mbid": "ba0d6274-db14-4ef5-b28d-657ebde1a396",
+     "name": "The Smashing Pumpkins",
+     "score": 9271
+    },
+    {
+     "mbid": "65f4f0c5-ef9e-490c-aee3-909e7ae6b2ab",
+     "name": "Metallica",
+     "score": 8788
+    },
+    {
+     "mbid": "b10bbbfc-cf9e-42e0-be17-e2c3e1d2600d",
+     "name": "The Beatles",
+     "score": 8283
+    },
+    {
+     "mbid": "9c9f1380-2516-4fc9-a3e6-f9f61941d090",
+     "name": "Muse",
+     "score": 8118
+    },
+    {
+     "mbid": "3798b104-01cb-484c-a3b0-56adc6399b80",
+     "name": "Rage Against the Machine",
+     "score": 8096
+    },
+    {
+     "mbid": "23a03e33-a603-404e-bcbf-2c00159d7067",
+     "name": "The Offspring",
+     "score": 7978
+    },
+    {
+     "mbid": "cc0b7089-c08d-4c10-b6b0-873582c17fd6",
+     "name": "System of a Down",
+     "score": 7961
+    },
+    {
+     "mbid": "153c9281-268f-4cf3-8938-f5a4593e5df4",
+     "name": "Soundgarden",
+     "score": 7922
+    },
+    {
+     "mbid": "11ae9fbb-f3d7-4a47-936f-4c0a04d3b3b5",
+     "name": "The White Stripes",
+     "score": 7893
+    },
+    {
+     "mbid": "83d91898-7763-47d7-b03b-b92132375c47",
+     "name": "Pink Floyd",
+     "score": 7837
+    },
+    {
+     "mbid": "678d88b2-87b0-403b-b63d-5da7465aecc3",
+     "name": "Led Zeppelin",
+     "score": 7791
+    },
+    {
+     "mbid": "0383dadf-2a4e-4d10-a46a-e9e041da8eb3",
+     "name": "Queen",
+     "score": 7725
+    },
+    {
+     "mbid": "6fe07aa5-fec0-4eca-a456-f29bff451b04",
+     "name": "Weezer",
+     "score": 7520
+    },
+    {
+     "mbid": "ea4dfa26-f633-4da6-a52a-f49ea4897b58",
+     "name": "R.E.M.",
+     "score": 7493
+    },
+    {
+     "mbid": "f59c5520-5f46-4d2c-b2c4-822eabf53419",
+     "name": "Linkin Park",
+     "score": 7398
+    },
+    {
+     "mbid": "eeb1195b-f213-4ce1-b28c-8565211f8e43",
+     "name": "Guns N\u2019 Roses",
+     "score": 7216
+    },
+    {
+     "mbid": "4bd95eea-b9f6-4d70-a36c-cfea77431553",
+     "name": "Alice in Chains",
+     "score": 7203
+    },
+    {
+     "mbid": "39ab1aed-75e0-4140-bd47-540276886b60",
+     "name": "Oasis",
+     "score": 7198
+    },
+    {
+     "mbid": "7dc8f5bd-9d0b-4087-9f73-dc164950bbd8",
+     "name": "Queens of the Stone Age",
+     "score": 7151
+    },
+    {
+     "mbid": "b071f9fa-14b0-4217-8e97-eb41da73f598",
+     "name": "The Rolling Stones",
+     "score": 7139
+    },
+    {
+     "mbid": "b6b2bb8d-54a9-491f-9607-7b546023b433",
+     "name": "Pixies",
+     "score": 7074
+    },
+    {
+     "mbid": "5441c29d-3602-4898-b1a1-b77fa23b8e50",
+     "name": "David Bowie",
+     "score": 6954
+    },
+    {
+     "mbid": "ba853904-ae25-4ebb-89d6-c44cfbd71bd2",
+     "name": "Blur",
+     "score": 6935
+    },
+    {
+     "mbid": "b7ffd2af-418f-4be2-bdd1-22f8b48613da",
+     "name": "Nine Inch Nails",
+     "score": 6787
+    },
+    {
+     "mbid": "ada7a83c-e3e1-40f1-93f9-3e73dbc9298a",
+     "name": "Arctic Monkeys",
+     "score": 6518
+    },
+    {
+     "mbid": "cc197bad-dc9c-440d-a5b5-d52ba2e14234",
+     "name": "Coldplay",
+     "score": 6390
+    },
+    {
+     "mbid": "309c62ba-7a22-4277-9f67-4a162526d18a",
+     "name": "Beck",
+     "score": 6337
+    },
+    {
+     "mbid": "69ee3720-a7cb-4402-b48d-a02c366f2bcf",
+     "name": "The Cure",
+     "score": 6290
+    },
+    {
+     "mbid": "66c662b6-6e2f-4930-8610-912e24c63ed1",
+     "name": "AC/DC",
+     "score": 6288
+    },
+    {
+     "mbid": "a3cb23fc-acd3-4ce0-8f36-1e5aa6a18432",
+     "name": "U2",
+     "score": 6188
+    },
+    {
+     "mbid": "8c32bb01-58a3-453b-8050-8c0620edb0e5",
+     "name": "Stone Temple Pilots",
+     "score": 6131
+    },
+    {
+     "mbid": "95e1ead9-4d31-4808-a7ac-32c3614c116b",
+     "name": "The Killers",
+     "score": 5914
+    },
+    {
+     "mbid": "e21857d5-3256-4547-afb3-4b6ded592596",
+     "name": "Gorillaz",
+     "score": 5815
+    },
+    {
+     "mbid": "0743b15a-3c32-48c8-ad58-cb325350befa",
+     "name": "blink\u2010182",
+     "score": 5760
+    },
+    {
+     "mbid": "5182c1d9-c7d2-4dad-afa0-ccfeada921a8",
+     "name": "Black Sabbath",
+     "score": 5737
+    },
+    {
+     "mbid": "f181961b-20f7-459e-89de-920ef03c7ed0",
+     "name": "The Strokes",
+     "score": 5680
+    },
+    {
+     "mbid": "9efff43b-3b29-4082-824e-bc82f646f93d",
+     "name": "The Doors",
+     "score": 5564
+    },
+    {
+     "mbid": "020bfbb4-05c3-4c86-b372-17825c262094",
+     "name": "Audioslave",
+     "score": 5516
+    },
+    {
+     "mbid": "8f92558c-2baa-4758-8c38-615519e9deda",
+     "name": "The Clash",
+     "score": 5494
+    },
+    {
+     "mbid": "3d2b98e5-556f-4451-a3ff-c50ea18d57cb",
+     "name": "Aerosmith",
+     "score": 5488
+    },
+    {
+     "mbid": "9beb62b2-88db-4cea-801e-162cd344ee53",
+     "name": "Beastie Boys",
+     "score": 5404
+    },
+    {
+     "mbid": "056e4f3e-d505-4dad-8ec1-d04f521cbb56",
+     "name": "Daft Punk",
+     "score": 5365
+    },
+    {
+     "mbid": "c98d40fd-f6cf-4b26-883e-eaa515ee2851",
+     "name": "The Cranberries",
+     "score": 5276
+    },
+    {
+     "mbid": "e3e0abcd-7671-4482-a9d8-462f5acc9be5",
+     "name": "Incubus",
+     "score": 5108
+    },
+    {
+     "mbid": "9fdaa16b-a6c4-4831-b87c-bc9ca8ce7eaa",
+     "name": "The Who",
+     "score": 5048
+    },
+    {
+     "mbid": "5dfdca28-9ddc-4853-933c-8bc97d87beec",
+     "name": "Marilyn Manson",
+     "score": 4961
+    },
+    {
+     "mbid": "8538e728-ca0b-4321-b7e5-cff6565dd4c0",
+     "name": "Depeche Mode",
+     "score": 4947
+    },
+    {
+     "mbid": "ac865b2e-bba8-4f5a-8756-dd40d5e39f46",
+     "name": "Korn",
+     "score": 4930
+    },
+    {
+     "mbid": "72c536dc-7137-4477-a521-567eeb840fa8",
+     "name": "Bob Dylan",
+     "score": 4915
+    },
+    {
+     "mbid": "6ffb8ea9-2370-44d8-b678-e9237bbd347b",
+     "name": "Kings of Leon",
+     "score": 4718
+    },
+    {
+     "mbid": "aa7a2827-f74b-473c-bd79-03d065835cf7",
+     "name": "Franz Ferdinand",
+     "score": 4716
+    },
+    {
+     "mbid": "d15721d8-56b4-453d-b506-fc915b14cba2",
+     "name": "The Black Keys",
+     "score": 4624
+    },
+    {
+     "mbid": "847e8284-8582-4b0e-9c26-b042a4f49e57",
+     "name": "Placebo",
+     "score": 4620
+    },
+    {
+     "mbid": "ca891d65-d9b0-4258-89f7-e6ba29d83767",
+     "name": "Iron Maiden",
+     "score": 4432
+    },
+    {
+     "mbid": "109958eb-a335-4c5e-907e-597ff4c6af46",
+     "name": "Creedence Clearwater Revival",
+     "score": 4419
+    },
+    {
+     "mbid": "d43d12a1-2dc9-4257-a2fd-0a3bb1081b86",
+     "name": "Johnny Cash",
+     "score": 4329
+    },
+    {
+     "mbid": "9e0e2b01-41db-4008-bd8b-988977d6019a",
+     "name": "The Police",
+     "score": 4284
+    },
+    {
+     "mbid": "40f5d9e4-2de7-4f2d-ad41-e31a9a9fea27",
+     "name": "The Smiths",
+     "score": 4203
+    },
+    {
+     "mbid": "d6ed7887-a401-47a8-893c-34b967444d26",
+     "name": "Ramones",
+     "score": 4181
+    },
+    {
+     "mbid": "93ccd76c-3790-4435-a8bf-02bc26294b93",
+     "name": "Bush",
+     "score": 4181
+    },
+    {
+     "mbid": "7527f6c2-d762-4b88-b5e2-9244f1e34c46",
+     "name": "Deftones",
+     "score": 4180
+    },
+    {
+     "mbid": "fbd2a255-1d57-4d31-ac11-65b671c19958",
+     "name": "No Doubt",
+     "score": 4173
+    },
+    {
+     "mbid": "66fc5bf8-daa4-4241-b378-9bc9077939d2",
+     "name": "Tool",
+     "score": 4138
+    },
+    {
+     "mbid": "f27ec8db-af05-4f36-916e-3d57f91ecf5e",
+     "name": "Michael Jackson",
+     "score": 4136
+    },
+    {
+     "mbid": "5cbef01b-cc35-4f52-af7b-d0df0c4f61b9",
+     "name": "Sonic Youth",
+     "score": 4130
+    },
+    {
+     "mbid": "5dcdb5eb-cb72-4e6e-9e63-b7bace604965",
+     "name": "Bon Jovi",
+     "score": 4124
+    },
+    {
+     "mbid": "a466c2a2-6517-42fb-a160-1087c3bafd9f",
+     "name": "Slipknot",
+     "score": 4068
+    },
+    {
+     "mbid": "06fb1c8b-566e-4cb2-985b-b467c90781d4",
+     "name": "Jimi Hendrix",
+     "score": 4059
+    },
+    {
+     "mbid": "b15ebd71-a252-417d-9e1c-3e6863da68f8",
+     "name": "Faith No More",
+     "score": 4022
+    },
+    {
+     "mbid": "b95ce3ff-3d05-4e87-9e01-c97b66af13d4",
+     "name": "Eminem",
+     "score": 3929
+    },
+    {
+     "mbid": "b2d122f9-eadb-4930-a196-8f221eeb0c66",
+     "name": "Rammstein",
+     "score": 3929
+    },
+    {
+     "mbid": "9a58fda3-f4ed-4080-a3a5-f457aac9fcdd",
+     "name": "Joy Division",
+     "score": 3885
+    },
+    {
+     "mbid": "b665b768-0d83-4363-950c-31ed39317c15",
+     "name": "Van Halen",
+     "score": 3843
+    },
+    {
+     "mbid": "f9ef7a22-4262-4596-a2a8-1d19345b8e50",
+     "name": "Garbage",
+     "score": 3834
+    },
+    {
+     "mbid": "8f9d6bb2-dba4-4cca-9967-cc02b9f4820c",
+     "name": "Limp Bizkit",
+     "score": 3833
+    },
+    {
+     "mbid": "4a4ee089-93b1-4470-af9a-6ff575d32704",
+     "name": "The Prodigy",
+     "score": 3814
+    },
+    {
+     "mbid": "a96ac800-bfcb-412a-8a63-0a98df600700",
+     "name": "Modest Mouse",
+     "score": 3808
+    },
+    {
+     "mbid": "10adbe5e-a2c0-4bf3-8249-2b4cbf6e6ca8",
+     "name": "Massive Attack",
+     "score": 3746
+    },
+    {
+     "mbid": "1dcc8968-f2cd-441c-beda-6270f70f2863",
+     "name": "Hole",
+     "score": 3740
+    },
+    {
+     "mbid": "52074ba6-e495-4ef3-9bb4-0703888a9f68",
+     "name": "Arcade Fire",
+     "score": 3716
+    },
+    {
+     "mbid": "8aa5b65a-5b3c-4029-92bf-47a544356934",
+     "name": "Ozzy Osbourne",
+     "score": 3709
+    },
+    {
+     "mbid": "95f5b748-d370-47fe-85bd-0af2dc450bc0",
+     "name": "Sublime",
+     "score": 3681
+    },
+    {
+     "mbid": "f4a31f0a-51dd-4fa7-986d-3095c40c5ed9",
+     "name": "Evanescence",
+     "score": 3673
+    },
+    {
+     "mbid": "c07f0676-9143-4217-8a9f-4c26bd636f13",
+     "name": "My Chemical Romance",
+     "score": 3655
+    },
+    {
+     "mbid": "d4d17620-fd97-4574-92a8-a2cb7e72ce42",
+     "name": "The Verve",
+     "score": 3654
+    },
+    {
+     "mbid": "c5eb9407-caeb-4303-b383-6929aa94021c",
+     "name": "Papa Roach",
+     "score": 3635
+    },
+    {
+     "mbid": "bd13909f-1c29-4c27-a874-d4aaf27c5b1a",
+     "name": "Fleetwood Mac",
+     "score": 3614
+    },
+    {
+     "mbid": "0ef3f425-9bd2-4216-9dd2-219d2fe90f1f",
+     "name": "Lenny Kravitz",
+     "score": 3573
+    },
+    {
+     "mbid": "79491354-3d83-40e3-9d8e-7592d58d790a",
+     "name": "Deep Purple",
+     "score": 3566
+    },
+    {
+     "mbid": "614e3804-7d34-41ba-857f-811bad7c2b7a",
+     "name": "Dire Straits",
+     "score": 3543
+    },
+    {
+     "mbid": "4bb4e4e4-5f66-4509-98af-62dbb90c45c5",
+     "name": "Disturbed",
+     "score": 3541
+    },
+    {
+     "mbid": "fa7b9055-3703-473a-8a09-adf2fe031a24",
+     "name": "CAKE",
+     "score": 3538
+    },
+    {
+     "mbid": "078a9376-3c04-4280-b7d7-b20e158f345d",
+     "name": "A Perfect Circle",
+     "score": 3533
+    },
+    {
+     "mbid": "bc710bcf-8815-42cf-bad2-3f1d12246aeb",
+     "name": "Nickelback",
+     "score": 3458
+    },
+    {
+     "mbid": "8970d868-0723-483b-a75b-51088913d3d4",
+     "name": "Moby",
+     "score": 3455
+    }
+   ]
+  }
+ }
+}

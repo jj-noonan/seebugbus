@@ -87,6 +87,9 @@ tail -f data/crawl.log
 | `npm run export` | rebuild `catalog.json` from SQLite |
 | `npm run db` | open the catalog in the sqlite3 shell |
 | `npm run walk` | simulate walks in the terminal — the fast loop for tuning recommendations |
+| `npm run eval` | score the recommender against independent similarity data |
+| `npm run eval:fetch` | refresh that ground truth from ListenBrainz Labs |
+| `npm run reach` | how much of the catalog the engine can actually offer |
 | `npm run ingest-check` | exercise search-driven ingest against the live APIs |
 | `npm run check` | server-render the app and assert its structure |
 
@@ -169,6 +172,29 @@ Once the deployed set is covered the same queue rolls onto everything else, so
 the crawler's interleaved pass (every 15 slices) keeps rating freshly harvested
 albums without a separate step. Re-exporting re-marks the deployed set, so the
 priority follows whatever is actually live.
+
+## Validating the recommender
+
+`npm run eval` scores offers against **ListenBrainz Labs similar-artists**,
+which derives similarity from collaborative filtering over real listening
+sessions. That independence is the point: this engine reasons from MusicBrainz
+tags, so agreeing with a tag-derived source would prove nothing.
+
+The metric is deliberately not a single number. Agreement should be **high at
+Sidewalk and fall toward Bushwhack** — the far end of the dial exists to leave
+the neighbourhood, and an engine that matched a similarity model at every
+setting would have a broken dial rather than good recommendations. The suite
+asserts two things: near-end agreement clearly beats chance, and the curve
+declines as the dial opens.
+
+An early version averaged all five settings, scored 2.0% against a 2.4% chance
+rate, and looked like it was losing to random. It was averaging in three
+settings that are supposed to disagree. Worth remembering before trusting any
+aggregate here.
+
+Current: **3.8x chance at the near end** (10.8% against 2.81%), declining
+cleanly to 0% at Bushwhack. Ten seed artists spread across idioms so the suite
+cannot pass by being good at one kind of music.
 
 ## Data model
 
