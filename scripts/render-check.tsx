@@ -27,6 +27,7 @@ console.log('reflections:    ', count(/case__reflection/g));
 console.log('slot badges:    ', count(/slot__badge/g));
 console.log('hover reasons:  ', count(/slot__why/g));
 console.log('play links:     ', count(/class="play play--(spotify|apple)"/g));
+console.log('feedback marks: ', count(/class="fb__btn fb__btn--(good|meh|bad)"/g));
 console.log('dial present:   ', /dial__face/.test(html));
 console.log('search present: ', /class="searchtrigger"/.test(html));
 console.log('shuffle present:', /class="shuffle"/.test(html));
