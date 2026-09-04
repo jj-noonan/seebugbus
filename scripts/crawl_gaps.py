@@ -38,6 +38,7 @@ import db  # noqa: E402
 from crawl_us import discography  # noqa: E402
 
 FIXTURE = HERE.parent / "data" / "similar-artists.json"
+GRAPH = HERE.parent / "data" / "similarity-graph.json"
 
 
 def log(*a):
@@ -56,9 +57,14 @@ def wanted_artists() -> dict[str, str]:
     fx = json.loads(FIXTURE.read_text())
     out: dict[str, str] = {}
     skipped = 0
+    held: set[str] = set()
     for seed in fx["seeds"].values():
         if seed.get("heldOut"):
             skipped += 1
+            # Remember these so the graph pass cannot smuggle them back in.
+            held.update(
+                s.get("mbid") or s.get("artist_mbid") or "" for s in seed["similar"]
+            )
             continue
         for s in seed["similar"]:
             mbid = s.get("mbid") or s.get("artist_mbid")
@@ -66,7 +72,50 @@ def wanted_artists() -> dict[str, str]:
                 out[mbid] = s.get("name") or ""
     if skipped:
         log(f"ignoring {skipped} held-out seeds as a crawl source")
+
+    # Widen beyond the seeds' own lists, using the similarity graph.
+    #
+    # The fixture names ~1,200 artists. The graph covers the 1,500 most-listened
+    # artists in the catalog and everyone their lists reach, which is a far
+    # larger frontier — and the reason Smashing Pumpkins and Mudhoney were still
+    # missing after the first pass: nothing in the 47 seeds' top-100 happened to
+    # name them.
+    #
+    # Held-out territory is excluded here too. The graph would otherwise
+    # reintroduce exactly the artists the held-out seeds were meant to keep out
+    # of catalog building, quietly undoing the one number in the suite that
+    # cannot be gamed.
+    if GRAPH.exists():
+        graph = json.loads(GRAPH.read_text()).get("edges", {})
+        before = len(out)
+        for source, targets in graph.items():
+            if source in held:
+                continue
+            for t in targets:
+                if t not in out and t not in held:
+                    out[t] = ""
+        log(f"similarity graph adds {len(out) - before:,} more candidates "
+            f"({len(held):,} held-out artists excluded)")
+
     return out
+
+
+def reference_counts() -> dict[str, int]:
+    """How many sources name each artist as similar to something."""
+    counts: dict[str, int] = {}
+    fx = json.loads(FIXTURE.read_text())
+    for seed in fx["seeds"].values():
+        if seed.get("heldOut"):
+            continue
+        for s in seed["similar"]:
+            mbid = s.get("mbid") or s.get("artist_mbid")
+            if mbid:
+                counts[mbid] = counts.get(mbid, 0) + 1
+    if GRAPH.exists():
+        for targets in json.loads(GRAPH.read_text()).get("edges", {}).values():
+            for t in targets:
+                counts[t] = counts.get(t, 0) + 1
+    return counts
 
 
 def artist_info(mbid: str) -> dict | None:
@@ -98,6 +147,18 @@ def main() -> int:
     wanted = wanted_artists()
     have = {r["id"] for r in conn.execute("SELECT id FROM artists")}
     gaps = {k: v for k, v in wanted.items() if k not in have}
+
+    # Most-named first.
+    #
+    # The frontier is now ~8,000 artists, which is a night of crawling, so any
+    # run short of the whole thing takes a slice — and an arbitrary slice is a
+    # waste of the budget. An artist named as similar by many different sources
+    # is one many listeners would expect to find; one named once is a long tail
+    # that can wait. This costs nothing when the whole list is fetched anyway,
+    # and matters every time it is not.
+    degree = reference_counts()
+    gaps = dict(sorted(gaps.items(), key=lambda kv: -degree.get(kv[0], 0)))
+
     total_gaps = len(gaps)
     if args.limit:
         gaps = dict(list(gaps.items())[: args.limit])
