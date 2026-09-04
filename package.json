@@ -18,6 +18,7 @@
     "click-check": "vite-node scripts/click-check.tsx",
     "feedback-check": "vite-node scripts/feedback-check.tsx",
     "dist-check": "vite-node scripts/dist-check.ts",
+    "publish": "bash scripts/publish.sh",
     "ratings": ".venv/bin/python -u scripts/backfill_ratings.py",
     "backfill": ".venv/bin/python -u scripts/backfill_popularity.py",
     "eval": "vite-node scripts/eval-recs.ts --",
