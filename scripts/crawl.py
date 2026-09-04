@@ -52,6 +52,18 @@ _mb_last = [0.0]
 
 # Adaptive pacing, on top of the fixed interval.
 #
+# Investigated at length before settling here, and two plausible culprits were
+# ruled out by measurement rather than argument. Stale pooled connections: a
+# fresh session per request, one reused session, and a session whose pool was
+# dropped between calls all failed identically (5 of 12), so it is not
+# keep-alive. Endpoint cost: the direct lookup ratings uses and the search the
+# crawl uses failed at much the same rate, so it is not that either.
+#
+# It is IP-level throttling after a long run, and the only useful response is
+# to ask for less. Note that probing to find this out adds a request stream of
+# its own and makes the numbers worse while you watch them — the readings above
+# were taken alongside a live job and overstate the failure rate.
+#
 # After ~14 hours of continuous crawling MusicBrainz began timing out and
 # resetting connections on most requests — 350 of 400 consecutive log lines
 # were retries, and throughput fell to a third. The pacing was not at fault:
