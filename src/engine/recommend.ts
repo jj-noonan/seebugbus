@@ -43,7 +43,24 @@ export const TUNING = {
    * high dial wants the tail. This is what actually makes "Sidewalk" feel like
    * a sidewalk — proximity alone still served strangers.
    */
-  popularityNear: 8.4,
+  /*
+   * Aims high on purpose. At 8.4 the closest setting targeted the 84th
+   * percentile — about 4,500 listeners — while the top of the catalog runs to
+   * 77,000, so a household-name record was answered with mid-tier ones. Born
+   * in the U.S.A. offered Tom Petty's Wildflowers and The Clash where a
+   * listener reasonably expects Neil Young's Harvest, which is what it offers
+   * now.
+   *
+   * This does not make the app canon-bound; it is what the near end is for.
+   * The dial is the escape route, and its far end reaches the tail properly
+   * now. A close step that lands on records nobody recognises isn't adventure,
+   * it just reads as the engine not knowing the album.
+   *
+   * Agreement rises with it too — 57.0% to 61.0% — since co-listening
+   * neighbours of famous records are themselves usually famous. Reach costs
+   * 0.5 points, which is cheap for the difference in what the near end means.
+   */
+  popularityNear: 9.8,
   /*
    * Not lower. Aiming at 1.8 asked for records with 12-28 listeners, where the
    * quality signal is deliberately shrunk to the catalog prior because a

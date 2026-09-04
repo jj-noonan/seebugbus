@@ -144,3 +144,12 @@
   font-style: normal;
   opacity: 0.6;
 }
+
+.debug__fbactions button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.debug__fbactions button:disabled:hover {
+  background: rgba(255, 255, 255, 0.05);
+}

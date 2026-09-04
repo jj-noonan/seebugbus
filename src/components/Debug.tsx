@@ -232,8 +232,10 @@ export function Debug({
         <h4>feedback ({fb.total})</h4>
         {fb.total === 0 ? (
           <p className="debug__empty">
-            Nothing judged yet. The marks under the case feed straight back into
-            scoring — a rejected step is suppressed the next time it comes up.
+            Nothing judged yet. Press <kbd>g</kbd> good, <kbd>m</kbd> fine or{' '}
+            <kbd>x</kbd> wrong turn on any album — or use the marks under the
+            case. Verdicts feed straight back into scoring, and this panel grows
+            a button to copy them all out.
           </p>
         ) : (
           <>
@@ -255,19 +257,29 @@ export function Debug({
                 </li>
               ))}
             </ol>
-            <div className="debug__fbactions">
-              <button onClick={copy}>{copied ? 'copied' : 'copy all as text'}</button>
-              <button
-                onClick={() => {
-                  clearFeedback();
-                  onFeedbackChange();
-                }}
-              >
-                clear
-              </button>
-            </div>
           </>
         )}
+        {/*
+          * Outside the empty check on purpose. Hiding the copy button until
+          * feedback exists means the one question a new user has — how do I
+          * send this anywhere? — is answered by an affordance that only appears
+          * once they have already guessed. It is disabled rather than absent,
+          * so the route out is visible before it is needed.
+          */}
+        <div className="debug__fbactions">
+          <button onClick={copy} disabled={fb.total === 0}>
+            {copied ? 'copied' : `copy ${fb.total || 'all'} as text`}
+          </button>
+          <button
+            onClick={() => {
+              clearFeedback();
+              onFeedbackChange();
+            }}
+            disabled={fb.total === 0}
+          >
+            clear
+          </button>
+        </div>
       </section>
 
       <footer>
