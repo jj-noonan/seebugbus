@@ -50,6 +50,25 @@ POOL_FACTOR = 3    # harvest this many times `per_tag` before stratifying down
 _mb_lock = threading.Lock()
 _mb_last = [0.0]
 
+# Adaptive pacing, on top of the fixed interval.
+#
+# After ~14 hours of continuous crawling MusicBrainz began timing out and
+# resetting connections on most requests — 350 of 400 consecutive log lines
+# were retries, and throughput fell to a third. The pacing was not at fault:
+# the gate above is shared across threads, so the process was inside the ~1
+# req/sec budget the whole time. The server was simply refusing to keep up with
+# a client that had been going all night.
+#
+# Retrying at an unchanged rate into that is the worst available move. It keeps
+# the pressure on, and every attempt costs a 12-second read timeout instead of
+# the half-second a healthy request takes, so the job goes slower the harder it
+# tries. This widens the gap when requests fail and decays back when they
+# succeed, so a rough patch costs some latency instead of most of the night.
+_mb_penalty = [0.0]
+MB_PENALTY_STEP = 0.6    # added per failure
+MB_PENALTY_MAX = 8.0     # never crawl slower than one request per ~9s
+MB_PENALTY_DECAY = 0.75  # multiplied on each success
+
 session = requests.Session()
 session.headers.update({"User-Agent": UA, "Accept": "application/json"})
 
@@ -62,7 +81,8 @@ def mb_get(path: str, params: dict) -> dict | None:
     """Rate-limited MusicBrainz GET with backoff on 503."""
     for attempt in range(5):
         with _mb_lock:
-            wait = MB_INTERVAL - (time.time() - _mb_last[0])
+            interval = MB_INTERVAL + _mb_penalty[0]
+            wait = interval - (time.time() - _mb_last[0])
             if wait > 0:
                 time.sleep(wait)
             _mb_last[0] = time.time()
@@ -76,15 +96,27 @@ def mb_get(path: str, params: dict) -> dict | None:
                 f"{MB}{path}", params={**params, "fmt": "json"}, timeout=(5, 12)
             )
         except requests.RequestException as e:
-            log(f"  mb error {e}; retrying")
+            with _mb_lock:
+                was = _mb_penalty[0]
+                _mb_penalty[0] = min(MB_PENALTY_MAX, was + MB_PENALTY_STEP)
+            # Only announce the pace change, not every retry: during a bad
+            # patch the retries are the noise and the pace is the news.
+            if int(was * 2) != int(_mb_penalty[0] * 2):
+                log(f"  backing off — now {MB_INTERVAL + _mb_penalty[0]:.1f}s between requests")
             time.sleep(2 * (attempt + 1))
             continue
         if r.status_code == 503:
+            with _mb_lock:
+                _mb_penalty[0] = min(MB_PENALTY_MAX, _mb_penalty[0] + MB_PENALTY_STEP)
             time.sleep(3 * (attempt + 1))
             continue
         if r.status_code != 200:
             log(f"  mb {r.status_code} for {path} {params}")
             return None
+        with _mb_lock:
+            _mb_penalty[0] *= MB_PENALTY_DECAY
+            if _mb_penalty[0] < 0.05:
+                _mb_penalty[0] = 0.0
         try:
             return r.json()
         except ValueError:
